@@ -2,23 +2,25 @@ package com.hao.mi2.net;
 
 import android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import okhttp3.*;
 import okio.ByteString;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OkHttpManager<T> extends NetParamHelp {
+public class OkHttpManager extends NetParamHelp {
     private List<RequestFormBodyParam> requestFormBodyParams;
     private List<RequestMultipartBodyParam> requestMultipartBodyParamList;
     private NetBodyType netBodyType = NetBodyType.form;
     private NetType netType;
     private String url = ""; //请求方式
-    private NetCallBack<T> netCallBack;
+    private NetCallBack netCallBack;
     private Request request;
+    private Class clazz;
 
     //枚举 请求的类型 multipart分块提交 form 表单提交
     private enum NetBodyType {
@@ -120,6 +122,12 @@ public class OkHttpManager<T> extends NetParamHelp {
         return this;
     }
 
+    @Override
+    public OkHttpManager setRClass(Class clazz) {
+        this.clazz = clazz;
+        return this;
+    }
+
     //设置请求返回监听
     public void setNetBack(NetCallBack netCallBack) {
         this.netCallBack = netCallBack;
@@ -139,22 +147,21 @@ public class OkHttpManager<T> extends NetParamHelp {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
                 netCallBack.fai(e);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-//                Class<T> clazz = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-                Class<T> clazz = (Class<T>) (getClass().getClass());
-                Log.i("获取到的对象", clazz.getName());
-                T t = new Gson().fromJson(response.body().toString(), clazz);
-                netCallBack.suc(t);
+                if (clazz != null) {
+                        netCallBack.suc(new Gson().fromJson(response.body().string(), clazz));
+                } else {
+                    new NullPointerException("解析类型为空");
+                }
             }
         });
     }
 
-    public OkHttpManager<T> setNetType(NetType netType) {
+    public OkHttpManager setNetType(NetType netType) {
         this.netType = netType;
         return this;
     }

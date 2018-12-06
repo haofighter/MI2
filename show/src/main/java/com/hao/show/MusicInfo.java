@@ -1343,4 +1343,11 @@ class MusicInfo  {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return "MusicInfo{" +
+                "result=" + result +
+                '}';
+    }
 }

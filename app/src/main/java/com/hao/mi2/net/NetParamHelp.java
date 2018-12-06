@@ -5,7 +5,7 @@ import okhttp3.Request;
 abstract class NetParamHelp {
     abstract NetParamHelp setUrl(String string);
 
-    abstract void setNetBack(OkHttpManager.NetCallBack netCallBack);
+    abstract OkHttpManager setRClass(Class clazz);
 
     abstract Request Post();
 
