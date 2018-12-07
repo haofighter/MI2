@@ -2,23 +2,22 @@ package com.hao.mi2.net;
 
 import android.util.Log;
 import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 import okhttp3.*;
 import okio.ByteString;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OkHttpManager extends NetParamHelp {
+public class OkHttpManager<T> extends NetParamHelp {
     private List<RequestFormBodyParam> requestFormBodyParams;
     private List<RequestMultipartBodyParam> requestMultipartBodyParamList;
     private NetBodyType netBodyType = NetBodyType.form;
     private NetType netType;
     private String url = ""; //请求方式
-    private NetCallBack netCallBack;
+    private Callback netCallBack;
     private Request request;
     private Class clazz;
 
@@ -129,7 +128,7 @@ public class OkHttpManager extends NetParamHelp {
     }
 
     //设置请求返回监听
-    public void setNetBack(NetCallBack netCallBack) {
+    public void setNetBack(Callback netCallBack) {
         this.netCallBack = netCallBack;
         buildNet();
     }
@@ -144,21 +143,8 @@ public class OkHttpManager extends NetParamHelp {
             new NumberFormatException("未设置请求方式");
         }
         Call call = getOkhttpClient().newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                netCallBack.fai(e);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (clazz != null) {
-                        netCallBack.suc(new Gson().fromJson(response.body().string(), clazz));
-                } else {
-                    new NullPointerException("解析类型为空");
-                }
-            }
-        });
+        if (netCallBack != null)//do 设置请求回调
+            call.enqueue(netCallBack);
     }
 
     public OkHttpManager setNetType(NetType netType) {

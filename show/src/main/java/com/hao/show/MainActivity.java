@@ -13,17 +13,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        new OkHttpManager().setNetType(OkHttpManager.NetType.Post)
+        new OkHttpManager<MusicInfo>().setNetType(OkHttpManager.NetType.Post)
                 .addFromParam("s", "孙子涵")
                 .addFromParam("offset", "1")
-                .addFromParam("limit", "10")
+                .addFromParam("limit", "1")
                 .addFromParam("type", "1")
                 .setUrl("http://music.163.com/api/search/pc")
-                .setRClass(MusicInfo.class)
+//                .setRClass(MusicInfo.class)
                 .setNetBack(new OkHttpManager.NetCallBack<MusicInfo>() {
                     @Override
                     public void suc(MusicInfo o) {
-                        ((TextView)findViewById(R.id.tv)).setText(o.toString());
+                        ((TextView)findViewById(R.id.tv)).setText(o.getCode());
                     }
 
                     @Override
