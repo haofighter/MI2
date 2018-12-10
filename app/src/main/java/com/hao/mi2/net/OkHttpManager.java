@@ -1,25 +1,20 @@
 package com.hao.mi2.net;
 
-import android.util.Log;
-import com.google.gson.Gson;
 import okhttp3.*;
 import okio.ByteString;
 
 import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OkHttpManager<T> extends NetParamHelp {
+public class OkHttpManager extends NetParamHelp {
     private List<RequestFormBodyParam> requestFormBodyParams;
     private List<RequestMultipartBodyParam> requestMultipartBodyParamList;
     private NetBodyType netBodyType = NetBodyType.form;
-    private NetType netType;
-    private String url = ""; //请求方式
+    private NetType netType;//请求方式
+    private String url = ""; //请求地址
     private Callback netCallBack;
     private Request request;
-    private Class clazz;
 
     //枚举 请求的类型 multipart分块提交 form 表单提交
     private enum NetBodyType {
@@ -121,12 +116,6 @@ public class OkHttpManager<T> extends NetParamHelp {
         return this;
     }
 
-    @Override
-    public OkHttpManager setRClass(Class clazz) {
-        this.clazz = clazz;
-        return this;
-    }
-
     //设置请求返回监听
     public void setNetBack(Callback netCallBack) {
         this.netCallBack = netCallBack;
@@ -152,11 +141,4 @@ public class OkHttpManager<T> extends NetParamHelp {
         return this;
     }
 
-
-    //接口回调
-    public interface NetCallBack<T> {
-        void suc(T t);
-
-        void fai(Exception e);
-    }
 }
