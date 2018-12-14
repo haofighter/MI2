@@ -20,9 +20,15 @@ public class MI2App extends Application {
 
 
     private List<MI2Activity> activities = new ArrayList<>();
+    private MI2Activity activitie = null;
+
+    public MI2Activity getNowActivitie() {
+        return activitie;
+    }
 
     public void addActivity(MI2Activity baseActivity) {
         activities.add(baseActivity);
+        activitie = baseActivity;
     }
 
     public void removeActivity(MI2Activity baseActivity) {
