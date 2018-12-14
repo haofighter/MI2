@@ -44,7 +44,11 @@ public class LoadingDialog {
 
 
     //对Dailog进行初始化
-    private void initDailog() {
+    private boolean initDailog() {
+        if (MI2App.getInstance().getNowActivitie() == null) {
+            new NullPointerException("还未初始化Activity,无法显示dialog");
+            return false;
+        }
         if (d == null) {
             View view = View.inflate(MI2App.getInstance().getNowActivitie(), R.layout.common_loadingdialog, null);
             imageView = (ImageView) view.findViewById(R.id.imageView);
@@ -74,9 +78,11 @@ public class LoadingDialog {
             window.setContentView(view, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
         }
+        return true;
     }
 
     public LoadingDialog show() {
+        initDailog();
         if (null != d && !d.isShowing()) {
             d.show();
         }
