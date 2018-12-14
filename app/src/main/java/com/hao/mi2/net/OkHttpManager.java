@@ -1,13 +1,17 @@
 package com.hao.mi2.net;
 
+import android.util.Log;
 import okhttp3.*;
 import okio.ByteString;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OkHttpManager extends NetParamHelp {
+public class OkHttpManager {
     private List<RequestFormBodyParam> requestFormBodyParams;
     private List<RequestMultipartBodyParam> requestMultipartBodyParamList;
     private NetBodyType netBodyType = NetBodyType.form;
@@ -51,13 +55,28 @@ public class OkHttpManager extends NetParamHelp {
 
 
     static class OkHttpHelper {
-        public static OkHttpClient okHttpClient = new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor())
-                .build();
+        public static OkHttpClient.Builder builder = new OkHttpClient.Builder().addInterceptor(new LoggingInterceptor());
     }
 
     //获取单例的okhttpClient对象
     public static OkHttpClient getOkhttpClient() {
-        return OkHttpHelper.okHttpClient;
+        return OkHttpHelper.builder.build();
+    }
+
+
+    OkHttpClient.Builder getOkhttpBuild() {
+        return OkHttpHelper.builder;
+    }
+
+    //下载
+    public OkHttpClient getOkhttpClient(final ProgressResponse.ProgressListener progressListener) {
+        return getOkhttpBuild().addInterceptor(new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Response response = chain.proceed(chain.request());
+                return response.newBuilder().body(new ProgressResponse(response.body(), progressListener)).build();
+            }
+        }).build();
     }
 
 
@@ -122,6 +141,43 @@ public class OkHttpManager extends NetParamHelp {
         buildNet();
     }
 
+    public void setDownloadBack(File file, ProgressResponse.ProgressListener progressListener) {
+        buildDownNet(file, progressListener);
+    }
+
+    private void buildDownNet(final File file, ProgressResponse.ProgressListener progressListener) {
+        if (netType == NetType.Post) {
+            request = Post();
+        } else if (netType == NetType.Post) {
+            request = GET();
+        } else {
+            new NumberFormatException("未设置请求方式");
+        }
+        Call call = getOkhttpClient(progressListener).newCall(request);
+        if (netCallBack != null)//do 设置请求回调
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.i("下载出错", "错误：" + e.getMessage());
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    InputStream is = response.body().byteStream();
+                    RandomAccessFile savedFile = new RandomAccessFile(file, "rw");
+                    savedFile.seek(file.length());//跳过已下载的字节
+                    byte[] b = new byte[1024];
+                    int total = 0;
+                    int len;
+                    while ((len = is.read(b)) != -1) {
+                            total += len;
+                            savedFile.write(b, 0, len);
+                    }
+                }
+            });
+    }
+
     //开始进行请求
     void buildNet() {
         if (netType == NetType.Post) {
@@ -135,6 +191,7 @@ public class OkHttpManager extends NetParamHelp {
         if (netCallBack != null)//do 设置请求回调
             call.enqueue(netCallBack);
     }
+
 
     public OkHttpManager setNetType(NetType netType) {
         this.netType = netType;
