@@ -111,17 +111,17 @@ class MusicInfo  {
             private int playedNum;
             private int dayPlays;
             private int hearTime;
-            private Object ringtone;
-            private Object crbt;
-            private Object audition;
+            private String ringtone;
+            private String crbt;
+            private String audition;
             private String copyFrom;
             private String commentThreadId;
-            private Object rtUrl;
+            private String rtUrl;
             private int ftype;
             private int copyright;
             private int mvid;
             private int rtype;
-            private Object rurl;
+            private String rurl;
             private HMusicBean hMusic;
             private MMusicBean mMusic;
             private LMusicBean lMusic;
@@ -267,27 +267,27 @@ class MusicInfo  {
                 this.hearTime = hearTime;
             }
 
-            public Object getRingtone() {
+            public String getRingtone() {
                 return ringtone;
             }
 
-            public void setRingtone(Object ringtone) {
+            public void setRingtone(String ringtone) {
                 this.ringtone = ringtone;
             }
 
-            public Object getCrbt() {
+            public String getCrbt() {
                 return crbt;
             }
 
-            public void setCrbt(Object crbt) {
+            public void setCrbt(String crbt) {
                 this.crbt = crbt;
             }
 
-            public Object getAudition() {
+            public String getAudition() {
                 return audition;
             }
 
-            public void setAudition(Object audition) {
+            public void setAudition(String audition) {
                 this.audition = audition;
             }
 
@@ -307,11 +307,11 @@ class MusicInfo  {
                 this.commentThreadId = commentThreadId;
             }
 
-            public Object getRtUrl() {
+            public String getRtUrl() {
                 return rtUrl;
             }
 
-            public void setRtUrl(Object rtUrl) {
+            public void setRtUrl(String rtUrl) {
                 this.rtUrl = rtUrl;
             }
 
@@ -347,11 +347,11 @@ class MusicInfo  {
                 this.rtype = rtype;
             }
 
-            public Object getRurl() {
+            public String getRurl() {
                 return rurl;
             }
 
-            public void setRurl(Object rurl) {
+            public void setRurl(String rurl) {
                 this.rurl = rurl;
             }
 
@@ -880,7 +880,7 @@ class MusicInfo  {
                  * volumeDelta : -1.78
                  */
 
-                private Object name;
+                private String name;
                 private int id;
                 private int size;
                 private String extension;
@@ -890,11 +890,11 @@ class MusicInfo  {
                 private int playTime;
                 private double volumeDelta;
 
-                public Object getName() {
+                public String getName() {
                     return name;
                 }
 
-                public void setName(Object name) {
+                public void setName(String name) {
                     this.name = name;
                 }
 
@@ -976,7 +976,7 @@ class MusicInfo  {
                  * volumeDelta : -1.35
                  */
 
-                private Object name;
+                private String name;
                 private int id;
                 private int size;
                 private String extension;
@@ -986,11 +986,11 @@ class MusicInfo  {
                 private int playTime;
                 private double volumeDelta;
 
-                public Object getName() {
+                public String getName() {
                     return name;
                 }
 
-                public void setName(Object name) {
+                public void setName(String name) {
                     this.name = name;
                 }
 
@@ -1072,7 +1072,7 @@ class MusicInfo  {
                  * volumeDelta : -1.4
                  */
 
-                private Object name;
+                private String name;
                 private int id;
                 private int size;
                 private String extension;
@@ -1082,11 +1082,11 @@ class MusicInfo  {
                 private int playTime;
                 private double volumeDelta;
 
-                public Object getName() {
+                public String getName() {
                     return name;
                 }
 
-                public void setName(Object name) {
+                public void setName(String name) {
                     this.name = name;
                 }
 
@@ -1168,7 +1168,7 @@ class MusicInfo  {
                  * volumeDelta : -1.4
                  */
 
-                private Object name;
+                private String name;
                 private int id;
                 private int size;
                 private String extension;
@@ -1178,11 +1178,11 @@ class MusicInfo  {
                 private int playTime;
                 private double volumeDelta;
 
-                public Object getName() {
+                public String getName() {
                     return name;
                 }
 
-                public void setName(Object name) {
+                public void setName(String name) {
                     this.name = name;
                 }
 
