@@ -1,4 +1,4 @@
-package com.hao.show;
+package com.hao.show.moudle.entity;
 
 
 import java.util.List;

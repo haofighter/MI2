@@ -1,4 +1,4 @@
-package com.hao.show;
+package com.hao.show.moudle;
 
 import com.hao.mi2.base.MI2Activity;
 

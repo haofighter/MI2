@@ -1,6 +1,9 @@
 package com.hao.mi2.base;
 
 import android.app.Application;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,5 +66,20 @@ public class MI2App extends Application {
         long time = System.currentTimeMillis() - beforClickTime;
         beforClickTime = System.currentTimeMillis();
         return time < 1000;
+    }
+
+
+    public void gotoSetting() {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (Build.VERSION.SDK_INT >= 9) {
+            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            intent.setData(Uri.fromParts("package", getPackageName(), null));
+        } else if (Build.VERSION.SDK_INT <= 8) {
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
+            intent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
+        }
+        startActivity(intent);
     }
 }

@@ -1,4 +1,4 @@
-package com.hao.show.view;
+package com.hao.show.moudle.view;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
