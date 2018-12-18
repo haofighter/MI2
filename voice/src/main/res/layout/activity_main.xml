@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="20dp"
+    android:orientation="vertical"
+    tools:context="com.wtsd.voicedemo.MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请输入字符和数字" />
+
+        <EditText
+            android:id="@+id/inputText"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:inputType="textVisiblePassword"
+            android:maxLength="20"
+            android:text="55555555" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="请输入当前音量（１－１５）" />
+
+        <EditText
+            android:id="@+id/inputVoiceText"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:inputType="textVisiblePassword"
+            android:maxLength="20"
+            android:text="8" />
+
+        <Button
+            android:id="@+id/setVoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置音量" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/sendData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="发送数据" />
+
+    <Button
+        android:id="@+id/autoSendData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="自动发送数据数据" />
+
+    <Button
+        android:id="@+id/cancelSendData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="停止发送" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/recieveData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="开始接受数据" />
+
+        <TextView
+            android:id="@+id/sendCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textColor="#ca0e0e" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="result：" />
+
+        <TextView
+            android:id="@+id/result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/recieveCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textColor="#ca0e0e" />
+    </LinearLayout>
+</LinearLayout>

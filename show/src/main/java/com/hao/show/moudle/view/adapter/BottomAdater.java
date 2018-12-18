@@ -72,16 +72,8 @@ public class BottomAdater extends BaseAdapter {
                 viewHolder.title.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         SystemUtils.INSTANCE.dip2px(App.getInstance().getApplicationContext(), TEXT_SIZE_HAVE_IMAGE)+3));
                 viewHolder.title.setTextSize(TEXT_SIZE_HAVE_IMAGE);
-                if (bottomDate.checkbitmap instanceof Integer) {
-                    viewHolder.im.setVisibility(View.VISIBLE);
-                    viewHolder.im.setImageResource((Integer) bottomDate.checkbitmap);
-                } else if (bottomDate.checkbitmap instanceof Bitmap) {
-                    viewHolder.im.setVisibility(View.VISIBLE);
-                    viewHolder.im.setImageBitmap((Bitmap) bottomDate.checkbitmap);
-                } else if (bottomDate.checkbitmap instanceof Drawable) {
-                    viewHolder.im.setVisibility(View.VISIBLE);
-                    viewHolder.im.setImageDrawable((Drawable) bottomDate.checkbitmap);
-                }
+                viewHolder.im.setVisibility(View.VISIBLE);
+                setImage(bottomDate.checkbitmap, viewHolder.im);
             }
             if (bottomDate.uncheckColor != 0)
                 viewHolder.title.setTextColor(ContextCompat.getColor(App.getInstance().getApplicationContext(), bottomDate.checkColor));
@@ -95,16 +87,8 @@ public class BottomAdater extends BaseAdapter {
                 viewHolder.title.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         SystemUtils.INSTANCE.dip2px(App.getInstance().getApplicationContext(), TEXT_SIZE_HAVE_IMAGE)+3));
                 viewHolder.title.setTextSize(TEXT_SIZE_HAVE_IMAGE);
-                if (bottomDate.uncheckbitmap instanceof Integer) {
-                    viewHolder.im.setVisibility(View.VISIBLE);
-                    viewHolder.im.setImageResource((Integer) bottomDate.uncheckbitmap);
-                } else if (bottomDate.uncheckbitmap instanceof Bitmap) {
-                    viewHolder.im.setVisibility(View.VISIBLE);
-                    viewHolder.im.setImageBitmap((Bitmap) bottomDate.uncheckbitmap);
-                } else if (bottomDate.uncheckbitmap instanceof Drawable) {
-                    viewHolder.im.setVisibility(View.VISIBLE);
-                    viewHolder.im.setImageDrawable((Drawable) bottomDate.uncheckbitmap);
-                }
+                viewHolder.im.setVisibility(View.VISIBLE);
+                setImage(bottomDate.uncheckbitmap, viewHolder.im);
             }
             if (bottomDate.uncheckColor != 0)
                 viewHolder.title.setTextColor(ContextCompat.getColor(App.getInstance().getApplicationContext(), bottomDate.uncheckColor));
@@ -118,6 +102,11 @@ public class BottomAdater extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+
+    public void setImage(Object img, ImageView iv) {
+
     }
 
     class ViewHolder {
