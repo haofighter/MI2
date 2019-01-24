@@ -19,11 +19,16 @@ import java.util.List;
 
 public class BottomAdater extends BaseAdapter {
     private List<BottomDate> mBottomDateList = new ArrayList<>();
-    private final static int TEXT_SIZE_NO_IMAGE=15;
-    private final static int TEXT_SIZE_HAVE_IMAGE=12;
+    private final static int TEXT_SIZE_NO_IMAGE = 15;//无图片时的标题文字大小
+    private final static int TEXT_SIZE_HAVE_IMAGE = 12;//有图片的时候文字大小
+    private int checkPosition = 0;//当前选中的item
 
 
-    public BottomAdater(List<BottomDate> bottomDateList) {
+    public void setTextSize(int textSize) {
+
+    }
+
+    public void setDate(List<BottomDate> bottomDateList) {
         mBottomDateList.addAll(bottomDateList);
     }
 
@@ -48,7 +53,7 @@ public class BottomAdater extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
         if (convertView == null) {
             convertView = LayoutInflater.from(App.getInstance().getApplicationContext()).inflate(R.layout.bottom_item, parent, false);
@@ -62,51 +67,71 @@ public class BottomAdater extends BaseAdapter {
         }
 
         BottomDate bottomDate = mBottomDateList.get(position);
-        if (bottomDate.isCheck) {
-            if (bottomDate.checkbitmap == null) {
+
+        if (position == checkPosition) {
+            if (bottomDate.defIcon == null) {
                 viewHolder.im.setVisibility(View.GONE);
                 viewHolder.title.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT));
                 viewHolder.title.setTextSize(TEXT_SIZE_NO_IMAGE);
             } else {
                 viewHolder.title.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        SystemUtils.INSTANCE.dip2px(App.getInstance().getApplicationContext(), TEXT_SIZE_HAVE_IMAGE)+3));
+                        SystemUtils.INSTANCE.dip2px(App.getInstance().getApplicationContext(), TEXT_SIZE_HAVE_IMAGE) + 3));
                 viewHolder.title.setTextSize(TEXT_SIZE_HAVE_IMAGE);
                 viewHolder.im.setVisibility(View.VISIBLE);
-                setImage(bottomDate.checkbitmap, viewHolder.im);
+                setImage(bottomDate.checkIcon, viewHolder.im);
             }
-            if (bottomDate.uncheckColor != 0)
+            if (bottomDate.uncheckColor != 0 && bottomDate.checkColor != 0)
                 viewHolder.title.setTextColor(ContextCompat.getColor(App.getInstance().getApplicationContext(), bottomDate.checkColor));
         } else {
-            if (bottomDate.uncheckbitmap == null) {
+            if (bottomDate.defIcon == null) {
                 viewHolder.im.setVisibility(View.GONE);
                 viewHolder.title.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT));
                 viewHolder.title.setTextSize(TEXT_SIZE_NO_IMAGE);
             } else {
                 viewHolder.title.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        SystemUtils.INSTANCE.dip2px(App.getInstance().getApplicationContext(), TEXT_SIZE_HAVE_IMAGE)+3));
+                        SystemUtils.INSTANCE.dip2px(App.getInstance().getApplicationContext(), TEXT_SIZE_HAVE_IMAGE) + 3));
                 viewHolder.title.setTextSize(TEXT_SIZE_HAVE_IMAGE);
                 viewHolder.im.setVisibility(View.VISIBLE);
-                setImage(bottomDate.uncheckbitmap, viewHolder.im);
+                setImage(bottomDate.checkIcon, viewHolder.im);
             }
-            if (bottomDate.uncheckColor != 0)
+            if (bottomDate.uncheckColor != 0 && bottomDate.checkColor != 0)
                 viewHolder.title.setTextColor(ContextCompat.getColor(App.getInstance().getApplicationContext(), bottomDate.uncheckColor));
         }
-        viewHolder.title.setText(bottomDate.title);
+
+        if (bottomDate.title == null && "".equals(bottomDate.title)) {
+            viewHolder.title.setVisibility(View.GONE);
+        } else {
+            viewHolder.title.setVisibility(View.VISIBLE);
+            viewHolder.title.setText(bottomDate.title);
+        }
         if (bottomDate.tipNum == 0) {
             viewHolder.tip.setVisibility(View.GONE);
         } else {
             viewHolder.tip.setVisibility(View.VISIBLE);
-            viewHolder.tip.setText(bottomDate.tipNum+"");
+            viewHolder.tip.setText(bottomDate.tipNum + "");
         }
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkPosition = position;
+                notifyDataSetChanged();
+            }
+        });
 
         return convertView;
     }
 
 
     public void setImage(Object img, ImageView iv) {
-
+        if (img instanceof Integer) {
+            iv.setImageResource((Integer) img);
+        } else if (img instanceof Drawable) {
+            iv.setImageDrawable((Drawable) img);
+        } else if (img instanceof Bitmap) {
+            iv.setImageBitmap((Bitmap) img);
+        }
     }
 
     class ViewHolder {
@@ -114,4 +139,5 @@ public class BottomAdater extends BaseAdapter {
         TextView title;
         TextView tip;
     }
+
 }

@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.hao.mi2.base.MI2Activity;
+import com.hao.mi2.view.NavigationBar;
 import com.hao.show.R;
 import com.hao.show.moudle.view.BottomView;
 import com.hao.show.moudle.view.adapter.BottomDate;
@@ -16,7 +17,8 @@ public class MainActivity extends MI2Activity implements View.OnClickListener {
 
     private LinearLayout main;
     private ViewPager vp_main;
-    private View bottomView;
+    private BottomView bottomView;
+    private NavigationBar navigationBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,19 +29,21 @@ public class MainActivity extends MI2Activity implements View.OnClickListener {
 
     private void findView() {
         main = findViewById(R.id.main);
+        navigationBar = findViewById(R.id.navigationBar);
+        navigationBar.setVisibility(View.GONE);
         vp_main = findViewById(R.id.vp_main);
-        bottomView = new BottomView(this, initBottomViewDate()).setOnClickListener(this).setViewBackground(R.color.blue);
-        main.addView(bottomView);
+        bottomView = ((BottomView) findViewById(R.id.bottom_view)).setDate(initBottomViewDate()).setBOnClickListener(this).setViewBackground(R.color.blue);
+//        main.addView(bottomView);
     }
 
     private List<BottomDate> initBottomViewDate() {
         List<BottomDate> bottomDateList = new ArrayList<>();
-        bottomDateList.add(new BottomDate(null, R.color.white, "菜单1", 0,false));
-        bottomDateList.add(new BottomDate(null, R.color.white, "菜单2", 0,true));
-        bottomDateList.add(new BottomDate(R.mipmap.back,R.mipmap.back,R.color.white,R.color.black,"菜单3",0,true));
-        bottomDateList.add(new BottomDate(R.mipmap.back,R.mipmap.back,R.color.white,R.color.black,"菜单4",2,false));
-        bottomDateList.add(new BottomDate(null,null,R.color.white,R.color.black,"菜单4",2,false));
-        bottomDateList.add(new BottomDate(null,null,R.color.white,R.color.black,"菜单4",2,false));
+        bottomDateList.add(new BottomDate());
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back));
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back));
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back).setUncheckColor(R.mipmap.ic_launcher));
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back).setUncheckColor(R.mipmap.ic_launcher).setTitle("菜单1"));
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back).setUncheckColor(R.mipmap.ic_launcher).setTipNum(3));
         return bottomDateList;
     }
 
