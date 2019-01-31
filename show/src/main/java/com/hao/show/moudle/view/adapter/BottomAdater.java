@@ -94,7 +94,7 @@ public class BottomAdater extends BaseAdapter {
                         SystemUtils.INSTANCE.dip2px(App.getInstance().getApplicationContext(), TEXT_SIZE_HAVE_IMAGE) + 3));
                 viewHolder.title.setTextSize(TEXT_SIZE_HAVE_IMAGE);
                 viewHolder.im.setVisibility(View.VISIBLE);
-                setImage(bottomDate.checkIcon, viewHolder.im);
+                setImage(bottomDate.defIcon, viewHolder.im);
             }
             if (bottomDate.uncheckColor != 0 && bottomDate.checkColor != 0)
                 viewHolder.title.setTextColor(ContextCompat.getColor(App.getInstance().getApplicationContext(), bottomDate.uncheckColor));
