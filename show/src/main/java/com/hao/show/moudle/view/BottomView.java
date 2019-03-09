@@ -16,6 +16,7 @@ import java.util.List;
 
 public class BottomView extends FrameLayout {
     private Context mContext;
+    private float height;
 
     GridView v;
 
@@ -30,15 +31,15 @@ public class BottomView extends FrameLayout {
     public BottomView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
+        init();
     }
 
 
-    private void init(List<BottomDate> bottomDateList) {
-        if (v == null)
+    private void init() {
+        if (v == null) {
             v = (GridView) LayoutInflater.from(mContext).inflate(R.layout.bottom_view, null);
-        v.setNumColumns(bottomDateList.size());
+        }
         addView(v);
-        invalidate();
     }
 
     @Override
@@ -50,16 +51,17 @@ public class BottomView extends FrameLayout {
 
     //设置显示的参数
     public BottomView setDate(List<BottomDate> bottomDateList) {
+        v.setNumColumns(bottomDateList.size());
         if (v != null && v.getAdapter() == null) {
             v.setAdapter(new BottomAdater());
         }
         ((BottomAdater) v.getAdapter()).setDate(bottomDateList);
-        init(bottomDateList);
         v.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                view.setTag(position);
-                mOnClickListener.onClick(view);
+                if (position != ((BottomAdater) v.getAdapter()).getCheckPosition())
+                    ((BottomAdater) v.getAdapter()).setCheckPosition(position);
+                mOnClickListener.onItemClick(parent, view, position, id);
             }
         });
         return this;
@@ -83,9 +85,9 @@ public class BottomView extends FrameLayout {
         return this;
     }
 
-    View.OnClickListener mOnClickListener;
+    AdapterView.OnItemClickListener mOnClickListener;
 
-    public BottomView setBOnClickListener(OnClickListener onClickListener) {
+    public BottomView setBOnClickListener(AdapterView.OnItemClickListener onClickListener) {
         this.mOnClickListener = onClickListener;
         return this;
     }

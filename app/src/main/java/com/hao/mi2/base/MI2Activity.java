@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.hao.mi2.R;
@@ -132,7 +133,7 @@ public class MI2Activity extends AppCompatActivity implements DrawerHelper {
      *
      * @param a 需要跳转的activityclass
      */
-    public void stratActivityNoEl(Class<? extends Activity> a) {
+    public void stratActivity(Class<? extends Activity> a) {
         startActivity(new Intent(this, a));
     }
 

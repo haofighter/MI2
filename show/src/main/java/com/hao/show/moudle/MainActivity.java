@@ -3,6 +3,7 @@ package com.hao.show.moudle;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import com.hao.mi2.base.MI2Activity;
 import com.hao.mi2.view.NavigationBar;
@@ -13,7 +14,7 @@ import com.hao.show.moudle.view.adapter.BottomDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends MI2Activity implements View.OnClickListener {
+public class MainActivity extends MI2Activity implements AdapterView.OnItemClickListener {
 
     private LinearLayout main;
     private ViewPager vp_main;
@@ -38,19 +39,16 @@ public class MainActivity extends MI2Activity implements View.OnClickListener {
 
     private List<BottomDate> initBottomViewDate() {
         List<BottomDate> bottomDateList = new ArrayList<>();
-        bottomDateList.add(new BottomDate());
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back));
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back));
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back).setUncheckColor(R.mipmap.ic_launcher));
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back).setUncheckColor(R.mipmap.ic_launcher).setTitle("菜单1"));
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back).setUncheckColor(R.mipmap.ic_launcher).setTipNum(3));
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.ic_launcher).setUncheckColor(R.color.black).setTitle("菜单1"));
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.ic_launcher).setUncheckColor(R.color.black).setTitle("菜单1"));
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.ic_launcher).setUncheckColor(R.color.black).setTitle("菜单1"));
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.ic_launcher).setUncheckColor(R.color.black).setTitle("菜单1"));
         return bottomDateList;
     }
 
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-        }
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }

@@ -26,11 +26,10 @@ import java.io.File
  * 3.遍历文件夹
  */
 object SystemUtils {
-
     /**
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
-    fun  dip2px(context: Context, dpValue: Float): Int {
+    fun dip2px(context: Context, dpValue: Float): Int {
         val scale = context.resources.displayMetrics.density
         return (dpValue * scale + 0.5f).toInt()
     }
@@ -65,8 +64,10 @@ object SystemUtils {
         try {
             val clazz = Class.forName("com.android.internal.R\$dimen")
             val obj = clazz.newInstance()
-            val height = Integer.parseInt(clazz.getField("status_bar_height")
-                    .get(obj).toString())
+            val height = Integer.parseInt(
+                clazz.getField("status_bar_height")
+                    .get(obj).toString()
+            )
             statusBarHeight = activity.getResources().getDimensionPixelSize(height)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -99,10 +100,14 @@ object SystemUtils {
 
 
     fun getViewSize(v: View): View {
-        val w = View.MeasureSpec.makeMeasureSpec(0,
-                View.MeasureSpec.UNSPECIFIED)
-        val h = View.MeasureSpec.makeMeasureSpec(0,
-                View.MeasureSpec.UNSPECIFIED)
+        val w = View.MeasureSpec.makeMeasureSpec(
+            0,
+            View.MeasureSpec.UNSPECIFIED
+        )
+        val h = View.MeasureSpec.makeMeasureSpec(
+            0,
+            View.MeasureSpec.UNSPECIFIED
+        )
         v.measure(w, h)
         return v
     }
@@ -112,7 +117,11 @@ object SystemUtils {
      * path 搜索文件的最初目录
      * filestag 搜索的文件的表示 可以是特定的表示  也可以是后缀
      */
-    fun traverseFile(path: String, filesTag: MutableList<String>, traverseFileListener: TraverseFileListener): MutableList<Any?> {
+    fun traverseFile(
+        path: String,
+        filesTag: MutableList<String>,
+        traverseFileListener: TraverseFileListener
+    ): MutableList<Any?> {
         var searchFiles = mutableListOf<Any?>()
         val dir = File(path)//文件夹dir
         if (MI2App.getInstance().nowActivitie != null) {
@@ -150,25 +159,43 @@ object SystemUtils {
     }
 
     var searchFileAsyncTask: SearchFileAsyncTask? = null
-    fun searchFlie(tags: MutableList<String>, searchFileLisener: SearchFileLisener, traverseFileListener: TraverseFileListener) {
-        if (ActivityCompat.checkSelfPermission(MI2App.getInstance(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+    fun searchFlie(
+        tags: MutableList<String>,
+        searchFileLisener: SearchFileLisener,
+        traverseFileListener: TraverseFileListener
+    ) {
+        if (ActivityCompat.checkSelfPermission(
+                MI2App.getInstance(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             searchFileAsyncTask = SearchFileAsyncTask(searchFileLisener, traverseFileListener)
             searchFileAsyncTask!!.execute(tags)
         } else {
-            DialogUtils.showInfoDialog(MI2App.getInstance(), "提示", "您还未获取到相关的操作权限是,无法使用此功能/n是否进行申请", "申请", "取消", object : BackCall<Int>{
-                override fun call(t: Int?) {
-                    when (t) {
-                        R.id.confirm -> {
-                            if (MI2App.getInstance().nowActivitie != null) {
-                                ActivityCompat.requestPermissions(MI2App.getInstance().nowActivitie!!, arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE), 100)
-                            } else {
-                                throw NullPointerException("未获取到 当前的activity ,  请尝试调用此方法之前调用 App.instance.nowActivity = this(Activity)")
+            DialogUtils.showInfoDialog(
+                MI2App.getInstance(),
+                "提示",
+                "您还未获取到相关的操作权限是,无法使用此功能/n是否进行申请",
+                "申请",
+                "取消",
+                object : BackCall<Int> {
+                    override fun call(t: Int?) {
+                        when (t) {
+                            R.id.confirm -> {
+                                if (MI2App.getInstance().nowActivitie != null) {
+                                    ActivityCompat.requestPermissions(
+                                        MI2App.getInstance().nowActivitie!!,
+                                        arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE),
+                                        100
+                                    )
+                                } else {
+                                    throw NullPointerException("未获取到 当前的activity ,  请尝试调用此方法之前调用 App.instance.nowActivity = this(Activity)")
+                                }
                             }
-                        }
 
+                        }
                     }
-                }
-            })
+                })
         }
     }
 
@@ -183,7 +210,10 @@ object SystemUtils {
     /**
      * 遍历查询文件的方法
      */
-    class SearchFileAsyncTask constructor(searchFileLisener: SearchFileLisener, traverseFileListener: TraverseFileListener) : AsyncTask<MutableList<String>, String, MutableList<Any?>>() {
+    class SearchFileAsyncTask constructor(
+        searchFileLisener: SearchFileLisener,
+        traverseFileListener: TraverseFileListener
+    ) : AsyncTask<MutableList<String>, String, MutableList<Any?>>() {
         var listener = searchFileLisener
         var traverselistener = traverseFileListener
         override fun doInBackground(vararg p0: MutableList<String>): MutableList<Any?>? {
