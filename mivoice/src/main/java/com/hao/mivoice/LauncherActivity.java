@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
+import com.hao.mivoice.bluetooth.BluetoothActivity;
 import com.hao.mivoice.util.AcpCallBack;
 import com.hao.mivoice.util.AcpUtil;
 
@@ -37,7 +38,8 @@ public class LauncherActivity extends AppCompatActivity implements View.OnClickL
         AcpUtil.doAcp(this, new AcpCallBack() {
             @Override
             public void doAcp() {
-                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+//                Intent intent = new Intent(LauncherActivity.this, MainActivity.class);
+                Intent intent = new Intent(LauncherActivity.this, BluetoothActivity.class);
                 startActivity(intent);
                 finish();
             }

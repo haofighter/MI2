@@ -59,9 +59,9 @@ public class BottomView extends FrameLayout {
         v.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                bottomClickListener.click(position, view);
                 if (position != ((BottomAdater) v.getAdapter()).getCheckPosition())
                     ((BottomAdater) v.getAdapter()).setCheckPosition(position);
-                mOnClickListener.onItemClick(parent, view, position, id);
             }
         });
         return this;
@@ -85,10 +85,14 @@ public class BottomView extends FrameLayout {
         return this;
     }
 
-    AdapterView.OnItemClickListener mOnClickListener;
+    BottomViewClickListener bottomClickListener;
 
-    public BottomView setBOnClickListener(AdapterView.OnItemClickListener onClickListener) {
-        this.mOnClickListener = onClickListener;
+    public BottomView setBottomClickListener(BottomViewClickListener bottomClickListener) {
+        this.bottomClickListener = bottomClickListener;
         return this;
+    }
+
+    public interface BottomViewClickListener {
+        void click(int item, View v);
     }
 }

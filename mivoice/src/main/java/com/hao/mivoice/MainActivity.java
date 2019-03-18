@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import com.google.gson.Gson;
+import com.hao.mivoice.bluetooth.Command;
 import com.hao.mivoice.code.CodeCreate;
 import com.hao.mivoice.util.MediaPlayerUtil;
 import com.hao.mivoice.util.VoiceUtils;
@@ -17,9 +19,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private EditText inputText;
     private EditText inputVoiceText;
+    private EditText star_num;
+    private EditText command_code;
+    private EditText driver_code;
     private Button sendData;
     private Button recieveData;
     private Button create_code;
+    private Button create_command_code;
     private TextView result;
 
     private Button autoSendData;
@@ -50,7 +56,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         audioManagerUtil = new VoiceUtils(this);
         audioManagerUtil.balanceVoice(Integer.parseInt(inputVoiceText.getText().toString()));
 
-
+        String address = getIntent().getStringExtra("address");
+        if (address != null && !address.equals("")) {
+            edit_message.setText("bluetooth" + address);
+        }
     }
 
     @Override
@@ -82,6 +91,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cancelSendData = findViewById(R.id.cancelSendData);
         cancelSendData = findViewById(R.id.cancelSendData);
         cancelSendData.setOnClickListener(this);
+
+
+        star_num = findViewById(R.id.star_num);
+        command_code = findViewById(R.id.command_code);
+        driver_code = findViewById(R.id.driver_code);
+        create_command_code = findViewById(R.id.create_command_code);
+        create_command_code.setOnClickListener(this);
+
     }
 
 
@@ -198,11 +215,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.create_code:
-                str = "";
-                for (int i = 0; i < 500; i++) {
-                    str += "0";
-                }
-                new CodeCreate().createQRcodeImage(str, scan_code);
+                new CodeCreate().createQRcodeImage(edit_message.getText().toString(), scan_code);
+                break;
+            case R.id.create_command_code:
+                Command command = new Command();
+                command.setCommandCode(command_code.getText().toString());
+                command.setDriverNum(driver_code.getText().toString());
+                command.setStar(star_num.getText().toString());
+                String com = new Gson().toJson(command);
+                com = "scanCommand" + com;
+                new CodeCreate().createQRcodeImage(com, scan_code);
                 break;
         }
     }

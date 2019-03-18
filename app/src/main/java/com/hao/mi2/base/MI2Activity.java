@@ -133,7 +133,7 @@ public class MI2Activity extends AppCompatActivity implements DrawerHelper {
      *
      * @param a 需要跳转的activityclass
      */
-    public void stratActivity(Class<? extends Activity> a) {
+    public void startActivity(Class<? extends Activity> a) {
         startActivity(new Intent(this, a));
     }
 
