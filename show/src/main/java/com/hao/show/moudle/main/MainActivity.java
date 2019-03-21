@@ -1,14 +1,16 @@
 package com.hao.show.moudle.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.hao.mi2.base.MI2Activity;
 import com.hao.mi2.view.NavigationBar;
 import com.hao.show.R;
+import com.hao.show.moudle.main.mainview.MainSecondView;
+import com.hao.show.moudle.main.novel.NovelActivity;
 import com.hao.show.moudle.view.BottomView;
 import com.hao.show.moudle.view.adapter.BottomDate;
 
@@ -31,6 +33,11 @@ public class MainActivity extends MI2Activity {
         initContent();
     }
 
+    @Override
+    protected void initDrawView(View view) {
+
+    }
+
     private void initView() {
         vp_main.setAdapter(new MainVPAdapter());
     }
@@ -43,7 +50,10 @@ public class MainActivity extends MI2Activity {
         bottomView = ((BottomView) findViewById(R.id.bottom_view)).setBottomClickListener(new BottomView.BottomViewClickListener() {
             @Override
             public void click(int item, View v) {
-
+                if (item == 1) {
+                    Intent intent = new Intent(MainActivity.this, NovelActivity.class);
+                    startActivity(intent);
+                }
             }
         }).setDate(initBottomViewDate()).setViewBackground(R.color.blue);
 //        main.addView(bottomView);
@@ -52,6 +62,9 @@ public class MainActivity extends MI2Activity {
     private void initContent() {
         MainVPAdapter adapter = new MainVPAdapter();
         List<View> views = new ArrayList<>();
+        views.add(LayoutInflater.from(this).inflate(R.layout.content_first, null));
+        views.add(new MainSecondView(this).getMainsecondView());
+        views.add(LayoutInflater.from(this).inflate(R.layout.content_first, null));
         views.add(LayoutInflater.from(this).inflate(R.layout.content_first, null));
         adapter.setViews(views);
         vp_main.setAdapter(adapter);
@@ -63,10 +76,10 @@ public class MainActivity extends MI2Activity {
 //        bottomDateList.add(new BottomDate());
 //        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back));
 //        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back));
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary));
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
-        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
+//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary));
+//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
+//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
+//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         return bottomDateList;

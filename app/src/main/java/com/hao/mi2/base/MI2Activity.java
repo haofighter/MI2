@@ -7,19 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.hao.mi2.R;
 import com.hao.mi2.Util.StatusBarUtil;
 import com.hao.mi2.help.DrawerHelper;
 
-public class MI2Activity extends AppCompatActivity implements DrawerHelper {
+public abstract class MI2Activity extends AppCompatActivity implements DrawerHelper {
     protected String MI2TAG = "MI2Activity";
     public static final String PERMISSION_MI = "com.hao.MI";
 
@@ -74,6 +71,7 @@ public class MI2Activity extends AppCompatActivity implements DrawerHelper {
         loading = drawer.findViewById(R.id.loading);
         drawer_content = drawer.findViewById(R.id.drawer_content);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+//        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
         view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         ((RelativeLayout) drawer.findViewById(R.id.content)).addView(view);
         super.setContentView(drawer);
@@ -91,16 +89,25 @@ public class MI2Activity extends AppCompatActivity implements DrawerHelper {
         drawer.closeDrawers();
     }
 
+    /**
+     * 设置一个侧滑的菜单
+     *
+     * @param view
+     */
     @Override
     public void setDrawerContent(View view) {
         view.measure(0, 0);
         drawer_content.measure(0, 0);
-        Log.i("布局的宽", "view.getMeasuredWidth()=" + view.getMeasuredWidth());
         drawer_content.removeAllViews();
+        if (view.getMeasuredWidth() > 0) {
+            DrawerLayout.LayoutParams dLayoutParams = new DrawerLayout.LayoutParams(view.getMeasuredWidth(), DrawerLayout.LayoutParams.MATCH_PARENT);
+            dLayoutParams.gravity = Gravity.LEFT;
+            drawer_content.setLayoutParams(dLayoutParams);
+        }
+        ViewGroup.LayoutParams dLayoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        view.setLayoutParams(dLayoutParams);
         drawer_content.addView(view);
-        DrawerLayout.LayoutParams dLayoutParams = new DrawerLayout.LayoutParams(view.getMeasuredWidth(), DrawerLayout.LayoutParams.MATCH_PARENT);
-        dLayoutParams.gravity = Gravity.LEFT;
-        drawer_content.setLayoutParams(dLayoutParams);
+        initDrawView(view);
     }
 
     public void openDrawer() {
@@ -128,6 +135,11 @@ public class MI2Activity extends AppCompatActivity implements DrawerHelper {
         MI2App.getInstance().addActivity(this);
     }
 
+
+    public DrawerLayout getParentView() {
+        return drawer;
+    }
+
     /**
      * 便捷无参数跳转
      *
@@ -138,4 +150,5 @@ public class MI2Activity extends AppCompatActivity implements DrawerHelper {
     }
 
 
+    protected abstract void initDrawView(View view);
 }

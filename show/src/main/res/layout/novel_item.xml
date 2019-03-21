@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:padding="10dp"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+
+    <TextView
+            android:id="@+id/novel_name"
+            android:textColor="@color/black"
+            android:text="小说1"
+            android:textSize="@dimen/text_title"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/novel_author"
+            android:textColor="@color/gray_dd"
+            android:text="小说1"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/text_second"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+    <TextView
+            android:id="@+id/novel_new"
+            android:textColor="@color/gray_dd"
+            android:text="小说1"
+            android:layout_marginTop="5dp"
+            android:textSize="@dimen/text_second"
+            android:layout_width="match_parent" android:layout_height="wrap_content"/>
+
+</LinearLayout>

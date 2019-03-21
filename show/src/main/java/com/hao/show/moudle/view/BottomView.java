@@ -87,6 +87,12 @@ public class BottomView extends FrameLayout {
 
     BottomViewClickListener bottomClickListener;
 
+    /**
+     * 设置一个点击事件的监听
+     *
+     * @param bottomClickListener
+     * @return
+     */
     public BottomView setBottomClickListener(BottomViewClickListener bottomClickListener) {
         this.bottomClickListener = bottomClickListener;
         return this;

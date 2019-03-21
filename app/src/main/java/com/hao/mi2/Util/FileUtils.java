@@ -35,7 +35,7 @@ public class FileUtils {
     /**
      * 根据byte数组，生成文件
      */
-    public static void byteToFile(byte[] bfile, File file) {
+    public static boolean byteToFile(byte[] bfile, File file) {
         BufferedOutputStream bos = null;
         FileOutputStream fos = null;
         try {
@@ -48,6 +48,7 @@ public class FileUtils {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("转换文件出错", e.getMessage());
+            return false;
         } finally {
             if (bos != null) {
                 try {
@@ -63,6 +64,7 @@ public class FileUtils {
                     e1.printStackTrace();
                 }
             }
+            return true;
         }
     }
 

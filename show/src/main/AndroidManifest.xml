@@ -21,13 +21,16 @@
             android:theme="@style/AppTheme">
         <activity android:name=".moudle.main.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.HOME" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.HOME"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <activity android:name=".moudle.main.MIDrawActivity">
+        </activity>
+        <activity android:name=".moudle.main.novel.NovelActivity">
         </activity>
     </application>
 
