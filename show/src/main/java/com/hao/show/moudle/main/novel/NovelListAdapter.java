@@ -10,40 +10,54 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.hao.show.R;
 import com.hao.show.moudle.main.novel.Entity.NovelDetail;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.hao.show.moudle.main.novel.Entity.NovelPage;
 
 public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.NovelDetailHolder> {
     private Context mContext;
-    private List<NovelDetail> novelClassifies = new ArrayList<>();
+    private NovelPage mNovelPage;
 
     public NovelListAdapter(Context context) {
         this.mContext = context;
     }
 
-    public void update(List<NovelDetail> list) {
-        if (list != null) {
-            novelClassifies = list;
+    public void update(NovelPage novelPage) {
+        if (novelPage != null) {
+            this.mNovelPage = novelPage;
             notifyDataSetChanged();
         }
+    }
+
+    public void add(NovelPage novelPage) {
+        if (mNovelPage == null && novelPage != null) {
+            mNovelPage = novelPage;
+        } else if (mNovelPage != null && novelPage != null) {
+            mNovelPage.getNovelDetailList().addAll(novelPage.getNovelDetailList());
+            mNovelPage.setNextPageUrl(novelPage.getNextPageUrl());
+        }
+        notifyDataSetChanged();
+    }
+
+    public NovelPage getNowDate() {
+        return mNovelPage;
     }
 
 
     @NonNull
     @Override
     public NovelDetailHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new NovelDetailHolder(LayoutInflater.from(mContext).inflate(R.layout.novel_item, null));
+        View view = LayoutInflater.from(mContext).inflate(R.layout.novel_item, null);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        return new NovelDetailHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final NovelDetailHolder novelHolder, final int i) {
-        novelHolder.setDate(novelClassifies.get(i));
+        novelHolder.setDate(mNovelPage.getNovelDetailList().get(i));
         novelHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.itemClick(i, novelHolder.view, novelClassifies.get(i));
+                    onItemClickListener.itemClick(i, novelHolder.view, mNovelPage.getNovelDetailList().get(i));
                 }
             }
         });
@@ -59,8 +73,14 @@ public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.Nove
 
     @Override
     public int getItemCount() {
-        Log.i("recycle", novelClassifies.size() + "");
-        return novelClassifies.size();
+        Log.i("recycle条数 ", mNovelPage == null ? "0" : mNovelPage.getNovelDetailList().size() + "");
+        return mNovelPage == null ? 0 : mNovelPage.getNovelDetailList().size();
+    }
+
+    //清除数据
+    public void clear() {
+        mNovelPage = new NovelPage();
+        notifyDataSetChanged();
     }
 
 

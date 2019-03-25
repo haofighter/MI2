@@ -2,25 +2,29 @@ package com.hao.show.moudle.main.novel;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.hao.mi2.base.Rx.Rx;
 import com.hao.mi2.base.Rx.RxMessage;
+import com.hao.mi2.view.RecycleView;
 import com.hao.show.R;
 import com.hao.show.base.BaseActivity;
 import com.hao.show.moudle.main.novel.Entity.NovelClassify;
-import com.hao.show.moudle.main.novel.Entity.NovelDetail;
+import com.hao.show.moudle.main.novel.Entity.NovelPage;
 import com.hao.show.spider.SpiderNovelFromBiQu;
 import com.hao.show.spider.SpiderUtils;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
 import java.util.List;
 
 public class NovelActivity extends BaseActivity {
-    RecyclerView novel_list;
-    RecyclerView novel_classify_list;
+    RecycleView novel_list;
+    RecycleView novel_classify_list;
+    TwinklingRefreshLayout refresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,41 @@ public class NovelActivity extends BaseActivity {
 
             }
         }));
+        novel_list.setScrollListener(new RecycleView.RecycleScrollListener() {
+            @Override
+            public void onScroll(int start, int end) {
+                Log.i("滑动", "当前显示的第一项：" + start + "         当前显示的最后一项：" + end);
+            }
+        });
+
+        refresh = findViewById(R.id.refresh);
+        refresh.setEnableRefresh(true);
+        refresh.setEnableLoadmore(true);
+        refresh.setOnRefreshListener(new RefreshListenerAdapter() {
+            @Override
+            public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+                super.onRefresh(refreshLayout);
+                String beforPage = ((NovelListAdapter) novel_list.getAdapter()).getNowDate().getBeforPageUrl();
+                if (beforPage == null || beforPage.equals("")) {
+                    refresh.finishRefreshing();
+                    Toast.makeText(NovelActivity.this, "没有更多内容了", Toast.LENGTH_LONG).show();
+                } else {
+                    ((NovelListAdapter) novel_list.getAdapter()).clear();
+                    setContentList(beforPage);
+                }
+            }
+
+            @Override
+            public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+                super.onLoadMore(refreshLayout);
+                String nextPage = ((NovelListAdapter) novel_list.getAdapter()).getNowDate().getNextPageUrl();
+                if (nextPage == null || nextPage.equals("")) {
+                    Toast.makeText(NovelActivity.this, "没有更多内容了", Toast.LENGTH_LONG).show();
+                } else {
+                    setContentList(nextPage);
+                }
+            }
+        });
     }
 
     @Override
@@ -66,7 +105,7 @@ public class NovelActivity extends BaseActivity {
         novel_classify_list.setAdapter(new NovelClassifyListAdapter(this).setItemClickLisener(new NovelClassifyListAdapter.OnItemClickListener() {
             @Override
             public void itemClick(int position, View view, Object o) {
-                setContentList((NovelClassify) o);
+                setContentList(((NovelClassify) o).getUrl());
             }
         }));
         imageView.setImageResource(R.mipmap.logo);
@@ -104,13 +143,15 @@ public class NovelActivity extends BaseActivity {
      * @param o
      */
     public void setViewDate(String tag, Object o) {
+        refresh.finishRefreshing();
+        refresh.finishLoadmore();
         if (tag.equals("html")) {
             List<NovelClassify> classifies = SpiderNovelFromBiQu.getClassify((String) o);
             ((NovelClassifyListAdapter) novel_classify_list.getAdapter()).update(classifies);
         } else if (tag.equals("novel_detail")) {
-            List<NovelDetail> novelDetails = SpiderNovelFromBiQu.getNovelDetail((String) o);
-            Log.i("查询的数据", novelDetails.size() + "");
-            ((NovelListAdapter) novel_list.getAdapter()).update(novelDetails);
+            refresh.setEnableRefresh(true);
+            NovelPage novelPage = SpiderNovelFromBiQu.getNovelDetail((String) o);
+            ((NovelListAdapter) novel_list.getAdapter()).add(novelPage);
         }
     }
 
@@ -118,10 +159,10 @@ public class NovelActivity extends BaseActivity {
     /**
      * 抓取当前页的数据
      *
-     * @param novelClassify
+     * @param url 当前页面url
      */
-    public void setContentList(NovelClassify novelClassify) {
-        SpiderUtils.getHtml(novelClassify.getUrl(), "novel_detail");
+    public void setContentList(String url) {
+        SpiderUtils.getHtml(url, "novel_detail");
     }
 
 }
