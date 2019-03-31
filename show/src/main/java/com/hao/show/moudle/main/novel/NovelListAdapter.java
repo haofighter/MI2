@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.hao.show.R;
-import com.hao.show.moudle.main.novel.Entity.NovelDetail;
+import com.hao.show.moudle.main.novel.Entity.NovelListItemContent;
 import com.hao.show.moudle.main.novel.Entity.NovelPage;
 
 public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.NovelDetailHolder> {
@@ -31,7 +31,7 @@ public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.Nove
         if (mNovelPage == null && novelPage != null) {
             mNovelPage = novelPage;
         } else if (mNovelPage != null && novelPage != null) {
-            mNovelPage.getNovelDetailList().addAll(novelPage.getNovelDetailList());
+            mNovelPage.getNovelListItemContentList().addAll(novelPage.getNovelListItemContentList());
             mNovelPage.setNextPageUrl(novelPage.getNextPageUrl());
         }
         notifyDataSetChanged();
@@ -52,12 +52,12 @@ public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.Nove
 
     @Override
     public void onBindViewHolder(@NonNull final NovelDetailHolder novelHolder, final int i) {
-        novelHolder.setDate(mNovelPage.getNovelDetailList().get(i));
+        novelHolder.setDate(mNovelPage.getNovelListItemContentList().get(i));
         novelHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.itemClick(i, novelHolder.view, mNovelPage.getNovelDetailList().get(i));
+                    onItemClickListener.itemClick(i, novelHolder.view, mNovelPage.getNovelListItemContentList().get(i));
                 }
             }
         });
@@ -73,8 +73,8 @@ public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.Nove
 
     @Override
     public int getItemCount() {
-        Log.i("recycle条数 ", mNovelPage == null ? "0" : mNovelPage.getNovelDetailList().size() + "");
-        return mNovelPage == null ? 0 : mNovelPage.getNovelDetailList().size();
+        Log.i("recycle条数 ", mNovelPage == null ? "0" : mNovelPage.getNovelListItemContentList().size() + "");
+        return mNovelPage == null ? 0 : mNovelPage.getNovelListItemContentList().size();
     }
 
     //清除数据
@@ -99,7 +99,7 @@ public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.Nove
             novel_author = itemView.findViewById(R.id.novel_author);
         }
 
-        public void setDate(NovelDetail novelClassify) {
+        public void setDate(NovelListItemContent novelClassify) {
             novel_name.setText(novelClassify.getTitle());
             novel_new.setText(novelClassify.getNewChapter());
             novel_author.setText(novelClassify.getAuther());

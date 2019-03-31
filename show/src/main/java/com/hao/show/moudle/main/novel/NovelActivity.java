@@ -1,6 +1,6 @@
 package com.hao.show.moudle.main.novel;
 
-import android.os.Bundle;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,8 +27,7 @@ public class NovelActivity extends BaseActivity {
     TwinklingRefreshLayout refresh;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void findView() {
         setDrawerContent(LayoutInflater.from(this).inflate(R.layout.menu_layout, null));
         setView();
     }
@@ -55,7 +54,9 @@ public class NovelActivity extends BaseActivity {
         novel_list.setAdapter(new NovelListAdapter(this).setItemClickLisener(new NovelListAdapter.OnItemClickListener() {
             @Override
             public void itemClick(int position, View view, Object o) {
-
+                Intent intent = new Intent(NovelActivity.this, NovelDetailActivity.class);
+                intent.putExtra("detailUrl", ((NovelListAdapter) novel_list.getAdapter()).getNowDate().getNovelListItemContentList().get(position).getUrl());
+                startActivity(intent);
             }
         }));
         novel_list.setScrollListener(new RecycleView.RecycleScrollListener() {
@@ -134,7 +135,9 @@ public class NovelActivity extends BaseActivity {
 
             }
         });
-        SpiderUtils.getHtml(SpiderNovelFromBiQu.BiQuMainUrl, "html");
+        if (SpiderNovelFromBiQu.BiQuMainUrl != null) {
+            SpiderUtils.getHtml(SpiderNovelFromBiQu.BiQuMainUrl, "html");
+        }
     }
 
     /**
@@ -150,7 +153,7 @@ public class NovelActivity extends BaseActivity {
             ((NovelClassifyListAdapter) novel_classify_list.getAdapter()).update(classifies);
         } else if (tag.equals("novel_detail")) {
             refresh.setEnableRefresh(true);
-            NovelPage novelPage = SpiderNovelFromBiQu.getNovelDetail((String) o);
+            NovelPage novelPage = SpiderNovelFromBiQu.getNovelList((String) o);
             ((NovelListAdapter) novel_list.getAdapter()).add(novelPage);
         }
     }

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+        <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:orientation="vertical"
+                          android:layout_height="wrap_content">
+                <LinearLayout android:layout_width="match_parent"
+                              android:layout_height="180dp"
+                              android:background="@color/gray_55"
+                              android:gravity="center_vertical"
+                              android:orientation="vertical"
+                              android:paddingLeft="130dp">
+                    <TextView
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_title"
+                            android:text="小说标题"
+                            android:id="@+id/novel_title" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                    <TextView
+                            android:textColor="@color/white_44"
+                            android:textSize="@dimen/text_second"
+                            android:text="小说标题"
+                            android:layout_marginTop="5dp"
+                            android:id="@+id/novel_author" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                  android:orientation="horizontal">
+                        <TextView
+                                android:id="@+id/novel_type"
+                                android:paddingTop="3dp"
+                                android:paddingBottom="3dp"
+                                android:paddingLeft="6dp"
+                                android:paddingRight="6dp"
+                                android:textSize="@dimen/text_four"
+                                android:textColor="@color/white"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:background="@drawable/shape_coner_white_5dp"/>
+                        <TextView
+                                android:id="@+id/novel_lenth"
+                                android:layout_marginLeft="20dp"
+                                android:paddingTop="3dp"
+                                android:paddingBottom="3dp"
+                                android:paddingLeft="6dp"
+                                android:paddingRight="6dp"
+                                android:textSize="@dimen/text_four"
+                                android:textColor="@color/white"
+                                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                android:background="@drawable/shape_coner_white_5dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              android:background="@color/white_44">
+                    <TextView
+                            android:padding="20dp"
+                            android:id="@+id/novel_introduce"
+                            android:layout_width="match_parent"
+                            android:gravity="center_vertical"
+                            android:text="小说简介"
+                            android:ellipsize="end"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_second"
+                            android:layout_height="wrap_content" android:baselineAligned="false"/>
+                    <View android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:background="@drawable/shape_line_gray"/>
+                    <LinearLayout android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:background="@color/white"
+                                  android:orientation="horizontal">
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:textSize="@dimen/text_second"
+                                android:textColor="@color/black"
+                                android:text="最新章节"/>
+                        <TextView
+                                android:id="@+id/novel_last_chaper"
+                                android:layout_width="0dp"
+                                android:lines="1"
+                                android:layout_marginRight="10dp"
+                                android:gravity="right|center_vertical"
+                                android:ellipsize="end"
+                                android:textColor="@color/black"
+                                android:layout_weight="1" android:layout_height="match_parent"/>
+                    </LinearLayout>
+                    <com.hao.mi2.view.MiNoScrollListView
+                            android:id="@+id/novel_chaper_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                    </com.hao.mi2.view.MiNoScrollListView>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="150dp"
+                    android:layout_height="250dp"
+                    android:orientation="vertical">
+                <ImageView
+                        android:id="@+id/novel_image"
+                        android:layout_marginTop="45dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_width="100dp"
+                        android:layout_height="150dp"
+                        android:src="@mipmap/defoult_img"/>
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:background="@color/white">
+        <LinearLayout android:layout_width="80dp" android:layout_height="50dp"
+                      android:orientation="vertical"
+                      android:gravity="center">
+            <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                       android:src="@mipmap/download"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="下载"
+                      android:textSize="@dimen/text_four"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/favor_state"
+                android:layout_width="80dp" android:layout_height="50dp"
+                android:orientation="vertical"
+                android:gravity="center">
+            <CheckBox android:layout_width="25dp" android:layout_height="25dp"
+                      android:enabled="false"
+                      android:focusableInTouchMode="false"
+                      android:focusable="false"
+                      android:button="@drawable/select_fav"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:text="收藏"
+                      android:textSize="@dimen/text_four"/>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/start_read"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="开始阅读"
+                android:textColor="@color/white"
+                android:background="@color/blue"
+                android:layout_height="match_parent"
+                android:gravity="center">
+        </TextView>
+    </LinearLayout>
+</LinearLayout>

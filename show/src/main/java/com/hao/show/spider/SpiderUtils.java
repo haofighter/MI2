@@ -30,6 +30,7 @@ public class SpiderUtils {
                     } else {
                         url = new URL("http://" + urlString);
                     }
+                    Log.i("解析地址", "url=" + url);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     InputStreamReader isr = new InputStreamReader(conn.getInputStream());
                     BufferedReader br = new BufferedReader(isr);
@@ -39,7 +40,6 @@ public class SpiderUtils {
                     }
                     br.close();
                     isr.close();
-                    Log.i("获取节点", html.toString());
                     Rx.getInstance().sendMessage(tag, html.toString());
                 } catch (Exception e) {
                     e.printStackTrace();

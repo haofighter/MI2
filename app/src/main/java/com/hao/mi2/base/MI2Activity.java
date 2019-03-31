@@ -28,9 +28,10 @@ public abstract class MI2Activity extends AppCompatActivity implements DrawerHel
      * 添加loading布局
      */
     public View addLoading(View v) {
-
-        if (v != null)
-            addLoading(v);
+        if (v != null) {
+            v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            loading.addView(v);
+        }
         return loading;
     }
 
@@ -61,7 +62,7 @@ public abstract class MI2Activity extends AppCompatActivity implements DrawerHel
         setContentView(LayoutInflater.from(this).inflate(layoutResID, null));
     }
 
-    View loading;
+    RelativeLayout loading;
     DrawerLayout drawer;
     RelativeLayout drawer_content;
 
@@ -76,6 +77,7 @@ public abstract class MI2Activity extends AppCompatActivity implements DrawerHel
         ((RelativeLayout) drawer.findViewById(R.id.content)).addView(view);
         super.setContentView(drawer);
     }
+
 
     //LOCK_MODE_UNLOCKED = 0; 可拖拽
     //LOCK_MODE_LOCKED_CLOSED = 1; 关闭并不可手势滑动,可调用方法
@@ -138,6 +140,10 @@ public abstract class MI2Activity extends AppCompatActivity implements DrawerHel
 
     public DrawerLayout getParentView() {
         return drawer;
+    }
+
+    public View getMainContentView() {
+        return drawer.findViewById(R.id.content);
     }
 
     /**

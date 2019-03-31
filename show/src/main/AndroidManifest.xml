@@ -32,6 +32,10 @@
         </activity>
         <activity android:name=".moudle.main.novel.NovelActivity">
         </activity>
+        <activity android:name=".moudle.main.novel.NovelDetailActivity">
+        </activity>
+        <activity android:name=".moudle.main.novel.NovelContentActivity">
+        </activity>
     </application>
 
 </manifest>

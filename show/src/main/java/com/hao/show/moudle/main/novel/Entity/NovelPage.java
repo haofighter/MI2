@@ -8,7 +8,7 @@ public class NovelPage {
     private String beforPageUrl;
     private String fristPageUrl;
     private String lastPageUrl;
-    private List<NovelDetail> novelDetailList;
+    private List<NovelListItemContent> novelListItemContentList;
 
     public String getBeforPageUrl() {
         return beforPageUrl;
@@ -19,7 +19,7 @@ public class NovelPage {
     }
 
     public NovelPage() {
-        this.novelDetailList = new ArrayList<>();
+        this.novelListItemContentList = new ArrayList<>();
     }
 
     public String getFristPageUrl() {
@@ -46,11 +46,11 @@ public class NovelPage {
         this.nextPageUrl = nextPageUrl;
     }
 
-    public void setNovelDetailList(List<NovelDetail> novelDetailList) {
-        this.novelDetailList = novelDetailList;
+    public void setNovelListItemContentList(List<NovelListItemContent> novelListItemContentList) {
+        this.novelListItemContentList = novelListItemContentList;
     }
 
-    public List<NovelDetail> getNovelDetailList() {
-        return novelDetailList;
+    public List<NovelListItemContent> getNovelListItemContentList() {
+        return novelListItemContentList;
     }
 }

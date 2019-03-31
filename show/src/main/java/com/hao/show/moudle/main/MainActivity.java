@@ -6,9 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.hao.mi2.base.MI2Activity;
 import com.hao.mi2.view.NavigationBar;
 import com.hao.show.R;
+import com.hao.show.base.BaseActivity;
 import com.hao.show.moudle.main.mainview.MainSecondView;
 import com.hao.show.moudle.main.novel.NovelActivity;
 import com.hao.show.moudle.view.BottomView;
@@ -17,7 +17,7 @@ import com.hao.show.moudle.view.adapter.BottomDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends MI2Activity {
+public class MainActivity extends BaseActivity {
 
     private LinearLayout main;
     private ViewPager vp_main;
@@ -25,28 +25,17 @@ public class MainActivity extends MI2Activity {
     private NavigationBar navigationBar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        findView();
-        initView();
-        initContent();
+    public int initViewID() {
+        return R.layout.activity_main;
     }
 
-    @Override
-    protected void initDrawView(View view) {
 
-    }
-
-    private void initView() {
-        vp_main.setAdapter(new MainVPAdapter());
-    }
-
-    private void findView() {
+    protected void findView() {
         main = findViewById(R.id.main);
         navigationBar = findViewById(R.id.navigationBar);
         navigationBar.setVisibility(View.GONE);
         vp_main = findViewById(R.id.vp_main);
+        vp_main.setAdapter(new MainVPAdapter());
         bottomView = ((BottomView) findViewById(R.id.bottom_view)).setBottomClickListener(new BottomView.BottomViewClickListener() {
             @Override
             public void click(int item, View v) {
@@ -57,6 +46,7 @@ public class MainActivity extends MI2Activity {
             }
         }).setDate(initBottomViewDate()).setViewBackground(R.color.blue);
 //        main.addView(bottomView);
+        initContent();
     }
 
     private void initContent() {
