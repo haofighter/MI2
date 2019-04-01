@@ -3,7 +3,9 @@
           android:id="@+id/text_content"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:text="dfjalfdhafdlafdjlajdflakjflasjdflkasjfljsdlfjasldfjakljflajflajlfjaslfjaslkfjlka"
+          android:paddingTop="20dp"
+          android:padding="5dp"
+          android:gravity="center_vertical"
           android:textColor="@color/black"
           android:letterSpacing="0.4"
           android:lineSpacingExtra="2dp">

@@ -1,17 +1,19 @@
 package com.hao.show.moudle.main.novel.Entity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import com.hao.lib.Util.SystemUtils;
 import com.hao.show.R;
 
 import java.util.List;
 
 public class NovelChapterItemAdapter extends BaseAdapter {
-    Context mcontext;
+    Activity mcontext;
     List<NovelChapter> novelChapterList;
 
 
@@ -20,7 +22,7 @@ public class NovelChapterItemAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public NovelChapterItemAdapter(Context context) {
+    public NovelChapterItemAdapter(Activity context) {
         mcontext = context;
     }
 

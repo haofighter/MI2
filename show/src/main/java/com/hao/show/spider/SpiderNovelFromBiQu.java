@@ -98,7 +98,7 @@ public class SpiderNovelFromBiQu {
         Elements thrid = second.select("div[class=bottem1]").select("a");
         novelContent.setBeforChapterUrl(CheckedUrl(thrid.get(1).attr("href")));
         novelContent.setNextChapterUrl(CheckedUrl(thrid.select("a").get(3).attr("href")));
-        novelContent.setChapterContent(frist.select("div#content").text());
+        novelContent.setChapterContent(frist.select("div#content").html());
         return novelContent;
     }
 }

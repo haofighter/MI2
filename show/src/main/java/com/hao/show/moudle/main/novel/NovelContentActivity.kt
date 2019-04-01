@@ -1,5 +1,8 @@
 package com.hao.show.moudle.main.novel
 
+import android.annotation.SuppressLint
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.util.Log
 import com.hao.lib.base.Rx.Rx
 import com.hao.lib.base.Rx.RxMessage
@@ -23,6 +26,8 @@ class NovelContentActivity : BaseActivity() {
     //通过网址获取网页
     private fun getDetailHtml(url: String) {
         Rx.getInstance().addRxMessage(object : RxMessage() {
+            @SuppressLint("NewApi")
+            @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun rxDo(tag: String, o: Any) {
                 Log.i("获取节点  回调", "$tag       $o")
                 try {
@@ -36,11 +41,16 @@ class NovelContentActivity : BaseActivity() {
     }
 
     //解析数据
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setViewDate(string: String, o: Any) {
         if (string.equals("content")) {
             dismisLoading()
             val novelContent = SpiderNovelFromBiQu.getNovelContent(o as String)
-            novel_content.adapter = NovelContentAdapter(this, novelContent);
+            if (novel_content.adapter != null) {
+                (novel_content.adapter as NovelContentAdapter).addContent(novelContent)
+            }else{
+                novel_content.adapter = NovelContentAdapter(this, novelContent);
+            }
         }
     }
 }
