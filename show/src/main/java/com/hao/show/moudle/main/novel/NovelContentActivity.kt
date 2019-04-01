@@ -1,8 +1,8 @@
 package com.hao.show.moudle.main.novel
 
 import android.util.Log
-import com.hao.mi2.base.Rx.Rx
-import com.hao.mi2.base.Rx.RxMessage
+import com.hao.lib.base.Rx.Rx
+import com.hao.lib.base.Rx.RxMessage
 import com.hao.show.R
 import com.hao.show.base.BaseActivity
 import com.hao.show.moudle.main.novel.adapter.NovelContentAdapter

@@ -1,7 +1,7 @@
 package com.hao.show.spider;
 
 import android.util.Log;
-import com.hao.mi2.base.Rx.Rx;
+import com.hao.lib.base.Rx.Rx;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

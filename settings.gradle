@@ -1,1 +1,1 @@
-include ':app', ':show', ':voice', ':mivoice'
+include ':show', ':voice', ':mivoice', ':lib'

@@ -5,7 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.hao.mi2.Util.DataUtils;
+import com.hao.lib.Util.DataUtils;
 import com.hao.show.R;
 
 import java.util.List;

@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-import com.hao.mi2.elseeffect.AnimalUtils;
-import com.hao.out.base.utils.modle.SystemUtils;
+import com.hao.lib.Util.SystemUtils;
+import com.hao.lib.elseeffect.AnimalUtils;
 import com.hao.show.R;
 import com.hao.show.base.App;
 

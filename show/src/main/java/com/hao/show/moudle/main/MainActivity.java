@@ -6,7 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.hao.mi2.view.NavigationBar;
+import com.hao.lib.view.NavigationBar;
 import com.hao.show.R;
 import com.hao.show.base.BaseActivity;
 import com.hao.show.moudle.main.mainview.MainSecondView;

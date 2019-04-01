@@ -1,8 +1,8 @@
 package com.hao.show.net;
 
 import com.google.gson.Gson;
-import com.hao.mi2.base.BackCall;
-import com.hao.mi2.net.OkHttpManager;
+import com.hao.lib.base.BackCall;
+import com.hao.lib.net.OkHttpManager;
 import com.hao.show.moudle.entity.MusicInfo;
 import okhttp3.Call;
 import okhttp3.Callback;

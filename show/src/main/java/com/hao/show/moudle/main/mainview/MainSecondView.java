@@ -4,12 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
-import com.hao.mi2.base.Rx.Rx;
-import com.hao.mi2.base.Rx.RxMessage;
 import com.hao.show.R;
-import com.hao.show.moudle.main.novel.Entity.NovelClassify;
-import com.hao.show.spider.SpiderNovelFromBiQu;
-import com.hao.show.spider.SpiderUtils;
 
 import java.util.List;
 

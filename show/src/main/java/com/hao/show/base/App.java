@@ -1,7 +1,7 @@
 package com.hao.show.base;
 
-import com.hao.mi2.base.MI2App;
 
+import com.hao.lib.base.MI2App;
 
 public class App extends MI2App {
     static App app;
