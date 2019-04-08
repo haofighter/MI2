@@ -54,11 +54,11 @@ public class MITextView extends View {
         super(context, attrs, defStyleAttr);
         this.context = context;
         Log.i("自定义", "初始化");
-        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MiTextView);
-        lineSpacingExtra = array.getDimension(R.styleable.MiTextView_lineSpacingExtra, 5);//行间距
-        wordSpacingExtra = array.getDimension(R.styleable.MiTextView_wordSpaceExtra, 5);//字间距
-        textColor = array.getDimension(R.styleable.MiTextView_textColor, 0xffffff);//颜色
-        textSize = array.getDimension(R.styleable.MiTextView_textSize, SystemUtils.INSTANCE.sp2px(context, 20));//文字大小
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MITextView);
+        lineSpacingExtra = array.getDimension(R.styleable.MITextView_lineSpacingExtra, 5);//行间距
+        wordSpacingExtra = array.getDimension(R.styleable.MITextView_wordSpaceExtra, 5);//字间距
+        textColor = array.getDimension(R.styleable.MITextView_textColor, 0xffffff);//颜色
+        textSize = array.getDimension(R.styleable.MITextView_textSize, SystemUtils.INSTANCE.sp2px(context, 20));//文字大小
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,27 +164,19 @@ public class MITextView extends View {
     }
 
 
-    float downX = 0;
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        float fingerNowX = 0;
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            downX = ev.getX();
+            fingerNowX = ev.getX();
         } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
-            float moveX = ev.getX() - downX;
+            float moveX = ev.getX() - fingerNowX;
+            fingerNowX = ev.getX();
             textPadingHor = textPadingHor + moveX;
             invalidate();
             return true;
         } else if (ev.getAction() == MotionEvent.ACTION_UP) {
-            float moveX = ev.getX() - downX;
-            if (downX > viewWidth - 100 && moveX < 10) {
-                return true;
-            } else if (downX < 100 && moveX < 10) {
-                if (show > 0) {
-                    show--;
-                }
-                return true;
-            }
+
         }
         return super.onTouchEvent(ev);
     }

@@ -7,7 +7,7 @@
         <attr name="border_color" format="color"/>
     </declare-styleable>
 
-    <declare-styleable name="MiTextView">
+    <declare-styleable name="MITextView">
         <attr name="textSize" format="dimension"/>
         <attr name="textColor" format="reference|color"/>
         <attr name="lineSpacingExtra" format="dimension"/>
