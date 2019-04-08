@@ -5,16 +5,13 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
-import android.text.Html;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.TextView;
 import com.hao.lib.Util.SystemUtils;
+import com.hao.lib.view.MITextView;
 import com.hao.show.R;
 import com.hao.show.moudle.main.novel.Entity.NovelContent;
 import org.jetbrains.annotations.NotNull;
@@ -37,25 +34,30 @@ public class NovelContentAdapter extends PagerAdapter {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public NovelContentAdapter(Activity context, NovelContent str) {
-        content = str;
-        Log.i("小说", Html.fromHtml(str.getChapterContent()).toString());
+        Log.i("小说", str.getChapterContent());
         mContext = context;
         padding5 = SystemUtils.INSTANCE.dip2px(mContext, 5);
-        initText();
+//        initText();
+        setContent(str);
     }
 
-    public TextView initText() {
+    public View initText() {
         DisplayMetrics displayMetrics = SystemUtils.INSTANCE.getScreenSize(mContext);
-        int screenHight = displayMetrics.heightPixels - SystemUtils.INSTANCE.getDecorViewHight(mContext) - padding5 * 5;
-        int screenWight = displayMetrics.widthPixels - SystemUtils.INSTANCE.dip2px(mContext, 5) * 2;
-        TextView contentView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.content_text, null);
-        contentView.setPadding(padding5, padding5 * 4, padding5, padding5);
-        float textHight = contentView.getTextSize() + contentView.getLineSpacingExtra();
-        float textWight = contentView.getTextSize() + 2 * contentView.getLineSpacingExtra();
-        textNum = (int) (screenWight / textWight);
-        lines = (int) (screenHight / textHight);
-        pageText = textNum * lines;
-        contentView.setLines(lines);
+        int dp5 = SystemUtils.INSTANCE.dip2px(mContext, 5);
+        int screenHight = displayMetrics.heightPixels - dp5 * 20;
+        int screenWight = displayMetrics.widthPixels - dp5 * 2;
+        MITextView contentView = (MITextView) LayoutInflater.from(mContext).inflate(R.layout.content_text, null);
+        contentView.setPadding(dp5, dp5, dp5, dp5);
+//        float textWidth = contentView.getTextSize() + 2 * contentView.getLineSpacingExtra();
+//        float texthight = contentView.getTextSize() + 4 * contentView.getLineSpacingExtra();
+//        textNum = (int) (screenWight / textWidth);
+//        lines = (int) (screenHight / texthight);
+//        pageText = textNum * lines;
+//        contentView.setLines(lines);
+
+//        Log.i("页面数据", "屏幕长：" + displayMetrics.heightPixels + "    计算文本大小：" + screenHight + "   行数：" + (screenWight / texthight) + "  虚拟键盘：" + SystemUtils.INSTANCE.getKeyBroadHight(mContext));
+//        Log.i("页面数据", "屏幕宽：" + displayMetrics.widthPixels + "    计算文本大小：" + screenWight + "  字数：" + (screenHight / textWidth));
+        Log.i("页面数据", "文字行数：" + lines + "    每行字数：" + textNum + "      每页字数：" + lines * textNum);
         return contentView;
     }
 
@@ -83,6 +85,7 @@ public class NovelContentAdapter extends PagerAdapter {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
@@ -95,20 +98,26 @@ public class NovelContentAdapter extends PagerAdapter {
                     mContext.finish();
                 }
             });
+            container.addView(view);
         } else {
             view = initText();
             int end = (position + 1) * pageText > content.getChapterContent().length() ? content.getChapterContent().length() : (position + 1) * pageText;
-            ((TextView) view).setText(Html.fromHtml(content.getChapterContent().substring(position * pageText, end)));
+            Log.i("本页数据", content.getChapterContent().substring(position * pageText, end));
+            Log.i("本页数据", content.getChapterContent().substring(position * pageText, end));
+            ((MITextView) view).setText(content.getChapterContent());
+            ((MITextView) view).setPage(position);
+            container.addView(view);
         }
-        container.addView(view);
         return view;
     }
+
 
     public void addContent(@NotNull NovelContent novelContent) {
         if (content != null) {
             novelContent.setChapterContent(content.getChapterContent() + novelContent.getChapterContent());
         }
-        content = novelContent;
+        setContent(novelContent);
         notifyDataSetChanged();
     }
+
 }

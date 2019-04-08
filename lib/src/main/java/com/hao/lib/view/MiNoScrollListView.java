@@ -1,4 +1,4 @@
-package com.hao.mi2.view;
+package com.hao.lib.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

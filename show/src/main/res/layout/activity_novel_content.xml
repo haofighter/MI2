@@ -5,9 +5,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".moudle.main.novel.NovelContentActivity">
-    <com.hao.mi2.view.MiClickViewPage
+    <com.hao.lib.view.MiClickViewPage
             android:id="@+id/novel_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-    </com.hao.mi2.view.MiClickViewPage>
+    </com.hao.lib.view.MiClickViewPage>
 </android.support.constraint.ConstraintLayout>

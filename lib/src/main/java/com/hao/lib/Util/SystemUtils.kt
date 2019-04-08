@@ -1,16 +1,20 @@
 package com.hao.lib.Util;
 
 import android.Manifest
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.AsyncTask
+import android.os.Build
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewConfiguration
 import com.hao.lib.R
 import com.hao.lib.base.BackCall
 import com.hao.lib.base.MI2App
@@ -40,6 +44,42 @@ object SystemUtils {
     fun px2dip(context: Context, pxValue: Float): Int {
         val scale = context.resources.displayMetrics.density
         return (pxValue / scale + 0.5f).toInt()
+    }
+
+    fun dp2px(context: Context, dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            context.getResources().getDisplayMetrics()
+        ).toInt()
+    }
+
+    fun px2dp(context: Context, pxValue: Float): Float {
+        return pxValue / context.getResources().getDisplayMetrics().density + 0.5f
+    }
+
+    fun px2sp(context: Context, pxValue: Float): Float {
+        return pxValue / context.getResources().getDisplayMetrics().scaledDensity + 0.5f
+    }
+
+    fun px2sp(context: Context, size: Int): Float {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_PX,
+            size.toFloat(),
+            context.getResources().getDisplayMetrics()
+        )
+    }
+
+    fun sp2px(context: Context, spValue: Float): Float {
+        return spValue * context.getResources().getDisplayMetrics().scaledDensity + 0.5f
+    }
+
+    fun sp2px(context: Context, size: Int): Float {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            size.toFloat(),
+            context.getResources().getDisplayMetrics()
+        )
     }
 
 
@@ -96,6 +136,63 @@ object SystemUtils {
         val outMetrics = DisplayMetrics()
         manager.getDefaultDisplay().getMetrics(outMetrics)
         return outMetrics;
+    }
+
+    /**
+     * 获取虚拟键盘
+     */
+    fun getKeyBroadHight(activity: Activity): Int {
+        var result = 0
+        if (hasNavBar(activity)) {
+            val res = activity.getResources()
+            val resourceId = res.getIdentifier("navigation_bar_height", "dimen", "android")
+            if (resourceId > 0) {
+                result = res.getDimensionPixelSize(resourceId)
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * 是否使用虚拟按键
+     */
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    fun hasNavBar(context: Context): Boolean {
+        var res = context.getResources();
+        var resourceId = res.getIdentifier("config_showNavigationBar", "bool", "android");
+        if (resourceId != 0) {
+            var hasNav = res.getBoolean(resourceId);
+            // check override flag
+            var sNavBarOverride = getNavBarOverride();
+            if ("1".equals(sNavBarOverride)) {
+                hasNav = false;
+            } else if ("0".equals(sNavBarOverride)) {
+                hasNav = true;
+            }
+            return hasNav;
+        } else { // fallback
+            return !ViewConfiguration.get(context).hasPermanentMenuKey();
+        }
+    }
+
+    /**
+     * 判断虚拟按键栏是否重写
+     *
+     * @return
+     */
+    fun getNavBarOverride(): String {
+        var sNavBarOverride = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                var c = Class.forName("android.os.SystemProperties");
+                var m = c.getDeclaredMethod("get", String::class.java)
+                m!!.setAccessible(true);
+                sNavBarOverride = m.invoke(null, "qemu.hw.mainkeys") as String;
+            } catch (e: Throwable) {
+            }
+        }
+        return sNavBarOverride;
     }
 
 
@@ -246,3 +343,4 @@ object SystemUtils {
         }
     }
 }
+

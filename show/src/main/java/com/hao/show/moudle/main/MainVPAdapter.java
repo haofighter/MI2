@@ -34,12 +34,14 @@ public class MainVPAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    TextView tv;
+
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         container.addView(views.get(position));
         if (position == 0) {
-            TextView tv = views.get(position).findViewById(R.id.tv);
+            tv = views.get(position).findViewById(R.id.tv);
             byte[] bytes1 = DataUtils.hexStringToByte("00000001");
             byte[] bytes2 = DataUtils.hexStringToByte("00000000");
             tv.append("\n" + "00000050        " + "00000000");

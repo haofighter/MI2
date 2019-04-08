@@ -1,4 +1,4 @@
-package com.hao.mi2.view;
+package com.hao.lib.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,7 +29,9 @@ public class MiClickViewPage extends ViewPager {
         screenHeight = metrics.heightPixels;
         screenWidth = metrics.widthPixels;
     }
+
     float downX = 0;
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
@@ -39,14 +41,14 @@ public class MiClickViewPage extends ViewPager {
             if (downX > screenWidth - 100 && moveX < 10) {
                 if (getCurrentItem() + 1 < getAdapter().getCount()) {
                     setCurrentItem(getCurrentItem() + 1);
-                    downX=0;
+                    downX = 0;
                     Log.i("viewPage", "边缘事件点击  右");
                     return true;
                 }
             } else if (downX < 100 && moveX < 10) {
                 if (getCurrentItem() > 0) {
                     setCurrentItem(getCurrentItem() - 1);
-                    downX=0;
+                    downX = 0;
                     Log.i("viewPage", "边缘事件点击  左");
                     return true;
                 } else {

@@ -54,22 +54,12 @@ public class MainActivity extends BaseActivity {
         List<View> views = new ArrayList<>();
         views.add(LayoutInflater.from(this).inflate(R.layout.content_first, null));
         views.add(new MainSecondView(this).getMainsecondView());
-        views.add(LayoutInflater.from(this).inflate(R.layout.content_first, null));
-        views.add(LayoutInflater.from(this).inflate(R.layout.content_first, null));
         adapter.setViews(views);
         vp_main.setAdapter(adapter);
     }
 
     private List<BottomDate> initBottomViewDate() {
         List<BottomDate> bottomDateList = new ArrayList<>();
-//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setCheckColor(R.color.colorAccent).setTitle("菜单1"));
-//        bottomDateList.add(new BottomDate());
-//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back));
-//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.back));
-//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary));
-//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
-//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
-//        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         return bottomDateList;

@@ -1,7 +1,6 @@
 package com.hao.show.moudle.main.novel
 
 import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
 import android.util.Log
 import android.view.View
 import com.bumptech.glide.Glide
@@ -15,6 +14,7 @@ import com.hao.show.spider.SpiderNovelFromBiQu
 import com.hao.show.spider.SpiderUtils
 import kotlinx.android.synthetic.main.activity_novel_detail.*
 
+
 class NovelDetailActivity : BaseActivity() {
     override fun findView() {
         showLoading();
@@ -27,6 +27,9 @@ class NovelDetailActivity : BaseActivity() {
             val intent = Intent(this@NovelDetailActivity, NovelContentActivity::class.java)
             intent.putExtra("chapterUrl", (novel_chaper_list.adapter.getItem(position) as NovelChapter).chapterUrl)
             startActivity(intent)
+        }
+        show_more_chapter.setOnClickListener {
+            (novel_chaper_list.adapter as NovelChapterItemAdapter).setPageAdd()
         }
     }
 

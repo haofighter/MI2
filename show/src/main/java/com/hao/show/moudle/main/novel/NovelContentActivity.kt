@@ -3,7 +3,9 @@ package com.hao.show.moudle.main.novel
 import android.annotation.SuppressLint
 import android.os.Build
 import android.support.annotation.RequiresApi
+import android.support.v4.view.ViewPager
 import android.util.Log
+import android.view.WindowManager
 import com.hao.lib.base.Rx.Rx
 import com.hao.lib.base.Rx.RxMessage
 import com.hao.show.R
@@ -16,7 +18,26 @@ import kotlinx.android.synthetic.main.activity_novel_content.*
 class NovelContentActivity : BaseActivity() {
     override fun findView() {
         showLoading()
+        getWindow().setFlags(
+            WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            WindowManager.LayoutParams.FLAG_FULLSCREEN)
         getDetailHtml(intent.getStringExtra("chapterUrl"))
+        novel_content.addOnPageChangeListener(
+            object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(p0: Int) {
+                }
+
+                override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
+                }
+
+                override fun onPageSelected(p0: Int) {
+                    Log.i("test", "当前页面:" + p0 + "   总页数：" + novel_content.adapter!!.count);
+                    if (novel_content.adapter!!.count - p0 < 2) {
+                        getDetailHtml((novel_content.adapter as NovelContentAdapter).content.nextChapterUrl)
+                    }
+                }
+            }
+        )
     }
 
     override fun initViewID(): Int {
@@ -48,7 +69,7 @@ class NovelContentActivity : BaseActivity() {
             val novelContent = SpiderNovelFromBiQu.getNovelContent(o as String)
             if (novel_content.adapter != null) {
                 (novel_content.adapter as NovelContentAdapter).addContent(novelContent)
-            }else{
+            } else {
                 novel_content.adapter = NovelContentAdapter(this, novelContent);
             }
         }

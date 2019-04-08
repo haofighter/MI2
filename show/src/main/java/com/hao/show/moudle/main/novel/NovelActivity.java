@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import com.hao.lib.base.Rx.Rx;
 import com.hao.lib.base.Rx.RxMessage;
-import com.hao.mi2.view.RecycleView;
+import com.hao.lib.view.RecycleView;
 import com.hao.show.R;
 import com.hao.show.base.BaseActivity;
 import com.hao.show.moudle.main.novel.Entity.NovelClassify;
@@ -150,6 +150,10 @@ public class NovelActivity extends BaseActivity {
         refresh.finishLoadmore();
         if (tag.equals("html")) {
             List<NovelClassify> classifies = SpiderNovelFromBiQu.getClassify((String) o);
+            classifies.remove(0);
+            classifies.remove(0);
+            classifies.remove(classifies.size() - 1);
+            classifies.remove(classifies.size() - 1);
             ((NovelClassifyListAdapter) novel_classify_list.getAdapter()).update(classifies);
         } else if (tag.equals("novel_detail")) {
             refresh.setEnableRefresh(true);
