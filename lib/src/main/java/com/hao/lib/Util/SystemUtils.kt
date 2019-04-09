@@ -187,7 +187,7 @@ object SystemUtils {
             try {
                 var c = Class.forName("android.os.SystemProperties");
                 var m = c.getDeclaredMethod("get", String::class.java)
-                m!!.setAccessible(true);
+                m.setAccessible(true);
                 sNavBarOverride = m.invoke(null, "qemu.hw.mainkeys") as String;
             } catch (e: Throwable) {
             }

@@ -1,4 +1,4 @@
-package com.hao.show.moudle.main.novel;
+package com.hao.show.moudle.main.novel.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -73,7 +73,6 @@ public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.Nove
 
     @Override
     public int getItemCount() {
-        Log.i("recycle条数 ", mNovelPage == null ? "0" : mNovelPage.getNovelListItemContentList().size() + "");
         return mNovelPage == null ? 0 : mNovelPage.getNovelListItemContentList().size();
     }
 
@@ -107,7 +106,7 @@ public class NovelListAdapter extends RecyclerView.Adapter<NovelListAdapter.Nove
     }
 
 
-    interface OnItemClickListener {
+    public interface OnItemClickListener {
         void itemClick(int position, View view, Object object);
     }
 }

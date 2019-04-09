@@ -1,10 +1,31 @@
 package com.hao.show.moudle.main.novel.Entity;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
+@Entity
 public class NovelContent {
+    @Id(autoincrement = true)
+    Long nID;
     String chapterName;
     String chapterContent;
     String nextChapterUrl;
     String beforChapterUrl;
+
+    @Generated(hash = 974800950)
+    public NovelContent(Long nID, String chapterName, String chapterContent,
+            String nextChapterUrl, String beforChapterUrl) {
+        this.nID = nID;
+        this.chapterName = chapterName;
+        this.chapterContent = chapterContent;
+        this.nextChapterUrl = nextChapterUrl;
+        this.beforChapterUrl = beforChapterUrl;
+    }
+
+    @Generated(hash = 1356956392)
+    public NovelContent() {
+    }
 
     public String getChapterName() {
         return chapterName;
@@ -36,5 +57,13 @@ public class NovelContent {
 
     public void setBeforChapterUrl(String beforChapterUrl) {
         this.beforChapterUrl = beforChapterUrl;
+    }
+
+    public Long getNID() {
+        return this.nID;
+    }
+
+    public void setNID(Long nID) {
+        this.nID = nID;
     }
 }

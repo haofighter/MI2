@@ -10,7 +10,7 @@ public class FileUtils {
     /**
      * 获得指定文件的byte数组
      */
-    private byte[] fileToBytes(File file) {
+    public static byte[] fileToBytes(File file) {
         byte[] buffer = null;
         try {
             FileInputStream fis = new FileInputStream(file);

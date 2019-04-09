@@ -1,6 +1,13 @@
 package com.hao.show.moudle.main.novel.Entity;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
+@Entity
 public class NovelListItemContent {
+    @Id(autoincrement = true)
+    Long nID;//小说的唯一标识
     private String title;
     private String url;
     private String auther;
@@ -30,11 +37,63 @@ public class NovelListItemContent {
         return newChapter;
     }
 
+
+    public Long getNID() {
+        return this.nID;
+    }
+
+
+    public void setNID(Long nID) {
+        this.nID = nID;
+    }
+
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+
+    public void setAuther(String auther) {
+        this.auther = auther;
+    }
+
+
+    public void setNewChapter(String newChapter) {
+        this.newChapter = newChapter;
+    }
+
+
+    public void setNewChapter_utl(String newChapter_utl) {
+        this.newChapter_utl = newChapter_utl;
+    }
+
     public NovelListItemContent(String title, String url, String auther, String newChapter, String newChapter_utl) {
         this.title = title;
         this.url = url;
         this.auther = auther;
         this.newChapter = newChapter;
         this.newChapter_utl = newChapter_utl;
+    }
+
+
+    @Generated(hash = 1911203596)
+    public NovelListItemContent(Long nID, String title, String url, String auther, String newChapter,
+            String newChapter_utl) {
+        this.nID = nID;
+        this.title = title;
+        this.url = url;
+        this.auther = auther;
+        this.newChapter = newChapter;
+        this.newChapter_utl = newChapter_utl;
+    }
+
+
+    @Generated(hash = 56679149)
+    public NovelListItemContent() {
     }
 }

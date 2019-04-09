@@ -48,6 +48,7 @@ public class NovelContentAdapter extends PagerAdapter {
         int screenWight = displayMetrics.widthPixels - dp5 * 2;
         MITextView contentView = (MITextView) LayoutInflater.from(mContext).inflate(R.layout.content_text, null);
         contentView.setPadding(dp5, dp5, dp5, dp5);
+        contentView.setBackgroundResource(R.color.black);
 //        float textWidth = contentView.getTextSize() + 2 * contentView.getLineSpacingExtra();
 //        float texthight = contentView.getTextSize() + 4 * contentView.getLineSpacingExtra();
 //        textNum = (int) (screenWight / textWidth);
@@ -102,8 +103,6 @@ public class NovelContentAdapter extends PagerAdapter {
         } else {
             view = initText();
             int end = (position + 1) * pageText > content.getChapterContent().length() ? content.getChapterContent().length() : (position + 1) * pageText;
-            Log.i("本页数据", content.getChapterContent().substring(position * pageText, end));
-            Log.i("本页数据", content.getChapterContent().substring(position * pageText, end));
             ((MITextView) view).setText(content.getChapterContent());
             ((MITextView) view).setPage(position);
             container.addView(view);

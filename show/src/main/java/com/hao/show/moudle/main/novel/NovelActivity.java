@@ -14,6 +14,7 @@ import com.hao.show.R;
 import com.hao.show.base.BaseActivity;
 import com.hao.show.moudle.main.novel.Entity.NovelClassify;
 import com.hao.show.moudle.main.novel.Entity.NovelPage;
+import com.hao.show.moudle.main.novel.adapter.NovelListAdapter;
 import com.hao.show.spider.SpiderNovelFromBiQu;
 import com.hao.show.spider.SpiderUtils;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
