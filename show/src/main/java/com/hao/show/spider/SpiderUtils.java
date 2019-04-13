@@ -18,7 +18,7 @@ public class SpiderUtils {
      * @param urlString
      * @return
      */
-    public static void getHtml(final String urlString, final String tag) {
+    public static void getHtml(final String urlString, final Object tag) {
         new Thread(new Runnable() {
             @Override
             public void run() {

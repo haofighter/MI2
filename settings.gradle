@@ -1,1 +1,2 @@
-include ':show', ':voice', ':mivoice', ':lib'
+include ':show', ':voice', ':mivoice', ':lib', ':visitor'
+include ':openCVLibrary330'

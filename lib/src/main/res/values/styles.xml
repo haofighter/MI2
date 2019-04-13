@@ -12,5 +12,10 @@
         <attr name="textColor" format="reference|color"/>
         <attr name="lineSpacingExtra" format="dimension"/>
         <attr name="wordSpaceExtra" format="dimension"/>
+        <attr name="padingLeft" format="dimension"/>
+        <attr name="padingRight" format="dimension"/>
+        <attr name="padingTop" format="dimension"/>
+        <attr name="padingBottom" format="dimension"/>
+        <attr name="pading" format="dimension"/>
     </declare-styleable>
 </resources>

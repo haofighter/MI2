@@ -1,11 +1,16 @@
 package com.hao.show.moudle.face;
 
 import android.content.Context;
+import android.media.FaceDetector;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import com.hao.show.R;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,20 +18,16 @@ import java.io.InputStream;
 
 
 public class FaceActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
-    private CameraBridgeViewBase openCvCameraView;
-
-    private static final String TAG = "OpencvActivity";
     private CascadeClassifier cascadeClassifier = null; //级联分类器
     private Mat mRgba; //图像容器
     private Mat mGray;
     private int absoluteFaceSize = 0;
-    private Handler handler;
 
     private void initializeOpenCVDependencies() {
         try {
-            InputStream is = getResources().openRawResource(R.raw.lbpcascade_frontalface_improved); //OpenCV的人脸模型文件： lbpcascade_frontalface_improved
+            InputStream is = getResources().openRawResource(R.raw.lbpcascade_frontalface); //OpenCV的人脸模型文件： lbpcascade_frontalface_improved
             File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
-            File mCascadeFile = new File(cascadeDir, "lbpcascade_frontalface_improved.xml");
+            File mCascadeFile = new File(cascadeDir, "lbpcascade_frontalface.xml");
             FileOutputStream os = new FileOutputStream(mCascadeFile);
             byte[] buffer = new byte[4096];
             int bytesRead;
@@ -38,23 +39,21 @@ public class FaceActivity extends AppCompatActivity implements CameraBridgeViewB
             // 加载cascadeClassifier
             cascadeClassifier = new CascadeClassifier(mCascadeFile.getAbsolutePath());
         } catch (Exception e) {
-            Log.e(TAG, "Error loading cascade", e);
+            Log.e("dsfaf", "Error loading cascade", e);
         }
         // 显示
         openCvCameraView.enableView();
     }
+
+    CameraBridgeViewBase openCvCameraView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face);
 
-        new GetRunAuthorityUtil().getRunAuthority(this, this); //动态获取权限
-
-        handler = new Handler();
-
         openCvCameraView = (CameraBridgeViewBase) findViewById(R.id.javaCameraView);
-        openCvCameraView.setCameraIndex(0); //摄像头索引        -1/0：后置双摄     1：前置
+        openCvCameraView.setCameraIndex(-1); //摄像头索引        -1/0：后置双摄     1：前置
         openCvCameraView.enableFpsMeter(); //显示FPS
         openCvCameraView.setCvCameraViewListener(this);
     }
@@ -63,7 +62,7 @@ public class FaceActivity extends AppCompatActivity implements CameraBridgeViewB
     public void onResume() {
         super.onResume();
         if (!OpenCVLoader.initDebug()) {
-            Log.e(TAG, "OpenCV init error");
+            Log.e("open", "OpenCV init error");
         }
         initializeOpenCVDependencies();
     }
@@ -93,7 +92,7 @@ public class FaceActivity extends AppCompatActivity implements CameraBridgeViewB
         }
 
         //解决  前置摄像头旋转显示问题
-        //Core.flip(mRgba, mRgba, 1); //旋转
+//        Core.flip(mRgba, mRgba, 1); //旋转
         //Core.flip(mGray, mGray, 1);
 
         //检测并显示
@@ -103,10 +102,15 @@ public class FaceActivity extends AppCompatActivity implements CameraBridgeViewB
         }
         Rect[] facesArray = faces.toArray();
         if (facesArray.length > 0) {
+            Log.i("找到了人脸", "人脸的数量" + facesArray.length);
             for (int i = 0; i < facesArray.length; i++) {    //用框标记
                 Imgproc.rectangle(mRgba, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);
             }
         }
         return mRgba;
     }
+
+
+
 }
+

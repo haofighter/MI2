@@ -1,7 +1,6 @@
 package com.hao.show.moudle.main;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +8,7 @@ import android.widget.LinearLayout;
 import com.hao.lib.view.NavigationBar;
 import com.hao.show.R;
 import com.hao.show.base.BaseActivity;
+import com.hao.show.moudle.face.FaceActivity;
 import com.hao.show.moudle.main.mainview.MainSecondView;
 import com.hao.show.moudle.main.novel.NovelActivity;
 import com.hao.show.moudle.view.BottomView;
@@ -42,6 +42,9 @@ public class MainActivity extends BaseActivity {
                 if (item == 1) {
                     Intent intent = new Intent(MainActivity.this, NovelActivity.class);
                     startActivity(intent);
+                } else if (item == 2) {
+                    Intent intent = new Intent(MainActivity.this, FaceActivity.class);
+                    startActivity(intent);
                 }
             }
         }).setDate(initBottomViewDate()).setViewBackground(R.color.blue);
@@ -60,6 +63,7 @@ public class MainActivity extends BaseActivity {
 
     private List<BottomDate> initBottomViewDate() {
         List<BottomDate> bottomDateList = new ArrayList<>();
+        bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         bottomDateList.add(new BottomDate().setDefIcon(R.mipmap.back).setCheckIcon(R.mipmap.icon_loading_footbar_0).setUncheckColor(R.color.colorPrimary).setTipNum(3));
         return bottomDateList;

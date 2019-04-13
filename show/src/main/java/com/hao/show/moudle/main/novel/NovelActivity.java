@@ -12,7 +12,9 @@ import com.hao.lib.base.Rx.RxMessage;
 import com.hao.lib.view.RecycleView;
 import com.hao.show.R;
 import com.hao.show.base.BaseActivity;
+import com.hao.show.db.manage.DBManager;
 import com.hao.show.moudle.main.novel.Entity.NovelClassify;
+import com.hao.show.moudle.main.novel.Entity.NovelListItemContent;
 import com.hao.show.moudle.main.novel.Entity.NovelPage;
 import com.hao.show.moudle.main.novel.adapter.NovelListAdapter;
 import com.hao.show.spider.SpiderNovelFromBiQu;
@@ -55,8 +57,10 @@ public class NovelActivity extends BaseActivity {
         novel_list.setAdapter(new NovelListAdapter(this).setItemClickLisener(new NovelListAdapter.OnItemClickListener() {
             @Override
             public void itemClick(int position, View view, Object o) {
+                //保存或者更新当前小说的信息
+                NovelListItemContent novelListItemContent = ((NovelListAdapter) novel_list.getAdapter()).getNowDate().getNovelListItemContentList().get(position);
                 Intent intent = new Intent(NovelActivity.this, NovelDetailActivity.class);
-                intent.putExtra("detailUrl", ((NovelListAdapter) novel_list.getAdapter()).getNowDate().getNovelListItemContentList().get(position).getUrl());
+                intent.putExtra("novel", DBManager.addNovel(novelListItemContent));
                 startActivity(intent);
             }
         }));
@@ -121,19 +125,20 @@ public class NovelActivity extends BaseActivity {
     private void getUrlDate() {
         Rx.getInstance().addRxMessage(new RxMessage() {
             @Override
-            protected void rxDo(final String tag, final Object o) {
+            protected void rxDo(final Object tag, final Object o) {
                 Log.i("获取节点  回调", tag + "       " + o);
-                try {
-                    setViewDate(tag, o);
-                } catch (Exception e) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setViewDate(tag, o);
-                        }
-                    });
+                if (tag instanceof String) {
+                    try {
+                        setViewDate((String) tag, o);
+                    } catch (Exception e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setViewDate((String) tag, o);
+                            }
+                        });
+                    }
                 }
-
             }
         });
         if (SpiderNovelFromBiQu.BiQuMainUrl != null) {
@@ -158,6 +163,7 @@ public class NovelActivity extends BaseActivity {
             ((NovelClassifyListAdapter) novel_classify_list.getAdapter()).update(classifies);
         } else if (tag.equals("novel_detail")) {
             refresh.setEnableRefresh(true);
+            closeDrawer();
             NovelPage novelPage = SpiderNovelFromBiQu.getNovelList((String) o);
             ((NovelListAdapter) novel_list.getAdapter()).add(novelPage);
         }

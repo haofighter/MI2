@@ -10,22 +10,25 @@ import com.hao.show.R
 import com.hao.show.base.BaseActivity
 import com.hao.show.moudle.main.novel.Entity.NovelChapter
 import com.hao.show.moudle.main.novel.Entity.NovelChapterItemAdapter
+import com.hao.show.moudle.main.novel.Entity.NovelListItemContent
 import com.hao.show.spider.SpiderNovelFromBiQu
 import com.hao.show.spider.SpiderUtils
 import kotlinx.android.synthetic.main.activity_novel_detail.*
 
 
 class NovelDetailActivity : BaseActivity() {
+    var nowShowNocel: NovelListItemContent? = null;
     override fun findView() {
         showLoading();
         mainContentView.visibility = View.GONE
-        val nowUrl = intent.getStringExtra("detailUrl");
+        nowShowNocel = intent.getSerializableExtra("novel") as NovelListItemContent;
+        val nowUrl = nowShowNocel!!.url;
         Log.i("获取到的小说详情", nowUrl)
         getDetailHtml(nowUrl)
         novel_chaper_list.adapter = NovelChapterItemAdapter(this)
         novel_chaper_list.setOnItemClickListener { parent, view, position, id ->
             val intent = Intent(this@NovelDetailActivity, NovelContentActivity::class.java)
-            intent.putExtra("chapterUrl", (novel_chaper_list.adapter.getItem(position) as NovelChapter).chapterUrl)
+            intent.putExtra("chapter", novel_chaper_list.adapter.getItem(position) as NovelChapter)
             startActivity(intent)
         }
         show_more_chapter.setOnClickListener {
@@ -40,12 +43,14 @@ class NovelDetailActivity : BaseActivity() {
     //通过网址获取网页抓取数据
     private fun getDetailHtml(url: String) {
         Rx.getInstance().addRxMessage(object : RxMessage() {
-            override fun rxDo(tag: String, o: Any) {
+            override fun rxDo(tag: Any, o: Any) {
                 Log.i("获取节点  回调", "$tag       $o")
-                try {
-                    setViewDate(tag, o)
-                } catch (e: Exception) {
-                    runOnUiThread { setViewDate(tag, o) }
+                if (tag is String) {
+                    try {
+                        setViewDate(tag, o)
+                    } catch (e: Exception) {
+                        runOnUiThread { setViewDate(tag, o) }
+                    }
                 }
             }
         })
@@ -59,7 +64,7 @@ class NovelDetailActivity : BaseActivity() {
      */
     fun setViewDate(tag: String, o: Any) {
         if (tag == "detail") {
-            val classifies = SpiderNovelFromBiQu.getNovelDetail(o as String)
+            val classifies = SpiderNovelFromBiQu.getNovelDetail(o as String, nowShowNocel!!.nid)
             mainContentView.visibility = View.VISIBLE
             (novel_chaper_list.adapter as NovelChapterItemAdapter).setNovelChapterList(classifies.novelChapters)
             Glide.with(this).load(classifies.imageUrl).into(novel_image)

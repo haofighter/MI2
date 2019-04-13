@@ -1,5 +1,7 @@
 package com.hao.show.spider;
 
+import android.util.Log;
+import com.hao.show.db.manage.DBManager;
 import com.hao.show.moudle.main.novel.Entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
@@ -48,8 +50,15 @@ public class SpiderNovelFromBiQu {
         return novelPage;
     }
 
-    //获取单个小说的当前信息
-    public static NovelDetail getNovelDetail(String html) {
+
+    /**
+     * 获取单个小说的当前信息
+     *
+     * @param html 章节对应的页面
+     * @param Nid  小说本地存储的ID
+     * @return 小说章节列表
+     */
+    public static NovelDetail getNovelDetail(String html, Long Nid) {
         NovelDetail novelDetail = new NovelDetail();
         Document doc = Jsoup.parse(html);
         Elements frist = doc.select("div[class=box_con]");
@@ -69,12 +78,13 @@ public class SpiderNovelFromBiQu {
         novelDetail.setNovel_introduce(introduce);
         List<NovelChapter> chapters = new ArrayList<>();
         Elements selectChapter = frist.select("div#list").select("dd");
-        for (Element e : selectChapter) {
-            String chapterUrl = e.select("a").attr("href");
-            String chapterName = e.select("a").text();
-            chapters.add(new NovelChapter(chapterName, CheckedUrl(chapterUrl)));
+        for (int i = 0; i < selectChapter.size(); i++) {
+            String chapterUrl = selectChapter.get(i).select("a").attr("href");
+            String chapterName = selectChapter.get(i).select("a").text();
+            chapters.add(new NovelChapter(Long.parseLong(i + ""), Nid, chapterName, CheckedUrl(chapterUrl), "", "", ""));
         }
         novelDetail.setNovelChapters(chapters);
+        DBManager.addNovelChapter(novelDetail.getNovelChapters());
         return novelDetail;
     }
 
@@ -89,16 +99,17 @@ public class SpiderNovelFromBiQu {
     }
 
     @NotNull
-    public static NovelContent getNovelContent(@NotNull String html) {
-        NovelContent novelContent = new NovelContent();
+    public static NovelChapter getNovelContent(String html, NovelChapter novelChapter) {
         Document doc = Jsoup.parse(html);
         Elements frist = doc.select("div[class=box_con]");
         Elements second = frist.select("div[class=bookname]");
-        novelContent.setChapterName(second.select("h1").text());
+        novelChapter.setChapterName(second.select("h1").text());
         Elements thrid = second.select("div[class=bottem1]").select("a");
-        novelContent.setBeforChapterUrl(CheckedUrl(thrid.get(1).attr("href")));
-        novelContent.setNextChapterUrl(CheckedUrl(thrid.select("a").get(3).attr("href")));
-        novelContent.setChapterContent(frist.select("div#content").html().replace(" ", "").replace("\n", "").replace("<br>&nbsp;&nbsp;&nbsp;&nbsp;", "\n  ").replace("<br>", "").replace("&nbsp;", "").split("<p>")[0]);
-        return novelContent;
+        novelChapter.setBeforChapterUrl(CheckedUrl(thrid.get(1).attr("href")));
+        novelChapter.setNextChapterUrl(CheckedUrl(thrid.select("a").get(3).attr("href")));
+        novelChapter.setChapterContent(frist.select("div#content").html().replace(" ", "").replace("\n", "").replace("<br>&nbsp;&nbsp;&nbsp;&nbsp;", "\n  ").replace("<br>", "").replace("&nbsp;", "").split("<p>")[0]);
+        Log.i("文章内容", novelChapter.getNextChapterUrl() + "  章节名：" + novelChapter.getCid() + "    小说id：" + novelChapter.getNid());
+        DBManager.addNovelChapter(novelChapter);
+        return novelChapter;
     }
 }

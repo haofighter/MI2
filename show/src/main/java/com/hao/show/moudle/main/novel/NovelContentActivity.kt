@@ -10,6 +10,8 @@ import com.hao.lib.base.Rx.Rx
 import com.hao.lib.base.Rx.RxMessage
 import com.hao.show.R
 import com.hao.show.base.BaseActivity
+import com.hao.show.db.manage.DBManager
+import com.hao.show.moudle.main.novel.Entity.NovelChapter
 import com.hao.show.moudle.main.novel.adapter.NovelContentAdapter
 import com.hao.show.spider.SpiderNovelFromBiQu
 import com.hao.show.spider.SpiderUtils
@@ -20,8 +22,39 @@ class NovelContentActivity : BaseActivity() {
         showLoading()
         getWindow().setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
+        var novelChapter = intent.getSerializableExtra("chapter") as NovelChapter;
+        novel_content.setOffscreenPageLimit(1);
+        novel_content.adapter = NovelContentAdapter(this, DBManager.selectNovelChapter(novelChapter.nid));
+        novel_content.currentItem = novelChapter.cid.toInt()
 
+        showLoading()
+        getDetailHtml(novelChapter)
+        novel_content.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(p0: Int) {
+            }
+
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                var chapterList = (novel_content.adapter as NovelContentAdapter).date
+                if (position < chapterList.size - 1 && position > 0) {
+                    //加载后一章
+                    var content = chapterList.get(position + 1).chapterContent
+                    if (content == null || content.equals("")) {
+                        getDetailHtml(chapterList.get(position + 1))
+                    }
+
+                    //加载前一章
+                    var beforContent = chapterList.get(position - 1).chapterContent
+                    if (beforContent == null || beforContent.equals("")) {
+                        getDetailHtml(chapterList.get(position - 1))
+                    }
+                }
+            }
+        })
     }
 
     override fun initViewID(): Int {
@@ -29,33 +62,28 @@ class NovelContentActivity : BaseActivity() {
     }
 
     //通过网址获取网页
-    private fun getDetailHtml(url: String) {
+    private fun getDetailHtml(no: NovelChapter) {
         Rx.getInstance().addRxMessage(object : RxMessage() {
             @SuppressLint("NewApi")
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-            override fun rxDo(tag: String, o: Any) {
-                Log.i("获取节点  回调", "$tag       $o")
-                try {
-                    setViewDate(tag, o)
-                } catch (e: Exception) {
-                    runOnUiThread { setViewDate(tag, o) }
+            override fun rxDo(tag: Any, o: Any) {
+                if (tag is NovelChapter) {
+                    try {
+                        setViewDate(tag, o)
+                    } catch (e: Exception) {
+                        runOnUiThread { setViewDate(tag, o) }
+                    }
                 }
             }
         })
-        SpiderUtils.getHtml(url, "content");
+        SpiderUtils.getHtml(no.chapterUrl, no);
     }
 
     //解析数据
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-    private fun setViewDate(string: String, o: Any) {
-        if (string.equals("content")) {
-            dismisLoading()
-            val novelContent = SpiderNovelFromBiQu.getNovelContent(o as String)
-            if (novel_content.adapter != null) {
-                (novel_content.adapter as NovelContentAdapter).addContent(novelContent)
-            } else {
-                novel_content.adapter = NovelContentAdapter(this, novelContent);
-            }
-        }
+    private fun setViewDate(no: NovelChapter, o: Any) {
+        SpiderNovelFromBiQu.getNovelContent(o as String, no)
+        dismisLoading()
+        novel_content.adapter!!.notifyDataSetChanged()
     }
 }

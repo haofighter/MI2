@@ -22,7 +22,7 @@ public class Rx {
 
     List<RxMessage> rxMessageList = new ArrayList<>();
 
-    public void sendMessage(final String tag, final Object o) {
+    public void sendMessage(final Object tag, final Object o) {
         List<RxMessage> errorRx = new ArrayList<>();
         for (final RxMessage rxMessage : rxMessageList) {
             try {

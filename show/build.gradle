@@ -48,4 +48,5 @@ dependencies {
     implementation project(':lib')
     implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.1'
+    implementation project(':openCVLibrary330')
 }

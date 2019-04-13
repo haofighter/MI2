@@ -40,6 +40,10 @@ public class MITextView extends View {
     private int show = 0;//当前文本展示的页面
     float textPadingVar = 0;//垂直方向的间隔距离
     float textPadingHor = 0;//横向方向的间隔距离
+    float textPadingleft = 0;//文字距离左边距离
+    float textPadingright = 0;//文字距离右边距离
+    float textPadingtop = 0;//文字距离上边距离
+    float textPadingbottom = 0;//文字距离下边距离
     int pageSize = 0;//文字填充的页数
 
     float offsetHor = 0;//画布横向方向偏移量
@@ -62,15 +66,17 @@ public class MITextView extends View {
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MITextView);
         lineSpacingExtra = array.getDimension(R.styleable.MITextView_lineSpacingExtra, 6);//行间距
         wordSpacingExtra = array.getDimension(R.styleable.MITextView_wordSpaceExtra, 5);//字间距
+        textPadingbottom = array.getDimension(R.styleable.MITextView_padingBottom, 0);//底部距离
+        textPadingtop = array.getDimension(R.styleable.MITextView_padingTop, 0);//顶部距离
+        textPadingright = array.getDimension(R.styleable.MITextView_padingRight, 0);//右边距离
+        textPadingleft = array.getDimension(R.styleable.MITextView_padingLeft, 0);//左边距离
+        float pading = array.getDimension(R.styleable.MITextView_pading, 0);//左边距离
+        if (pading != 0) {
+            textPadingleft = textPadingbottom = textPadingtop = textPadingright = pading;
+        }
         textColor = array.getColor(R.styleable.MITextView_textColor, 0xFFFFFFFF);//颜色
         textSize = array.getDimension(R.styleable.MITextView_textSize, SystemUtils.INSTANCE.sp2px(context, 20));//文字大小
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setTextColor(0xFFFFFF);
-                appendText("      测试一下双方一下safdlsfk");
-            }
-        });
+
     }
 
 
@@ -84,13 +90,24 @@ public class MITextView extends View {
 
 
     private void initViewConfig() {
-        lineTextNum = (int) (viewWidth / textSize);
-        lineNum = (int) (viewhigh / (textSize + lineSpacingExtra));
-        //                //文本垂直方向距离边缘的位置  通过计算一行被填满时所占用的位置，算出空出的位置长度,主要用于文本居中处理
-        offsetVar = textPadingVar = (viewhigh - lineNum * ((textSize + lineSpacingExtra))) / 2;
+        //绘制文字空间的垂直方向的大小
+        float textContentVar = viewhigh - textPadingtop - textPadingbottom;
+        //绘制文字空间的横向方向的大小
+        float textContentHor = viewWidth - textPadingleft - textPadingright;
+        //计算的每行容纳的文字大小
+        lineTextNum = (int) (textContentHor / textSize);
+        //计算没页容纳文字行数
+        lineNum = (int) (textContentVar / (textSize + lineSpacingExtra));
+
+        //计算出去边缘距离和文字占用的位置剩余的位置 并计算出每页文字的位置
+        //文本垂直方向距离边缘的位置  通过计算一行被填满时所占用的位置，算出空出的位置长度,主要用于文本居中处理
+        textPadingVar = (textContentVar - lineNum * ((textSize + lineSpacingExtra))) / 2;
+        offsetVar = textPadingVar + textPadingtop;
         //文本水平方向距离边缘的位置  通过计算一行被填满时所占用的位置，算出空出的位置长度,主要用于文本居中处理
-        offsetHor = textPadingHor = (viewWidth - lineTextNum * textSize) / 2;
-        Log.i("自定义", "测量" + viewWidth + "   高度：" + viewhigh + "     每页行数：" + lineNum + "     每行字数：" + lineTextNum + "  字体大小：" + textSize);
+        textPadingHor = (viewWidth - textPadingleft - textPadingright - lineTextNum * textSize) / 2;
+        offsetHor = textPadingHor + textPadingleft;
+        Log.i("自定义", "测量" + viewWidth + "   高度：" + viewhigh + "     文本hor：" + textContentHor + "     文本var：" + textContentVar +
+                "     每页行数：" + lineNum + "     每行字数：" + lineTextNum + "  字体大小：" + textSize + "      offsetVar：" + offsetVar + "       offsetHor：" + offsetHor);
     }
 
     private void initDate() {
@@ -189,8 +206,12 @@ public class MITextView extends View {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             fingerNowX = ev.getX();
             fingerNowY = ev.getY();
-//            attemptClaimDrag();
-            return true;
+            if (show != pageSize) {
+                attemptClaimDrag(true);
+                return true;
+            } else {
+                attemptClaimDrag(false);
+            }
         } else if (ev.getAction() == MotionEvent.ACTION_MOVE) {
             moveX = moveX + ev.getX() - fingerNowX;
             moveY = moveY + ev.getY() - fingerNowY;
@@ -198,10 +219,11 @@ public class MITextView extends View {
             fingerNowY = ev.getY();
             if ((moveX < 0 && show < pageSize - 1) || (moveX > 0 && show > 0)) {
                 offsetHor = textPadingVar + moveX - show * viewWidth;
-//            offsetVar = textPadingVar + moveY;
                 invalidate();
-                attemptClaimDrag();
+                attemptClaimDrag(true);
                 return true;
+            } else {
+                attemptClaimDrag(false);
             }
         } else if (ev.getAction() == MotionEvent.ACTION_UP) {
             Log.i("手势结束", "moveX=" + moveX + "   show=" + show + "  pageSize=" + pageSize);
@@ -210,16 +232,16 @@ public class MITextView extends View {
                     @Override
                     public void call(Object o) {
                         if (Math.abs(moveX) < viewWidth / 2) {
-                            offsetHor = (1 - Float.parseFloat(o + "") / 100) * moveX + textPadingVar - show * viewWidth;
+                            offsetHor = (1 - Float.parseFloat(o + "") / 100) * moveX + textPadingVar - show * viewWidth + textPadingleft + textPadingVar;
                         } else {
-                            if (moveX < 0) {
-                                offsetHor = moveX - (viewWidth + moveX) * Float.parseFloat(o + "") / 100 - show * viewWidth;
-                            } else {
-                                offsetHor = moveX + (viewWidth - moveX) * Float.parseFloat(o + "") / 100 - show * viewWidth;
+                            if (moveX < 0) {//左移动
+                                offsetHor = moveX - (viewWidth - textPadingleft - textPadingVar + moveX) * Float.parseFloat(o + "") / 100 - show * viewWidth;
+                            } else {//右移动
+                                offsetHor = moveX + (viewWidth + textPadingright + textPadingVar - moveX) * Float.parseFloat(o + "") / 100 - show * viewWidth;
                             }
                         }
                         invalidate();
-                        attemptClaimDrag();
+                        attemptClaimDrag(true);
                         if ((int) o == 100) {//动画执行完成后 重置移动距离
                             if (Math.abs(moveX) >= viewWidth / 2) {
                                 if (moveX > 0) {
@@ -231,24 +253,26 @@ public class MITextView extends View {
                             moveX = 0;
                             moveY = 0;
                         }
+
                     }
                 });
+                return true;
             } else {
                 moveX = 0;
                 moveY = 0;
+                attemptClaimDrag(false);
             }
-            return true;
         }
         return super.onTouchEvent(ev);
     }
 
-    private void attemptClaimDrag() {
+    private void attemptClaimDrag(Boolean b) {
         ViewParent parent = getParent();
         if (parent != null) {
             // 如果控件有父控件，那么请求父控件不要劫取事件
             // 以便此控件正常处理所有触摸事件
             // 而不是被父控件传入ACTION_CANCEL去截断事件
-            parent.requestDisallowInterceptTouchEvent(true);
+            parent.requestDisallowInterceptTouchEvent(b);
         }
     }
 

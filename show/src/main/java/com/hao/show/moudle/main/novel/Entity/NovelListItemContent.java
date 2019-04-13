@@ -1,11 +1,15 @@
 package com.hao.show.moudle.main.novel.Entity;
 
+import com.hao.show.base.App;
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+
+import java.io.Serializable;
 
 @Entity
-public class NovelListItemContent {
+public class NovelListItemContent implements Serializable {
+    private static final long serialVersionUID = App.serialVersionUID;
     @Id(autoincrement = true)
     Long nID;//小说的唯一标识
     private String title;
@@ -43,8 +47,9 @@ public class NovelListItemContent {
     }
 
 
-    public void setNID(Long nID) {
+    public NovelListItemContent setNID(Long nID) {
         this.nID = nID;
+        return this;
     }
 
 
@@ -83,7 +88,7 @@ public class NovelListItemContent {
 
     @Generated(hash = 1911203596)
     public NovelListItemContent(Long nID, String title, String url, String auther, String newChapter,
-            String newChapter_utl) {
+                                String newChapter_utl) {
         this.nID = nID;
         this.title = title;
         this.url = url;
@@ -96,4 +101,5 @@ public class NovelListItemContent {
     @Generated(hash = 56679149)
     public NovelListItemContent() {
     }
+
 }

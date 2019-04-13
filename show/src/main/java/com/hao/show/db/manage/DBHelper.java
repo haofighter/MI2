@@ -4,7 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import com.github.yuweiguocn.library.greendao.MigrationHelper;
 import com.hao.show.db.dao.DaoMaster;
-import com.hao.show.db.dao.NovelContentDao;
+import com.hao.show.db.dao.NovelChapterDao;
+import com.hao.show.db.dao.NovelClassifyDao;
+import com.hao.show.db.dao.NovelListItemContentDao;
 import org.greenrobot.greendao.database.Database;
 
 
@@ -30,16 +32,19 @@ public class DBHelper extends DaoMaster.OpenHelper {
     private void update(SQLiteDatabase db, int oldVersion, int newVersion) {
         //把需要管理的数据库表DAO作为最后一个参数传入到方法中
         MigrationHelper.migrate(db, new MigrationHelper.ReCreateAllTableListener() {
-            @Override
-            public void onCreateAllTables(Database db, boolean ifNotExists) {
-                DaoMaster.createAllTables(db, ifNotExists);
-            }
+                    @Override
+                    public void onCreateAllTables(Database db, boolean ifNotExists) {
+                        DaoMaster.createAllTables(db, ifNotExists);
+                    }
 
-            @Override
-            public void onDropAllTables(Database db, boolean ifExists) {
-                DaoMaster.dropAllTables(db, ifExists);
-            }
-        }, NovelContentDao.class);
-
+                    @Override
+                    public void onDropAllTables(Database db, boolean ifExists) {
+                        DaoMaster.dropAllTables(db, ifExists);
+                    }
+                },
+                NovelChapterDao.class,
+                NovelListItemContentDao.class,
+                NovelClassifyDao.class,
+                NovelChapterDao.class);
     }
 }
