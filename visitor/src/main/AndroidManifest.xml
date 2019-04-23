@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.xb.visitor">
+
+    <!-- 用于自定义一个权限 -->
+    <!-- 声明一个新的权限 -->
+    <permission android:name="com.hao.MI"/>
+    <!-- 使用一个新的权限 -->
+    <uses-permission android:name="com.hao.MI"/>
+    <!--  -->
+
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-feature
+            android:name="android.hardware.camera"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.camera.autofocus"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.camera.front"
+            android:required="false"/>
+    <uses-feature
+            android:name="android.hardware.camera.front.autofocus"
+            android:required="false"/>
+
+    <application
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:name=".base.App"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:networkSecurityConfig="@xml/network_config"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".moudle.SplashActivity"
+                  android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.HOME"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <service android:name="org.eclipse.paho.android.service.MqttService"></service>
+        <service android:name=".Mqtt.GetPushService"/>
+        <activity android:name=".moudle.MainActivity"
+                  android:screenOrientation="landscape"/>
+    </application>
+
+</manifest>

@@ -8,13 +8,17 @@ import java.io.IOException;
 
 public class ProgressResponse extends ResponseBody {
     //回调接口
-    interface ProgressListener {
+    public interface ProgressListener {
         /**
          * @param bytesRead     已经读取的字节数
          * @param contentLength 响应总长度
          * @param done          是否读取完毕
          */
         void update(long bytesRead, long contentLength, boolean done);
+
+        void downSuc();
+
+        void err(Exception e);
     }
 
     private final ResponseBody responseBody;

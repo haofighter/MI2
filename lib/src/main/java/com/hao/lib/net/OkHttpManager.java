@@ -145,7 +145,8 @@ public class OkHttpManager {
         buildDownNet(file, progressListener);
     }
 
-    private void buildDownNet(final File file, ProgressResponse.ProgressListener progressListener) {
+
+    private void buildDownNet(final File file, final ProgressResponse.ProgressListener progressListener) {
         if (netType == NetType.Post) {
             request = Post();
         } else if (netType == NetType.Post) {
@@ -163,16 +164,21 @@ public class OkHttpManager {
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    InputStream is = response.body().byteStream();
-                    RandomAccessFile savedFile = new RandomAccessFile(file, "rw");
-                    savedFile.seek(file.length());//跳过已下载的字节
-                    byte[] b = new byte[1024];
-                    int total = 0;
-                    int len;
-                    while ((len = is.read(b)) != -1) {
+                public void onResponse(Call call, Response response) {
+                    try {
+                        InputStream is = response.body().byteStream();
+                        RandomAccessFile savedFile = new RandomAccessFile(file, "rw");
+                        savedFile.seek(file.length());//跳过已下载的字节
+                        byte[] b = new byte[1024];
+                        int total = 0;
+                        int len;
+                        while ((len = is.read(b)) != -1) {
                             total += len;
                             savedFile.write(b, 0, len);
+                        }
+                        progressListener.downSuc();
+                    } catch (Exception e) {
+                        progressListener.err(e);
                     }
                 }
             });
