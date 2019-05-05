@@ -1,2 +1,2 @@
-include ':show', ':voice', ':mivoice', ':lib', ':visitor'
+include ':show', ':voice', ':mivoice', ':lib', ':visitor', ':alipay', ':app'
 include ':openCVLibrary330'

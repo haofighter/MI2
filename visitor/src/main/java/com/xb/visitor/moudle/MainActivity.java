@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.hao.lib.base.MI2Activity;
 import com.xb.visitor.FaceOverlayView;
 import com.xb.visitor.FaceUtil.FaceUtils;
+import com.xb.visitor.FaceUtil.FeatureUtils;
 import com.xb.visitor.R;
 import com.xb.visitor.base.App;
 import com.xb.visitor.db.manage.DBManager;
@@ -48,10 +49,6 @@ public class MainActivity extends MI2Activity implements SurfaceHolder.Callback,
     private byte[] mPreviewFrameBuffer;
     private byte[] mByteCache;
 
-    // 根据已知人物图像生成对应的特征数据.
-    // 由于生成特征数据是一个耗时的过程,实际使用中需要提前生成好,然后持久化保存.
-    // 下次启动直接加载,对于新的人物做增量更新即可.
-    public FaceRecognizer fr = new FaceRecognizer();
 
 
     @Override
@@ -80,19 +77,29 @@ public class MainActivity extends MI2Activity implements SurfaceHolder.Callback,
         findViewById(R.id.add_face1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Feature> features = DBManager.checkAllFeature();
-                List<FaceRecognizer.Feature> usefeatures = new ArrayList<>();
-                List<String> names = new ArrayList<>();
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                for (int i = 0; i < features.size(); ++i) {
-                    usefeatures.add(FaceUtils.toFaceRecognizerFeature(features.get(i)));
-                    names.add("图片" + i);
-                    Log.i("添加特征", "图片" + i);
-                }
-                Utils.setFeatures(mCamera, usefeatures, names);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Feature> features = DBManager.checkAllFeature();
+                        List<FaceRecognizer.Feature> usefeatures = new ArrayList<>();
+                        List<String> names = new ArrayList<>();
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                        while (features.size() != 0) {
+//                for (int i = 0; i < features.size(); ++i) {
+                            usefeatures.add(FaceUtils.toFaceRecognizerFeature(features.get(0)));
+                            names.add("图片" + usefeatures.size());
+                            features.remove(0);
+                            Log.i("添加特征", "图片" + usefeatures.size());
+                        }
+//                }
+                        Utils.setFeatures(mCamera, usefeatures, names);
+                    }
+                }).start();
+
             }
         });
+
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -169,7 +176,6 @@ public class MainActivity extends MI2Activity implements SurfaceHolder.Callback,
         try {
             mCamera = Camera.open();
             mCamera.startPreview();
-            mLoadingView.setVisibility(View.INVISIBLE);
         } catch (Exception e) {
             e.printStackTrace();
             showToast("Open camera  failed:" + e.getMessage());
@@ -361,11 +367,14 @@ public class MainActivity extends MI2Activity implements SurfaceHolder.Callback,
         @Override
         protected Void doInBackground(Void... voids) {
 
-            int[] resIds = new int[]{R.drawable.wangyadong2, R.drawable.liuke2, R.drawable.zhanghao2, R.drawable.huangcuilan2, R.drawable.mahuateng2,
-                    R.drawable.wangyadong, R.drawable.liuke1, R.drawable.zhanghao1, R.drawable.huangcuilan1, R.drawable.mahuateng,
-                    R.drawable.huangmu1, R.drawable.huangmu2, R.drawable.huangmu3, R.drawable.huangmu4, R.drawable.huangmu5,
-                    R.drawable.huangmu6};
-            String[] names = new String[]{"王亚东", "刘科", "张浩", "黄翠兰", "马化腾", "王亚东2", "刘科2", "张浩2", "黄翠兰2", "马化腾2", "黄睦1", "黄睦2", "黄睦3", "黄睦4", "黄睦5", "黄睦6"};
+            int[] resIds = new int[]{
+//                    R.drawable.wangyadong2, R.drawable.liuke2, R.drawable.zhanghao2, R.drawable.huangcuilan2, R.drawable.mahuateng2,
+//                    R.drawable.wangyadong, R.drawable.liuke1, R.drawable.zhanghao1, R.drawable.huangcuilan1, R.drawable.mahuateng,
+//                    R.drawable.huangmu2,
+                    R.drawable.huangmu4, R.drawable.zhanghao2,R.drawable.wangyadong, R.drawable.liuke1, R.drawable.huangcuilan1};
+//                    , R.drawable.huangmu1, R.drawable.huangmu3, R.drawable.huangmu4, R.drawable.huangmu5,
+//                    R.drawable.huangmu6};
+            String[] names = new String[]{"黄睦1", "张浩", "黄睦2", "黄睦3", "黄睦4", "黄睦5", "黄睦6", "刘科", "黄翠兰", "马化腾", "王亚东2", "刘科2", "张浩2", "黄翠兰2", "马化腾2", "王亚东",};
 
 
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -373,9 +382,13 @@ public class MainActivity extends MI2Activity implements SurfaceHolder.Callback,
             for (int i = 0; i < resIds.length; ++i) {
                 if (mActivity.get() == null) return null;
                 Bitmap bitmap = BitmapFactory.decodeResource(mActivity.get().getResources(), resIds[i], options);
-                Log.i("解析人脸", "开始解析 图片" + i);
-                FaceRecognizer.Feature feature = fr.extractFeature(bitmap);
-                Log.i("解析人脸", "解析完成 图片" + i);
+                Log.i("解析人脸", "开始解析 图片" + names[i]);
+                FaceRecognizer.Feature feature = FeatureUtils.getInstance().extractFeature(bitmap);
+//                Feature locFeature = FaceUtils.getLocFeature(feature);
+//                locFeature.setOpenid(names[i]);
+//                DBManager.checkFeature(locFeature);
+//                locFeature.setOpenid("图片" + i);
+                Log.i("解析人脸", "解析完成 图片" + names[i]);
                 if (feature != null) {
                     mFeatures.add(feature);
                     mNames.add(names[i]);
@@ -383,6 +396,29 @@ public class MainActivity extends MI2Activity implements SurfaceHolder.Callback,
                     Log.w(TAG, "gen feature failed for:" + names[i]);
                 }
             }
+
+//            List<Feature> features = DBManager.checkAllFeature();
+//            while (features.size() != 0) {
+////                for (int i = 0; i < features.size(); ++i) {
+//                mFeatures.add(FaceUtils.toFaceRecognizerFeature(features.get(0)));
+//                mNames.add("图片" + mFeatures.size());
+//                features.remove(0);
+//                Log.i("添加特征", "图片" + mFeatures.size());
+//            }
+//            mFeatures.add(FaceUtils.toFaceRecognizerFeature(DBManager.checkAllFeature("黄睦1")));
+//            mNames.add("黄睦1");
+//            mFeatures.add(FaceUtils.toFaceRecognizerFeature(DBManager.checkAllFeature("黄睦2")));
+//            mNames.add("黄睦2");
+//            mFeatures.add(FaceUtils.toFaceRecognizerFeature(DBManager.checkAllFeature("黄睦3")));
+//            mNames.add("黄睦3");
+//            mFeatures.add(FaceUtils.toFaceRecognizerFeature(DBManager.checkAllFeature("黄睦4")));
+//            mNames.add("黄睦4");
+//            mFeatures.add(FaceUtils.toFaceRecognizerFeature(DBManager.checkAllFeature("黄睦5")));
+//            mNames.add("黄睦5");
+//            mFeatures.add(FaceUtils.toFaceRecognizerFeature(DBManager.checkAllFeature("黄睦6")));
+//            mNames.add("黄睦6");
+
+
             return null;
         }
 

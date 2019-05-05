@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewParent;
 import android.view.animation.AccelerateInterpolator;
@@ -201,8 +202,15 @@ public class MITextView extends View {
     float moveX = 0;//拖动的距离
     float moveY = 0;
 
+    private VelocityTracker mVelocityTracker;
+
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if (mVelocityTracker == null) {
+            mVelocityTracker = VelocityTracker.obtain();
+        }
+
+
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             fingerNowX = ev.getX();
             fingerNowY = ev.getY();
@@ -228,11 +236,17 @@ public class MITextView extends View {
         } else if (ev.getAction() == MotionEvent.ACTION_UP) {
             Log.i("手势结束", "moveX=" + moveX + "   show=" + show + "  pageSize=" + pageSize);
             if ((moveX < 0 && show < pageSize - 1) || (moveX > 0 && show > 0)) {
+
+                final MotionEvent vtev = MotionEvent.obtain(ev);
+                mVelocityTracker.addMovement(vtev);
+                mVelocityTracker.computeCurrentVelocity(1000, 100);
+                Log.i("惯性速度", mVelocityTracker.getXVelocity() + "");
+
                 setValueAnimal(new BackCall() {
                     @Override
                     public void call(Object o) {
                         if (Math.abs(moveX) < viewWidth / 2) {
-                            offsetHor = (1 - Float.parseFloat(o + "") / 100) * moveX + textPadingVar - show * viewWidth + textPadingleft + textPadingVar;
+                            offsetHor = (1 - Float.parseFloat(o + "") / 100) * moveX + textPadingVar - show * viewWidth + textPadingleft ;
                         } else {
                             if (moveX < 0) {//左移动
                                 offsetHor = moveX - (viewWidth - textPadingleft - textPadingVar + moveX) * Float.parseFloat(o + "") / 100 - show * viewWidth;

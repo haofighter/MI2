@@ -52,6 +52,7 @@ public class FaceActivity extends AppCompatActivity implements CameraBridgeViewB
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_face);
 
+
         openCvCameraView = (CameraBridgeViewBase) findViewById(R.id.javaCameraView);
         openCvCameraView.setCameraIndex(-1); //摄像头索引        -1/0：后置双摄     1：前置
         openCvCameraView.enableFpsMeter(); //显示FPS

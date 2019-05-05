@@ -36,10 +36,13 @@ public class DBManager {
      */
     public static Feature checkFeature(Feature feature) {
         Feature locFeature = DBCore.getDaoSession().getFeatureDao().queryBuilder().where(FeatureDao.Properties.Openid.eq(feature.getOpenid())).limit(1).unique();
-        if (locFeature == null) {
-            locFeature = feature;
+        if (locFeature != null) {
+            feature.setFeatureId(locFeature.getFeatureId());
+            Log.i("解析人脸", "替换：" + feature.getOpenid());
+        } else {
+            Log.i("解析人脸", "添加：" + feature.getOpenid());
         }
-        DBCore.getDaoSession().insertOrReplace(locFeature);
+        DBCore.getDaoSession().insertOrReplace(feature);
         return DBCore.getDaoSession().getFeatureDao().queryBuilder().where(FeatureDao.Properties.Openid.eq(feature.getOpenid())).limit(1).unique();
     }
 
@@ -80,7 +83,16 @@ public class DBManager {
      * @return
      */
     public static List<Feature> checkAllFeature() {
-        return DBCore.getDaoSession().getFeatureDao().queryBuilder().list();
+        return DBCore.getDaoSession().getFeatureDao().queryBuilder().limit(10000).list();
+    }
+
+    /**
+     * 查询所有的存储的人脸
+     *
+     * @return
+     */
+    public static Feature checkAllFeature(String openid) {
+        return DBCore.getDaoSession().getFeatureDao().queryBuilder().where(FeatureDao.Properties.Openid.eq(openid)).limit(1).unique();
     }
 
 

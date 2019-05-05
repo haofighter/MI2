@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.hao.lib.base.BackCall;
 import com.squareup.picasso.Picasso;
 import com.xb.visitor.FaceUtil.FaceUtils;
+import com.xb.visitor.FaceUtil.FeatureUtils;
 import com.xb.visitor.base.App;
 import com.xb.visitor.db.manage.DBManager;
 import com.xb.visitor.entity.BitMapInfo;
@@ -278,7 +279,7 @@ public class GetPushService extends Service {
     public void resolutionFace() {
         for (int i = 0; i < bitmaps.size(); i++) {
             Log.i("过程   人脸图片", "开始解析图片" + bitmaps.get(i).toString().length());
-            FaceRecognizer.Feature feature = ((MainActivity) App.getInstance().getNowActivitie()).fr.extractFeature(bitmaps.get(i).getBitmap());
+            FaceRecognizer.Feature feature = FeatureUtils.getInstance().extractFeature(bitmaps.get(i).getBitmap());
             Log.i("过程   人脸图片", "图片解析成功");
             FaceInfo faceInfo = DBManager.checkFace(new FaceInfo(bitmaps.get(i).getMqttInfo()));
             Log.i("过程   人脸图片", "信息添加或修改");

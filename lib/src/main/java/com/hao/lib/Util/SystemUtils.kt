@@ -286,7 +286,7 @@ object SystemUtils {
                                         100
                                     )
                                 } else {
-                                    throw NullPointerException("未获取到 当前的activity ,  请尝试调用此方法之前调用 App.instance.nowActivity = this(Activity)")
+                                    throw NullPointerException("未获取到 当前的activity ,  请尝试调用此方法之前调用 App.instance.nowActivity = this(Activity)") as Throwable
                                 }
                             }
 

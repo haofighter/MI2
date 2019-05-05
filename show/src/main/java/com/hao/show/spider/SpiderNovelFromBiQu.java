@@ -1,6 +1,7 @@
 package com.hao.show.spider;
 
 import android.util.Log;
+import com.hao.lib.Util.ThreadUtils;
 import com.hao.show.db.manage.DBManager;
 import com.hao.show.moudle.main.novel.Entity.*;
 import org.jetbrains.annotations.NotNull;
@@ -111,5 +112,29 @@ public class SpiderNovelFromBiQu {
         Log.i("文章内容", novelChapter.getNextChapterUrl() + "  章节名：" + novelChapter.getCid() + "    小说id：" + novelChapter.getNid());
         DBManager.addNovelChapter(novelChapter);
         return novelChapter;
+    }
+
+    /**
+     * 入库所有的小说
+     *
+     * @param html
+     */
+    @NotNull
+    public static void getAllNovel(final String html) {
+        ThreadUtils.createSingle("allnovel").execute(new Runnable() {
+            @Override
+            public void run() {
+                Document doc = Jsoup.parse(html);
+                Elements novellist = doc.select("div[class=novellist]").select("li");
+                for (int i = 0; i < novellist.size(); i++) {
+                    NovelListItemContent novelListItemContent = new NovelListItemContent();
+                    Elements node = novellist.get(i).select("a");
+                    novelListItemContent.setTitle(node.text());
+                    novelListItemContent.setUrl(node.attr("href"));
+                    Log.i("获取内容", "" + novelListItemContent.getTitle() + "   " + novelListItemContent.getUrl() + "     " + novellist.get(i).html());
+                    DBManager.addNovel(novelListItemContent);
+                }
+            }
+        });
     }
 }

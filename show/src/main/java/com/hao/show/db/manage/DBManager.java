@@ -35,10 +35,11 @@ public class DBManager {
         return checkNovel(novelListItemContent);
     }
 
+
     //通过小说名及作者来判断是小说是否为同一本
     public static NovelListItemContent checkNovel(NovelListItemContent novelListItemContent) {
         return DBCore.getDaoSession().getNovelListItemContentDao().queryBuilder().where(NovelListItemContentDao.Properties.Title.eq(novelListItemContent.getTitle()),
-                NovelListItemContentDao.Properties.Auther.eq(novelListItemContent.getAuther())).unique();
+                NovelListItemContentDao.Properties.Url.eq(novelListItemContent.getUrl())).unique();
     }
 
     /**
@@ -73,6 +74,5 @@ public class DBManager {
             return DBCore.getDaoSession().getNovelChapterDao().queryBuilder().where(NovelChapterDao.Properties.Nid.eq(id[0]), NovelChapterDao.Properties.Cid.eq(id[1])).list();
         }
     }
-
 
 }
