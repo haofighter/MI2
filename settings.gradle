@@ -1,2 +1,2 @@
-include ':show', ':voice', ':mivoice', ':lib', ':visitor', ':alipay', ':app'
-include ':openCVLibrary330'
+include ':show', ':lib', ':visitor', ':haikou', ':openCVLibrary3301'
+project(':openCVLibrary3301').projectDir = new File('openCVLibrary330')

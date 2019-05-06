@@ -1,5 +1,6 @@
 package com.hao.lib.base;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,14 +23,14 @@ public class MI2App extends Application {
     }
 
 
-    private List<MI2Activity> activities = new ArrayList<>();
-    private MI2Activity activitie = null;
+    private List<Activity> activities = new ArrayList<>();
+    private Activity activitie = null;
 
-    public MI2Activity getNowActivitie() {
+    public Activity getNowActivitie() {
         return activitie;
     }
 
-    public void addActivity(MI2Activity baseActivity) {
+    public void addActivity(Activity baseActivity) {
         activities.add(baseActivity);
         activitie = baseActivity;
     }
@@ -50,8 +51,10 @@ public class MI2App extends Application {
             if (tag == null && tag.equals("")) {
                 activities.get(i).finish();
             } else {
-                if (activities.get(i).getMI2TAG().equals(tag)) {
-                    activities.get(i).finish();
+                if (activities.get(i) instanceof MI2Activity) {
+                    if (((MI2Activity) activities.get(i)).getMI2TAG().equals(tag)) {
+                        activities.get(i).finish();
+                    }
                 }
             }
         }

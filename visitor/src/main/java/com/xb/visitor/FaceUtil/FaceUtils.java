@@ -2,9 +2,7 @@ package com.xb.visitor.FaceUtil;
 
 import android.media.FaceRecognizer;
 import android.util.Log;
-import com.xb.visitor.base.App;
 import com.xb.visitor.entity.Feature;
-import com.xb.visitor.moudle.MainActivity;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -45,7 +43,7 @@ public class FaceUtils {
 
                 //实例化对象
                 if (feature == null) {
-                    feature = con.newInstance(((MainActivity) App.getInstance().getNowActivitie()).fr);
+                    feature = con.newInstance(FeatureUtils.getInstance());
                 } else {
                     feature.fvect = string2Float(locfeature.fvect);
                     feature.face_x1 = locfeature.face_x1;

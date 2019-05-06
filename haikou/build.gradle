@@ -1,0 +1,77 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+    compileSdkVersion 28
+
+
+
+    defaultConfig {
+        applicationId "com.xb.haikou"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    greendao {
+        schemaVersion 1
+        daoPackage 'com.xb.haikou.db.dao'
+        targetGenDir 'src/main/java'
+    }
+
+    flavorDimensions 'api'
+    productFlavors {
+        haikou {
+            versionCode 100
+            versionName "1.0.3"
+            buildConfigField 'String', 'LOG_TAG', '"laiwu"'
+            //            buildConfigField 'String', 'BIN_NAME', '"laiwu_cy.bin"'
+            buildConfigField 'String', 'BIN_NAME', '"Q6_K21_190505171050.bin"'
+            buildConfigField 'int', 'CITY', '2'
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            if (variant.buildType.name == 'debug') {
+                def fileName = "${variant.versionName}_${debugTime()}_${variant.productFlavors[0].name}.apk"
+                outputFileName = fileName
+            }
+        }
+    }
+
+}
+
+static def debugTime() {
+    return new Date().format("yyMMdd", TimeZone.getDefault())
+}
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation project(':lib')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.squareup.okhttp3:okhttp:3.12.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'com.github.yuweiguocn:GreenDaoUpgradeHelper:v2.0.1'
+}
