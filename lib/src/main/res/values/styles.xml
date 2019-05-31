@@ -7,15 +7,15 @@
         <attr name="border_color" format="color"/>
     </declare-styleable>
 
-    <declare-styleable name="MITextView">
+    <declare-styleable name="ScorllTextView">
         <attr name="textSize" format="dimension"/>
         <attr name="textColor" format="reference|color"/>
         <attr name="lineSpacingExtra" format="dimension"/>
         <attr name="wordSpaceExtra" format="dimension"/>
-        <attr name="padingLeft" format="dimension"/>
-        <attr name="padingRight" format="dimension"/>
-        <attr name="padingTop" format="dimension"/>
-        <attr name="padingBottom" format="dimension"/>
-        <attr name="pading" format="dimension"/>
+        <attr name="paddingLeft" format="dimension"/>
+        <attr name="paddingRight" format="dimension"/>
+        <attr name="paddingTop" format="dimension"/>
+        <attr name="paddingBottom" format="dimension"/>
+        <attr name="padding" format="dimension"/>
     </declare-styleable>
 </resources>

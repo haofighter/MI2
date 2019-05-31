@@ -26,14 +26,17 @@ object DialogUtils {
      * @throws
      * @since 1.0.0
      */
-    fun showInfoDialog(context: Context,
-                       tv_titel: String?, content: String, conf: String?, canc: String?,
-                       call: BackCall<Int>?): Dialog {
+    fun showInfoDialog(
+        context: Context,
+        tv_titel: String?, content: String, conf: String?, canc: String?,
+        call: BackCall<Int>?
+    ): Dialog {
         var dlg = Dialog(context, R.style.noDialogTheme)
         var inflater = context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var layout = inflater.inflate(
-                R.layout.dialog_show_info, null)
+            R.layout.dialog_show_info, null
+        )
         var title = layout.findViewById<TextView>(R.id.title)
         if (tv_titel == null) {
             title.visibility = View.GONE
@@ -77,16 +80,16 @@ object DialogUtils {
             }
         }
         layout.findViewById<View>(R.id.cancel).setOnClickListener(
-                object : View.OnClickListener {
-                    override fun onClick(v: View) {
-                        if (call != null) {
-                            call.call(R.id.cancel)
-                            dlg.dismiss()
-                        } else {
-                            dlg.dismiss()
-                        }
+            object : View.OnClickListener {
+                override fun onClick(v: View) {
+                    if (call != null) {
+                        call.call(R.id.cancel)
+                        dlg.dismiss()
+                    } else {
+                        dlg.dismiss()
                     }
-                })
+                }
+            })
         var w = dlg.window
         var lp = w!!.attributes
         lp.gravity = Gravity.CENTER
@@ -120,6 +123,7 @@ object DialogUtils {
 //        }
 //        return dlg as Dialog
 //    }
+
 
 }
 

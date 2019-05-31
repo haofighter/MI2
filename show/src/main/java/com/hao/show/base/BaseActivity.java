@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.hao.lib.base.MI2Activity;
+import com.hao.lib.base.Rx.Rx;
 import com.hao.show.R;
 
 public abstract class BaseActivity extends MI2Activity {
@@ -49,5 +50,6 @@ public abstract class BaseActivity extends MI2Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Rx.getInstance().removeAll();
     }
 }

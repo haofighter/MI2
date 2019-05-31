@@ -101,17 +101,18 @@ public class SpiderNovelFromBiQu {
 
     @NotNull
     public static NovelChapter getNovelContent(String html, NovelChapter novelChapter) {
+        NovelChapter novelChapternew = novelChapter;//防止取到list的元素后导致报错
         Document doc = Jsoup.parse(html);
         Elements frist = doc.select("div[class=box_con]");
         Elements second = frist.select("div[class=bookname]");
-        novelChapter.setChapterName(second.select("h1").text());
+        novelChapternew.setChapterName(second.select("h1").text());
         Elements thrid = second.select("div[class=bottem1]").select("a");
-        novelChapter.setBeforChapterUrl(CheckedUrl(thrid.get(1).attr("href")));
-        novelChapter.setNextChapterUrl(CheckedUrl(thrid.select("a").get(3).attr("href")));
-        novelChapter.setChapterContent(frist.select("div#content").html().replace(" ", "").replace("\n", "").replace("<br>&nbsp;&nbsp;&nbsp;&nbsp;", "\n  ").replace("<br>", "").replace("&nbsp;", "").split("<p>")[0]);
-        Log.i("文章内容", novelChapter.getNextChapterUrl() + "  章节名：" + novelChapter.getCid() + "    小说id：" + novelChapter.getNid());
-        DBManager.addNovelChapter(novelChapter);
-        return novelChapter;
+        novelChapternew.setBeforChapterUrl(CheckedUrl(thrid.get(1).attr("href")));
+        novelChapternew.setNextChapterUrl(CheckedUrl(thrid.select("a").get(3).attr("href")));
+        novelChapternew.setChapterContent(frist.select("div#content").html().replace(" ", "").replace("\n", "").replace("<br>&nbsp;&nbsp;&nbsp;&nbsp;", "\n  ").replace("<br>", "").replace("&nbsp;", "").split("<p>")[0]);
+        Log.i("文章内容", novelChapternew.getNextChapterUrl() + "  章节名：" + novelChapternew.getCid() + "    小说id：" + novelChapternew.getNid());
+        DBManager.addNovelChapter(novelChapternew);
+        return novelChapternew;
     }
 
     /**
@@ -121,7 +122,7 @@ public class SpiderNovelFromBiQu {
      */
     @NotNull
     public static void getAllNovel(final String html) {
-        ThreadUtils.createSingle("allnovel").execute(new Runnable() {
+        ThreadUtils.getInstance().createSingle("allnovel").execute(new Runnable() {
             @Override
             public void run() {
                 Document doc = Jsoup.parse(html);
@@ -131,7 +132,6 @@ public class SpiderNovelFromBiQu {
                     Elements node = novellist.get(i).select("a");
                     novelListItemContent.setTitle(node.text());
                     novelListItemContent.setUrl(node.attr("href"));
-                    Log.i("获取内容", "" + novelListItemContent.getTitle() + "   " + novelListItemContent.getUrl() + "     " + novellist.get(i).html());
                     DBManager.addNovel(novelListItemContent);
                 }
             }

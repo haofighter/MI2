@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Environment
@@ -295,13 +296,13 @@ object SystemUtils {
                 })
         }
     }
-
-    fun cancalSearchFileAsyncTask() {
-        if (searchFileAsyncTask != null && !searchFileAsyncTask!!.isCancelled) {
-            searchFileAsyncTask!!.cancel(true)
-            searchFileAsyncTask = null
-        }
-    }
+    //结束查找
+//    fun cancalSearchFileAsyncTask() {
+//        if (searchFileAsyncTask != null && !searchFileAsyncTask!!.isCancelled) {
+//            searchFileAsyncTask!!.cancel(true)
+//            searchFileAsyncTask = null
+//        }
+//    }
 
 
     /**
@@ -341,6 +342,28 @@ object SystemUtils {
             Log.i("进度", "总共搜索" + result!!.size)
             listener.finish(result)
         }
+    }
+
+
+    /**
+     * @param context 。
+     * @return 是否有网络
+     */
+    fun getNetWorkState(context: Context): Boolean {
+        val connectivityManager = context
+            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = connectivityManager
+            .activeNetworkInfo
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
+            if (activeNetworkInfo.type == ConnectivityManager.TYPE_WIFI) {
+                return true
+            } else if (activeNetworkInfo.type == ConnectivityManager.TYPE_MOBILE) {
+                return true
+            }
+        } else {
+            return false
+        }
+        return false
     }
 }
 

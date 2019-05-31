@@ -12,23 +12,20 @@
                   android:layout_marginBottom="5dp"
                   android:background="@drawable/shape_coner_white_5dp"
                   android:orientation="vertical">
-        <TextView
+        <com.hao.lib.view.ThemeTextView
                 android:id="@+id/novel_name"
-                android:textColor="@color/black"
                 android:text="小说1"
                 android:textSize="@dimen/text_title"
                 android:layout_width="match_parent" android:layout_height="wrap_content"/>
-        <TextView
+        <com.hao.lib.view.ThemeTextView
                 android:id="@+id/novel_author"
-                android:textColor="@color/gray_dd"
                 android:text="小说1"
                 android:layout_marginTop="5dp"
                 android:textSize="@dimen/text_second"
                 android:layout_width="match_parent" android:layout_height="wrap_content"/>
 
-        <TextView
+        <com.hao.lib.view.ThemeTextView
                 android:id="@+id/novel_new"
-                android:textColor="@color/gray_dd"
                 android:text="小说1"
                 android:layout_marginTop="5dp"
                 android:textSize="@dimen/text_second"

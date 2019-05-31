@@ -15,8 +15,8 @@ public class LoggingInterceptor implements Interceptor {
         Request request = chain.request();
 
         long t1 = System.nanoTime();//请求发起的时间
-        Log.i("请求", String.format("发送请求 %s on %s%n%s",
-                request.url(), "\n连接:"+chain.connection(), "\n请求头:"+request.headers()));
+//        Log.i("请求", String.format("发送请求 %s on %s%s%s",
+//                request.url(), "\n连接:" + chain.connection(), "\n请求头:" + request.headers(), "\n请求参数：" + request.toString()));
 
         Response response = chain.proceed(request);
 
@@ -26,13 +26,13 @@ public class LoggingInterceptor implements Interceptor {
         //因为response.body().string()之后，response中的流会被关闭，程序会报错，我们需要创建出一
         //个新的response给应用层处理
         ResponseBody responseBody = response.peekBody(1024 * 1024);
-
-        Log.i("请求", String.format("接收响应: [%s] %n返回json:【%s】 %.1fms%n%s",
-                response.request().url(),
-                responseBody.string(),
-                (t2 - t1) / 1e6d,
-                response.headers()));
-
+//
+//        Log.i("请求", String.format("接收响应: [%s] %n返回json:【%s】 %.1fms%n%s",
+//                response.request().url(),
+//                responseBody.string(),
+//                (t2 - t1) / 1e6d,
+//                response.headers()));
+        Log.i("请求", "返回数据=" + responseBody.string());
         return response;
     }
 }

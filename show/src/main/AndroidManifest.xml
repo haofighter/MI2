@@ -36,7 +36,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".moudle.main.MainActivity">
+        <activity android:name=".moudle.main.AdvertActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -47,14 +47,19 @@
         </activity>
         <activity android:name=".moudle.main.MIDrawActivity">
         </activity>
+        <activity android:name=".moudle.main.MainActivity">
+        </activity>
         <activity android:name=".moudle.main.novel.NovelActivity">
         </activity>
         <activity android:name=".moudle.main.novel.NovelDetailActivity">
         </activity>
         <activity android:name=".moudle.main.novel.NovelContentActivity">
         </activity>
-        <activity android:name=".moudle.face.FaceActivity"
-                  android:screenOrientation="landscape">
+        <activity
+                android:name=".moudle.face.FaceActivity"
+                android:screenOrientation="landscape">
+        </activity>
+        <activity android:name=".moudle.main.novel.NovelLooksActivity">
         </activity>
     </application>
 

@@ -8,10 +8,12 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
+import com.hao.show.moudle.main.novel.Entity.HistroryReadEntity;
 import com.hao.show.moudle.main.novel.Entity.NovelChapter;
 import com.hao.show.moudle.main.novel.Entity.NovelClassify;
 import com.hao.show.moudle.main.novel.Entity.NovelListItemContent;
 
+import com.hao.show.db.dao.HistroryReadEntityDao;
 import com.hao.show.db.dao.NovelChapterDao;
 import com.hao.show.db.dao.NovelClassifyDao;
 import com.hao.show.db.dao.NovelListItemContentDao;
@@ -25,10 +27,12 @@ import com.hao.show.db.dao.NovelListItemContentDao;
  */
 public class DaoSession extends AbstractDaoSession {
 
+    private final DaoConfig histroryReadEntityDaoConfig;
     private final DaoConfig novelChapterDaoConfig;
     private final DaoConfig novelClassifyDaoConfig;
     private final DaoConfig novelListItemContentDaoConfig;
 
+    private final HistroryReadEntityDao histroryReadEntityDao;
     private final NovelChapterDao novelChapterDao;
     private final NovelClassifyDao novelClassifyDao;
     private final NovelListItemContentDao novelListItemContentDao;
@@ -36,6 +40,9 @@ public class DaoSession extends AbstractDaoSession {
     public DaoSession(Database db, IdentityScopeType type, Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>
             daoConfigMap) {
         super(db);
+
+        histroryReadEntityDaoConfig = daoConfigMap.get(HistroryReadEntityDao.class).clone();
+        histroryReadEntityDaoConfig.initIdentityScope(type);
 
         novelChapterDaoConfig = daoConfigMap.get(NovelChapterDao.class).clone();
         novelChapterDaoConfig.initIdentityScope(type);
@@ -46,19 +53,26 @@ public class DaoSession extends AbstractDaoSession {
         novelListItemContentDaoConfig = daoConfigMap.get(NovelListItemContentDao.class).clone();
         novelListItemContentDaoConfig.initIdentityScope(type);
 
+        histroryReadEntityDao = new HistroryReadEntityDao(histroryReadEntityDaoConfig, this);
         novelChapterDao = new NovelChapterDao(novelChapterDaoConfig, this);
         novelClassifyDao = new NovelClassifyDao(novelClassifyDaoConfig, this);
         novelListItemContentDao = new NovelListItemContentDao(novelListItemContentDaoConfig, this);
 
+        registerDao(HistroryReadEntity.class, histroryReadEntityDao);
         registerDao(NovelChapter.class, novelChapterDao);
         registerDao(NovelClassify.class, novelClassifyDao);
         registerDao(NovelListItemContent.class, novelListItemContentDao);
     }
     
     public void clear() {
+        histroryReadEntityDaoConfig.clearIdentityScope();
         novelChapterDaoConfig.clearIdentityScope();
         novelClassifyDaoConfig.clearIdentityScope();
         novelListItemContentDaoConfig.clearIdentityScope();
+    }
+
+    public HistroryReadEntityDao getHistroryReadEntityDao() {
+        return histroryReadEntityDao;
     }
 
     public NovelChapterDao getNovelChapterDao() {

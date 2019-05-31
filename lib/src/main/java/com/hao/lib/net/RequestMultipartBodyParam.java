@@ -57,4 +57,14 @@ public class RequestMultipartBodyParam {
     public void setHeaderContent(String headerContent) {
         this.headerContent = headerContent;
     }
+
+
+    @Override
+    public String toString() {
+        return
+                "mediaType=" + mediaType +
+                        ", mediaContent=" + mediaContent +
+                        ", headerName='" + headerName + '\'' +
+                        ", headerContent='" + headerContent + '\'';
+    }
 }

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * 作者: Tangren on 2017/7/8
  * 包名：com.szxb.onlinbus.util
  * 邮箱：996489865@qq.com
- * TODO:通用的工具类
+ * 通用的工具类
  */
 
 public class DataUtils {
@@ -87,8 +87,6 @@ public class DataUtils {
         String is = new String(ss);
         return is;
     }
-
-
 
 
     /**
@@ -186,6 +184,13 @@ public class DataUtils {
     public static String getStringDate() {
         Date currentTime = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
+
+    public static String getStringDateM() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         String dateString = formatter.format(currentTime);
         return dateString;
     }

@@ -21,6 +21,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
+        HistroryReadEntityDao.createTable(db, ifNotExists);
         NovelChapterDao.createTable(db, ifNotExists);
         NovelClassifyDao.createTable(db, ifNotExists);
         NovelListItemContentDao.createTable(db, ifNotExists);
@@ -28,6 +29,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
+        HistroryReadEntityDao.dropTable(db, ifExists);
         NovelChapterDao.dropTable(db, ifExists);
         NovelClassifyDao.dropTable(db, ifExists);
         NovelListItemContentDao.dropTable(db, ifExists);
@@ -49,6 +51,7 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
+        registerDaoClass(HistroryReadEntityDao.class);
         registerDaoClass(NovelChapterDao.class);
         registerDaoClass(NovelClassifyDao.class);
         registerDaoClass(NovelListItemContentDao.class);

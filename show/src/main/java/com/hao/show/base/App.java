@@ -1,10 +1,13 @@
 package com.hao.show.base;
 
 
+import android.support.v4.content.ContextCompat;
 import com.hao.lib.Util.SPUtils;
 import com.hao.lib.base.MI2App;
 import com.hao.lib.base.Rx.Rx;
 import com.hao.lib.base.Rx.RxMessage;
+import com.hao.lib.base.theme.ThemeFactory;
+import com.hao.show.R;
 import com.hao.show.spider.SpiderNovelFromBiQu;
 import com.hao.show.spider.SpiderUtils;
 
@@ -25,6 +28,7 @@ public class App extends MI2App {
         app = this;
         SPUtils.init(this);
         getAllNovel();
+        initTheme();
     }
 
 
@@ -32,7 +36,7 @@ public class App extends MI2App {
         if (System.currentTimeMillis() - updateTime > 24 * 60 * 60 * 1000) {
             Rx.getInstance().addRxMessage(new RxMessage() {
                 @Override
-                protected void rxDo(Object tag, Object o) {
+                public void rxDo(Object tag, Object o) {
                     if (tag.equals("all")) {
                         SpiderNovelFromBiQu.getAllNovel((String) o);
                         updateTime = System.currentTimeMillis();
@@ -41,5 +45,10 @@ public class App extends MI2App {
             });
             SpiderUtils.getHtml("http://www.xbiquge.la/xiaoshuodaquan/", "all");
         }
+    }
+
+
+    public void initTheme() {
+        ThemeFactory.getInstance().createTheme().setBackBitmap(R.mipmap.background).setTextColorResource(this, R.color.white).load();
     }
 }

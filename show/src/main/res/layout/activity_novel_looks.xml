@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hao.lib.view.ScorllTextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/novel_looks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".moudle.main.novel.NovelLooksActivity">
+
+</com.hao.lib.view.ScorllTextView>

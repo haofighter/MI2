@@ -8,7 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class ThreadUtils {
     static class ExecutorConfig {
-        int num;
+        int num = 1;
         Executor executor;
 
         public ExecutorConfig(int num, Executor executor) {
@@ -18,7 +18,7 @@ public class ThreadUtils {
     }
 
     static HashMap<String, ExecutorConfig> map = new HashMap<>();
-    static int num;
+    static int num = 10;
     static ThreadUtils threadUtils;
 
     private ThreadUtils() {
@@ -28,9 +28,10 @@ public class ThreadUtils {
         static final ThreadUtils threadUtils = new ThreadUtils();
     }
 
-    public static void setNum(int num) {
-        ThreadUtils.num = num;
+    public static ThreadUtils getInstance() {
+        return ThreadHelper.threadUtils;
     }
+
 
     /**
      * 创建一个带有标示的线程池
@@ -38,23 +39,24 @@ public class ThreadUtils {
      * @param tag
      * @return
      */
-    public static ScheduledExecutorService createSch(String tag) {
+    public ScheduledExecutorService createSch(String tag) {
         if (threadUtils == null) {
             threadUtils = ThreadHelper.threadUtils;
         }
+
         if (map.get(tag) == null || !(map.get(tag).executor instanceof ExecutorService) || (num != map.get(tag).num) && num != 0) {
-            map.put(tag, new ExecutorConfig(num, Executors.newScheduledThreadPool(map.get(tag).num)));
+            map.put(tag, new ExecutorConfig(num, Executors.newScheduledThreadPool(num)));
             threadUtils.num = 0;
         }
         return (ScheduledExecutorService) map.get(tag).executor;
     }
 
-    public static ExecutorService createFix(String tag) {
+    public ExecutorService createFix(String tag) {
         if (threadUtils == null) {
             threadUtils = ThreadHelper.threadUtils;
         }
         if (map.get(tag) == null || !(map.get(tag) instanceof ExecutorService) || (num != map.get(tag).num) && num != 0) {
-            map.put(tag, new ExecutorConfig(num, Executors.newFixedThreadPool(map.get(tag).num)));
+            map.put(tag, new ExecutorConfig(num, Executors.newFixedThreadPool(num)));
             threadUtils.num = 0;
         }
         return (ExecutorService) map.get(tag).executor;
@@ -62,7 +64,7 @@ public class ThreadUtils {
 
 
     //单线程化线程池
-    public static ExecutorService createSingle(String tag) {
+    public  ExecutorService createSingle(String tag) {
         if (threadUtils == null) {
             threadUtils = ThreadHelper.threadUtils;
         }

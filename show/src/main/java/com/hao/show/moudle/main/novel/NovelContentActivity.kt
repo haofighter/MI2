@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.view.ViewPager
-import android.util.Log
 import android.view.WindowManager
 import com.hao.lib.base.Rx.Rx
 import com.hao.lib.base.Rx.RxMessage
@@ -25,6 +24,7 @@ class NovelContentActivity : BaseActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         var novelChapter = intent.getSerializableExtra("chapter") as NovelChapter;
+        var page = intent.getLongExtra("page", -1);
         novel_content.setOffscreenPageLimit(1);
         novel_content.adapter = NovelContentAdapter(this, DBManager.selectNovelChapter(novelChapter.nid));
         novel_content.currentItem = novelChapter.cid.toInt()
@@ -55,6 +55,7 @@ class NovelContentActivity : BaseActivity() {
                 }
             }
         })
+
     }
 
     override fun initViewID(): Int {
@@ -63,7 +64,7 @@ class NovelContentActivity : BaseActivity() {
 
     //通过网址获取网页
     private fun getDetailHtml(no: NovelChapter) {
-        Rx.getInstance().addRxMessage(object : RxMessage() {
+        Rx.getInstance().addRxMessage(object : RxMessage {
             @SuppressLint("NewApi")
             @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
             override fun rxDo(tag: Any, o: Any) {
@@ -73,6 +74,10 @@ class NovelContentActivity : BaseActivity() {
                     } catch (e: Exception) {
                         runOnUiThread { setViewDate(tag, o) }
                     }
+                } else if (tag.equals("reload")) {
+                    showLoading()
+                    var chapterList = (novel_content.adapter as NovelContentAdapter).date
+                    SpiderUtils.getHtml(chapterList.get(o as Int).chapterUrl, chapterList.get(o));
                 }
             }
         })

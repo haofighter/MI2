@@ -9,10 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class OkHttpManager {
     private List<RequestFormBodyParam> requestFormBodyParams;
+    private String content = "";
     private List<RequestMultipartBodyParam> requestMultipartBodyParamList;
     private NetBodyType netBodyType = NetBodyType.form;
     private NetType netType;//请求方式
@@ -22,7 +26,7 @@ public class OkHttpManager {
 
     //枚举 请求的类型 multipart分块提交 form 表单提交
     private enum NetBodyType {
-        multipart, form
+        multipart, form, json
     }
 
     //枚举请求的方式
@@ -46,6 +50,25 @@ public class OkHttpManager {
         return this;
     }
 
+    //添加表单提交的参数配置
+
+    public OkHttpManager addFromParam(Map<String, Object> map) {
+        netBodyType = NetBodyType.form;
+        Iterator<Map.Entry<String, Object>> entries = map.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry<String, Object> entry = entries.next();
+            System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+            requestFormBodyParams.add(new RequestFormBodyParam(entry.getKey(), entry.getValue().toString()));
+        }
+        return this;
+    }
+
+    public OkHttpManager addJsonParam(String string) {
+        netBodyType = NetBodyType.json;
+        content = string;
+        return this;
+    }
+
     //添加分块提交的参数配置
     public OkHttpManager addMultipartParam(RequestMultipartBodyParam requestMultipartBodyParam) {
         netBodyType = NetBodyType.multipart;
@@ -61,6 +84,14 @@ public class OkHttpManager {
     //获取单例的okhttpClient对象
     public static OkHttpClient getOkhttpClient() {
         return OkHttpHelper.builder.build();
+    }
+
+    public void setTimeOut(int second) {
+        OkHttpHelper.builder.connectTimeout(second, TimeUnit.SECONDS);
+        OkHttpHelper.builder.callTimeout(second, TimeUnit.SECONDS);
+        OkHttpHelper.builder.readTimeout(second, TimeUnit.SECONDS);
+        OkHttpHelper.builder.writeTimeout(second, TimeUnit.SECONDS);
+
     }
 
 
@@ -83,6 +114,12 @@ public class OkHttpManager {
     //构建Post格式的提交requet
     Request Post() {
         RequestBody body = RequestBody.create(null, "");
+        if (url.equals("")) {
+            new NullPointerException("请求地址为空，请调用SeUrl()");
+        } else {
+            Log.i("请求地址", "url=" + url);
+        }
+
         if (netBodyType == NetBodyType.multipart) {
             MultipartBody.Builder builder = new MultipartBody.Builder("AaB03x").setType(MultipartBody.FORM);
             body = builder.build();
@@ -102,20 +139,23 @@ public class OkHttpManager {
                     builder.addPart(Headers.of(r.headerName, r.headerContent), body);
                 }
             }
+            Log.i("请求参数", "param=" + requestMultipartBodyParamList.toString());
         } else if (netBodyType == NetBodyType.form) {
             //为数据添加复杂的请求的参数
             FormBody.Builder builder = new FormBody.Builder();
-            for (int i = 0; i < requestFormBodyParams.size(); i++) {
-                RequestFormBodyParam r = requestFormBodyParams.get(i);
-                builder.add(r.paramName, r.paramContent);
+            if (requestFormBodyParams != null && requestFormBodyParams.size() != 0) {
+                for (int i = 0; i < requestFormBodyParams.size(); i++) {
+                    RequestFormBodyParam r = requestFormBodyParams.get(i);
+                    builder.add(r.paramName, r.paramContent);
+                }
             }
             body = builder.build();
+            Log.i("请求参数", "param=" + requestFormBodyParams.toString());
+        } else if (netBodyType == NetBodyType.json) {
+            body = RequestBody.create(MediaType.get("application/json"), content);
+            Log.i("请求参数", "param=" + content);
         }
 
-
-        if (url.equals("")) {
-            new NullPointerException("请求地址为空，请调用SeUrl()");
-        }
         return new Request.Builder().url(url).post(body).build();
     }
 
@@ -197,6 +237,7 @@ public class OkHttpManager {
         if (netCallBack != null)//do 设置请求回调
             call.enqueue(netCallBack);
     }
+
 
 
     public OkHttpManager setNetType(NetType netType) {

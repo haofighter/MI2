@@ -1,11 +1,11 @@
 package com.hao.lib.base.Rx;
 
-import android.util.Log;
 import com.hao.lib.base.MI2App;
-
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Rx {
 
@@ -20,44 +20,41 @@ public class Rx {
         static final Rx rx = new Rx();
     }
 
-    List<RxMessage> rxMessageList = new ArrayList<>();
+
+    BlockingQueue<RxMessage> queue = new LinkedBlockingQueue<>(10000);
 
     public void sendMessage(final Object tag, final Object o) {
         List<RxMessage> errorRx = new ArrayList<>();
-        for (final RxMessage rxMessage : rxMessageList) {
+        for (final RxMessage rx : queue) {
             try {
                 if (MI2App.getInstance().getNowActivitie() != null) {
                     MI2App.getInstance().getNowActivitie().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.i("发送消息", (String) o);
-                            rxMessage.rxDo(tag, o);
+                            rx.rxDo(tag, o);
                         }
                     });
                 } else {
-                    rxMessage.rxDo(tag, o);
+                    rx.rxDo(tag, o);
                 }
             } catch (Exception e) {
-                errorRx.add(rxMessage);
+                queue.remove(rx);
             }
         }
 
-        //用于清理出错了的消息
-        for (RxMessage errMessage : errorRx) {
-            rxMessageList.remove(errMessage);
-        }
     }
 
+
     public void addRxMessage(RxMessage rxMessage) {
-        rxMessageList.add(rxMessage);
+        queue.offer(rxMessage);
     }
 
     public void remove(RxMessage rxMessage) {
-        rxMessageList.add(rxMessage);
+        queue.remove(rxMessage);
     }
 
     public void removeAll() {
-        rxMessageList.clear();
+        queue.clear();
     }
 
 }

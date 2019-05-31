@@ -1,22 +1,31 @@
 package com.hao.show.moudle.main.novel;
 
 import android.content.Intent;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.Toast;
+import com.hao.lib.Util.PopUtils;
 import com.hao.lib.base.Rx.Rx;
 import com.hao.lib.base.Rx.RxMessage;
 import com.hao.lib.view.RecycleView;
 import com.hao.show.R;
+import com.hao.show.base.App;
 import com.hao.show.base.BaseActivity;
 import com.hao.show.db.manage.DBManager;
 import com.hao.show.moudle.main.novel.Entity.NovelClassify;
 import com.hao.show.moudle.main.novel.Entity.NovelListItemContent;
 import com.hao.show.moudle.main.novel.Entity.NovelPage;
 import com.hao.show.moudle.main.novel.adapter.NovelListAdapter;
+import com.hao.show.moudle.main.novel.adapter.TextNovelAdapter;
 import com.hao.show.spider.SpiderNovelFromBiQu;
 import com.hao.show.spider.SpiderUtils;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
@@ -28,6 +37,9 @@ public class NovelActivity extends BaseActivity {
     RecycleView novel_list;
     RecycleView novel_classify_list;
     TwinklingRefreshLayout refresh;
+    EditText search_content;
+    RecyclerView recyclerView;
+    PopupWindow pop;
 
     @Override
     protected void findView() {
@@ -51,6 +63,7 @@ public class NovelActivity extends BaseActivity {
             }
         });
         novel_list = findViewById(R.id.novel_list);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         novel_list.setLayoutManager(linearLayoutManager);
@@ -99,6 +112,61 @@ public class NovelActivity extends BaseActivity {
                 }
             }
         });
+
+        search_content = findViewById(R.id.search_content);
+        search_content.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().equals("")) {
+                    if (pop != null && pop.isShowing()) {
+                        pop.dismiss();
+                    }
+                    return;
+                }
+                if (pop != null) {
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                    ((TextNovelAdapter) recyclerView.getAdapter()).setList(DBManager.selectNovelbyStr(s.toString()));
+                    ((RecyclerView) pop.getContentView()).getAdapter().notifyDataSetChanged();
+                    if (!pop.isShowing()) {
+                        pop.showAsDropDown(search_content);
+                    }
+                } else {
+                    recyclerView = (RecyclerView) LayoutInflater.from(App.getInstance()).inflate(R.layout.recycle_layout, null);
+                    recyclerView.setBackgroundResource(R.color.white);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(App.getInstance()));
+                    recyclerView.addItemDecoration(new DividerItemDecoration(App.getInstance(), DividerItemDecoration.VERTICAL));
+                    recyclerView.setAdapter(new TextNovelAdapter(App.getInstance(), DBManager.selectNovelbyStr(s.toString()))
+                            .setItemClickLisener(new TextNovelAdapter.OnItemClickListener() {
+                                @Override
+                                public void itemClick(int position, View view, Object object) {
+                                    if (pop != null) {
+                                        pop.dismiss();
+                                    }
+                                    //保存或者更新当前小说的信息
+                                    NovelListItemContent novelListItemContent = ((TextNovelAdapter) recyclerView.getAdapter()).getDate().get(position);
+                                    Intent intent = new Intent(NovelActivity.this, NovelDetailActivity.class);
+                                    intent.putExtra("novel", DBManager.addNovel(novelListItemContent));
+                                    startActivity(intent);
+                                }
+                            }));
+                    PopUtils.getInstance().createPop(search_content, recyclerView).showAsViewDown(search_content);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @Override
@@ -118,26 +186,15 @@ public class NovelActivity extends BaseActivity {
         getUrlDate();
     }
 
-
     /**
      * 抓取网页的主题
      */
     private void getUrlDate() {
         Rx.getInstance().addRxMessage(new RxMessage() {
             @Override
-            protected void rxDo(final Object tag, final Object o) {
-                Log.i("获取节点  回调", tag + "       " + o);
+            public void rxDo(final Object tag, final Object o) {
                 if (tag instanceof String) {
-                    try {
-                        setViewDate((String) tag, o);
-                    } catch (Exception e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setViewDate((String) tag, o);
-                            }
-                        });
-                    }
+                    setViewDate((String) tag, o);
                 }
             }
         });
@@ -168,7 +225,6 @@ public class NovelActivity extends BaseActivity {
             ((NovelListAdapter) novel_list.getAdapter()).add(novelPage);
         }
     }
-
 
     /**
      * 抓取当前页的数据

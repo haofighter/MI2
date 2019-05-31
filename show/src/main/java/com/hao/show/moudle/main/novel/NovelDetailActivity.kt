@@ -7,7 +7,10 @@ import com.bumptech.glide.Glide
 import com.hao.lib.base.Rx.Rx
 import com.hao.lib.base.Rx.RxMessage
 import com.hao.show.R
+import com.hao.show.base.App
 import com.hao.show.base.BaseActivity
+import com.hao.show.db.manage.DBManager
+import com.hao.show.moudle.main.novel.Entity.HistroryReadEntity
 import com.hao.show.moudle.main.novel.Entity.NovelChapter
 import com.hao.show.moudle.main.novel.Entity.NovelChapterItemAdapter
 import com.hao.show.moudle.main.novel.Entity.NovelListItemContent
@@ -18,6 +21,7 @@ import kotlinx.android.synthetic.main.activity_novel_detail.*
 
 class NovelDetailActivity : BaseActivity() {
     var nowShowNocel: NovelListItemContent? = null;
+    var his: HistroryReadEntity? = null
     override fun findView() {
         showLoading();
         mainContentView.visibility = View.GONE
@@ -40,11 +44,26 @@ class NovelDetailActivity : BaseActivity() {
         return R.layout.activity_novel_detail;
     }
 
+    override fun onResume() {
+        super.onResume()
+        his = DBManager.checkHistroy(nowShowNocel!!.nid);
+        if (his == null) {
+            novel_now_read_ll.visibility = View.GONE
+        } else {
+            novel_now_read_ll.visibility = View.VISIBLE
+            novel_now_read.text = his!!.noverChapter
+            novel_now_read.setOnClickListener {
+                val intent = Intent(this@NovelDetailActivity, NovelLooksActivity::class.java)
+                intent.putExtra("chapter", DBManager.checkNovel(his!!.novelId, his!!.noverChapterId))
+                startActivity(intent)
+            }
+        }
+    }
+
     //通过网址获取网页抓取数据
     private fun getDetailHtml(url: String) {
-        Rx.getInstance().addRxMessage(object : RxMessage() {
+        Rx.getInstance().addRxMessage(object : RxMessage {
             override fun rxDo(tag: Any, o: Any) {
-                Log.i("获取节点  回调", "$tag       $o")
                 if (tag is String) {
                     try {
                         setViewDate(tag, o)
@@ -67,7 +86,7 @@ class NovelDetailActivity : BaseActivity() {
             val classifies = SpiderNovelFromBiQu.getNovelDetail(o as String, nowShowNocel!!.nid)
             mainContentView.visibility = View.VISIBLE
             (novel_chaper_list.adapter as NovelChapterItemAdapter).setNovelChapterList(classifies.novelChapters)
-            Glide.with(this).load(classifies.imageUrl).into(novel_image)
+            Glide.with(App.getInstance()).load(classifies.imageUrl).into(novel_image)
             novel_title.text = classifies.novel_title
             novel_author.text = classifies.novel_auther
             novel_type.text = classifies.novel_type.substring(0, 3)

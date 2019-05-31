@@ -80,6 +80,28 @@
                     <View android:layout_width="wrap_content" android:layout_height="wrap_content"
                           android:background="@drawable/shape_line_gray"/>
                     <LinearLayout android:layout_width="match_parent"
+                                  android:id="@+id/novel_now_read_ll"
+                                  android:layout_height="wrap_content"
+                                  android:background="@color/white"
+                                  android:orientation="horizontal">
+                        <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:textSize="@dimen/text_second"
+                                android:textColor="@color/black"
+                                android:text="当前阅读："/>
+                        <TextView
+                                android:id="@+id/novel_now_read"
+                                android:layout_width="0dp"
+                                android:lines="1"
+                                android:layout_marginRight="10dp"
+                                android:gravity="right|center_vertical"
+                                android:ellipsize="end"
+                                android:textColor="@color/black"
+                                android:layout_weight="1" android:layout_height="match_parent"/>
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent"
                                   android:layout_height="wrap_content"
                                   android:background="@color/white"
                                   android:orientation="horizontal">
@@ -100,6 +122,7 @@
                                 android:textColor="@color/black"
                                 android:layout_weight="1" android:layout_height="match_parent"/>
                     </LinearLayout>
+
                     <com.hao.lib.view.MiNoScrollListView
                             android:id="@+id/novel_chaper_list"
                             android:layout_width="match_parent"

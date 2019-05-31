@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.xb.haikou.R;
+import com.xb.haikou.base.App;
 
 
 /**
@@ -71,16 +72,15 @@ public class BusToast extends Toast {
     }
 
     /**
-     * @param context 上下文
      * @param text    tip文本
      * @param isOk    更新/检测/扣款成功或者失败
      */
-    public static void showToast(final Context context, final CharSequence text, final boolean isOk) {
+    public static void showToast(final CharSequence text, final boolean isOk) {
         MainLooper.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (mToast == null) {
-                    mToast = showTopay(context, text, isOk);
+                    mToast = showTopay(App.getInstance(), text, isOk);
                     mToast.show();
                     firstTime = SystemClock.elapsedRealtime();
                     Log.d("BusToast",

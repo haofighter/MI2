@@ -1,6 +1,6 @@
 package com.hao.lib.base.Rx;
 
-public abstract class RxMessage {
+public interface RxMessage {
 
-    protected abstract void rxDo(Object tag, Object o);
+    void rxDo(Object tag, Object o);
 }

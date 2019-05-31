@@ -3,8 +3,12 @@ package com.hao.lib.base;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
+import com.hao.lib.base.theme.AppThemeSetting;
+import com.hao.lib.base.theme.ThemeFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +75,18 @@ public class MI2App extends Application {
         return time < 1000;
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void setWindowsBackground(Drawable resouce) {
+        if (activitie != null) {
+            activitie.getWindow().getDecorView().setBackground(resouce);
+        }
+    }
+
+
+    public AppThemeSetting getMi2Theme() {
+        return ThemeFactory.getInstance().getTheme();
+    }
 
     public void gotoSetting() {
         Intent intent = new Intent();

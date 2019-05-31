@@ -1,2 +1,1 @@
-include ':show', ':lib', ':visitor', ':haikou', ':openCVLibrary3301'
-project(':openCVLibrary3301').projectDir = new File('openCVLibrary330')
+include ':lib', ':haikou', ':show', ':visitor', ':openCVLibrary3301'

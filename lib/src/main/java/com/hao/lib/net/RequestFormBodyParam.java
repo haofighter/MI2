@@ -14,4 +14,10 @@ public class RequestFormBodyParam {
         this.paramName = paramName;
         this.paramContent = paramContent;
     }
+
+    @Override
+    public String toString() {
+        return "paramName='" + paramName + '\'' +
+                ", paramContent='" + paramContent + '\'';
+    }
 }

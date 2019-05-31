@@ -44,9 +44,7 @@ public class TypeFaceUtils {
     }
 
     //方正静蕾简体
-    public static Typeface getFZHJLJT(Context context) {
-        return getTypeface("FZHJLJT.TTF", context);
-    }
+    public static Typeface getFZHJLJT(Context context) { return getTypeface("FZHJLJT.TTF", context); }
 
     //方正卡通简体
     public static Typeface getFZHKTYT(Context context) {
@@ -94,9 +92,7 @@ public class TypeFaceUtils {
     }
 
     //华康娃娃体
-    public static Typeface getHKWWT(Context context) {
-        return getTypeface("HKWWT.TTF", context);
-    }
+    public static Typeface getHKWWT(Context context) { return getTypeface("HKWWT.TTF", context); }
 
     //华康中黑字体
     public static Typeface getHKZHZT(Context context) {
@@ -104,9 +100,7 @@ public class TypeFaceUtils {
     }
 
     //华文彩云
-    public static Typeface getHWCY(Context context) {
-        return getTypeface("HWCY.TTF", context);
-    }
+    public static Typeface getHWCY(Context context) { return getTypeface("HWCY.TTF", context); }
 
     //华文行楷
     public static Typeface getHWXK(Context context) {
