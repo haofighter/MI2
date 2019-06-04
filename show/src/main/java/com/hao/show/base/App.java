@@ -8,6 +8,7 @@ import com.hao.lib.base.Rx.Rx;
 import com.hao.lib.base.Rx.RxMessage;
 import com.hao.lib.base.theme.ThemeFactory;
 import com.hao.show.R;
+import com.hao.show.db.manage.DBCore;
 import com.hao.show.spider.SpiderNovelFromBiQu;
 import com.hao.show.spider.SpiderUtils;
 
@@ -29,6 +30,7 @@ public class App extends MI2App {
         SPUtils.init(this);
         getAllNovel();
         initTheme();
+        DBCore.init(this);
     }
 
 

@@ -45,8 +45,10 @@ public class InitActiivty extends AppCompatActivity implements RxMessage {
                 .getWxMacKey()//获取微信秘钥
                 .getWXPublicKey()//获取微信公钥
                 .getALPublicKey()//获取支付宝公钥
-//                .getTranPublicKey()//交通部
+                .getTranPublicKey()//交通部
 //                .getCertverquery()
+                .getWhite()
+                .getBlack()
         ;
     }
 

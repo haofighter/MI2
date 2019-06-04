@@ -41,7 +41,7 @@ android {
             versionCode 1
             versionName "1.0.0"
             buildConfigField 'String', 'LOG_TAG', '"haikou"'
-            buildConfigField 'String', 'BIN_NAME', '"Q6_K21_190531104649.bin"'
+            buildConfigField 'String', 'BIN_NAME', '"Q6_K21_190604122608.bin"'
             buildConfigField 'int', 'CITY', '0'
             buildConfigField 'boolean', 'isTest', 'true'
         }

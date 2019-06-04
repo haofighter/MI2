@@ -37,10 +37,17 @@ public class SoundPoolUtil {
             R.raw.ic_invalid,//卡失效
             R.raw.zhifuchenggong,//支付成功
             R.raw.wuxiaoka,//无效卡
-
-
-
-
+            R.raw.ic_over_time,//卡过期
+            R.raw.ic_enable_time,//卡未启用
+            R.raw.ic_check_time,//请年检
+            R.raw.ic_student,//学生卡
+            R.raw.ic_old,//老年卡
+            R.raw.ic_souvenir,//纪念卡
+            R.raw.ic_love,//.爱心卡
+            R.raw.junrenka_t,//军人卡
+            R.raw.ic_repeat,//重复刷卡
+            R.raw.ic_lllegal_card,//.非法卡
+            R.raw.guashi,//挂失卡
 
 
             R.raw.verify_fail,//验码失败
@@ -52,7 +59,6 @@ public class SoundPoolUtil {
             R.raw.ic_honor,//荣军卡
             R.raw.ic_old,//老年卡
             R.raw.ic_student,//学生卡
-
             R.raw.ic_love,//.爱心卡
             R.raw.ic_push_money,//请投币
             R.raw.qr_error,//二维码有误

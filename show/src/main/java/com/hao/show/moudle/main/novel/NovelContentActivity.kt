@@ -24,7 +24,6 @@ class NovelContentActivity : BaseActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         var novelChapter = intent.getSerializableExtra("chapter") as NovelChapter;
-        var page = intent.getLongExtra("page", -1);
         novel_content.setOffscreenPageLimit(1);
         novel_content.adapter = NovelContentAdapter(this, DBManager.selectNovelChapter(novelChapter.nid));
         novel_content.currentItem = novelChapter.cid.toInt()

@@ -9,9 +9,11 @@ public class AppPreload {
     boolean TencentPublicKeySuc;
     boolean ALPublicKey;
     boolean JTBParam;
+    boolean WHITE;//白名单
+    boolean BLACK;//黑名单
 
     public boolean sucesse() {
-        return binLoadSucess;
+        return binLoadSucess && WHITE && BLACK;
     }
 
     public boolean isBinLoadSucess() {

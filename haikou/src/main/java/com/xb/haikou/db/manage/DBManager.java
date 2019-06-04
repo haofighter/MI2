@@ -3,6 +3,8 @@ package com.xb.haikou.db.manage;
 
 import android.util.Log;
 import com.xb.haikou.config.AppRunConfigEntity;
+import com.xb.haikou.config.BlackList;
+import com.xb.haikou.config.Whitelist;
 import com.xb.haikou.config.line.LineInfo;
 import com.xb.haikou.config.line.PayRuleInfo;
 import com.xb.haikou.config.line.SingleTicktInfo;
@@ -545,6 +547,12 @@ public class DBManager {
         jTBPayEntityDao.deleteInTx(jtBscanRecords);
     }
 
+    //查询刷卡3000条历史记录
+    public static CardRecordEntity checkCardRecord(String uid) {
+        CardRecordEntityDao cardRecordEntityDao = getDaoSession().getCardRecordEntityDao();
+        return cardRecordEntityDao.queryBuilder().where(CardRecordEntityDao.Properties.Uid.eq(uid)).orderDesc(CardRecordEntityDao.Properties.Time).limit(1).unique();
+    }
+
 
     //查询刷卡3000条历史记录
     public static List<CardRecordEntity> checkCardRecord() {
@@ -556,5 +564,17 @@ public class DBManager {
     public static void deleteCardRecord(List<CardRecordEntity> cardRecordEntities) {
         CardRecordEntityDao cardRecordEntityDao = getDaoSession().getCardRecordEntityDao();
         cardRecordEntityDao.deleteInTx(cardRecordEntities);
+    }
+
+    //查询白名单
+    public static Whitelist seachWhite(String cardNo) {
+        WhitelistDao whitelistDao = DBCore.getDaoSession().getWhitelistDao();
+        return whitelistDao.queryBuilder().where(WhitelistDao.Properties.PAN.eq(cardNo)).limit(1).unique();
+    }
+
+    //查询黑名单名单
+    public static BlackList seachBlack(String card) {
+        BlackListDao blackList = DBCore.getDaoSession().getBlackListDao();
+        return blackList.queryBuilder().where(BlackListDao.Properties.Card.eq(card)).limit(1).unique();
     }
 }

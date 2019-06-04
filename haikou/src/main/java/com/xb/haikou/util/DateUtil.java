@@ -23,6 +23,7 @@ public class DateUtil {
     private static SimpleDateFormat main_format = new SimpleDateFormat("yyyy.MM.dd\b\bHH:mm:ss", new Locale("zh", "CN"));
     private static SimpleDateFormat format_3 = new SimpleDateFormat("yyyy-MM-dd", new Locale("zh", "CN"));
     private static SimpleDateFormat format_4 = new SimpleDateFormat("HHmm", new Locale("zh", "CN"));
+    private static SimpleDateFormat format_5 = new SimpleDateFormat("yyyyMMdd", new Locale("zh", "CN"));
 
     /**
      * 时钟
@@ -53,6 +54,16 @@ public class DateUtil {
             e.printStackTrace();
         }
         return date.getTime();
+    }
+
+    public static Long ymdToLong(String str) {
+
+        try {
+            return format_5.parse(str).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return -1l;
     }
 
     //得到当前日期：yyyy-MM-dd HH:mm:ss

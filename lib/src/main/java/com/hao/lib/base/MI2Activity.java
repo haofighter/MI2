@@ -1,8 +1,10 @@
 package com.hao.lib.base;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
@@ -16,9 +18,13 @@ import com.hao.lib.R;
 import com.hao.lib.Util.StatusBarUtil;
 import com.hao.lib.help.DrawerHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class MI2Activity extends AppCompatActivity implements DrawerHelper {
     protected String MI2TAG = "MI2Activity";
     public static final String PERMISSION_MI = "com.hao.MI";
+
 
     public String getMI2TAG() {
         return MI2TAG;
@@ -157,4 +163,30 @@ public abstract class MI2Activity extends AppCompatActivity implements DrawerHel
 
 
     protected abstract void initDrawView(View view);
+
+
+    protected void initPromission(String[] promision) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            List<String> promission = new ArrayList<>();
+            for (int i = 0; i < promision.length; i++) {
+                if (checkSelfPermission(promision[i]) == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    promission.add(promision[i]);
+                }
+            }
+
+            String[] str = new String[promission.size()];
+            for (int i = 0; i < promission.size(); i++) {
+                str[i] = promission.get(i);
+            }
+
+
+            if (str.length != 0) {
+                requestPermissions(str, 0);
+            }
+        }
+    }
+
+
 }

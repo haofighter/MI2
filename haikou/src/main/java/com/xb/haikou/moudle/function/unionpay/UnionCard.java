@@ -23,6 +23,7 @@ import com.xb.haikou.moudle.function.unionpay.entity.UnionPayEntity;
 import com.xb.haikou.moudle.function.unionpay.unionutil.TLV;
 import com.xb.haikou.util.BusToast;
 import com.xb.haikou.util.DateUtil;
+import com.xb.haikou.voice.SoundPoolUtil;
 import com.xb.haikou.voice.VoiceConfig;
 
 import java.util.*;
@@ -350,6 +351,13 @@ public class UnionCard {
             payEntity.setCurrency("156");
             payEntity.setTransdata(FileUtils.bytesToHexString(sendData));
             DBManager.insertUnionPayRecord(payEntity);
+
+
+            if (DBManager.seachBlack(payEntity.getMainCardNo()) != null) {
+                BusToast.showToast("挂失卡", false);
+                SoundPoolUtil.play(VoiceConfig.IC_GUASHI);
+                return;
+            }
 
             SLog.d("LoopCard(run.java:278)" + payEntity);
             UnionPay.getInstance().exeSSL(UnionConfig.PAY, sendData);

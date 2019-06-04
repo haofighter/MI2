@@ -72,8 +72,8 @@ public class BusToast extends Toast {
     }
 
     /**
-     * @param text    tip文本
-     * @param isOk    更新/检测/扣款成功或者失败
+     * @param text tip文本
+     * @param isOk 更新/检测/扣款成功或者失败
      */
     public static void showToast(final CharSequence text, final boolean isOk) {
         MainLooper.runOnUiThread(new Runnable() {
@@ -82,17 +82,13 @@ public class BusToast extends Toast {
                 if (mToast == null) {
                     mToast = showTopay(App.getInstance(), text, isOk);
                     mToast.show();
-                    firstTime = SystemClock.elapsedRealtime();
                     Log.d("BusToast",
                             "run(BusToast.java:88)mToast == null>>>提示" + text);
                 } else {
-                    secondTime = System.currentTimeMillis();
                     if (text.equals(temStr)) {
-                        if (secondTime - firstTime > Toast.LENGTH_SHORT) {
-                            mToast.show();
-                            Log.d("BusToast",
-                                    "run(BusToast.java:95)text.equals(temStr)>>>提示" + text);
-                        }
+                        mToast.show();
+                        Log.d("BusToast",
+                                "run(BusToast.java:95)text.equals(temStr)>>>提示" + text);
                     } else {
                         temStr = (String) text;
                         mToast.setView(getView(isOk, text));
@@ -101,10 +97,7 @@ public class BusToast extends Toast {
                                 "run(BusToast.java:102) temStr = (String) text>>>>" + text);
                     }
                 }
-                firstTime = secondTime;
             }
         });
     }
-
-
 }

@@ -144,6 +144,7 @@ public class ScorllTextView extends View {
 
     public void setText(String string) {
         textContent = string;
+        show = 0;
         invalidate();
     }
 
@@ -202,7 +203,6 @@ public class ScorllTextView extends View {
     long downTime;
     float s;//手指离开后 以50px的加速度减速后位移的距离
     boolean isNextPage;//用于控制翻页方向
-    long beforClick;
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -222,6 +222,7 @@ public class ScorllTextView extends View {
                 if ((moveX > 0 && show == 0) || (moveX < 0 && show == pageSize - 1)) {
                     //如果手指滑动了 并且是第一页向右滑  或者是 最后一页向左滑
                     attemptClaimDrag(false);
+                    return false;
                 } else {
                     offsetHor = textPadingVar + moveX - show * viewWidth;
                     invalidate();
@@ -229,42 +230,59 @@ public class ScorllTextView extends View {
                     return true;
                 }
             } else if (ev.getAction() == MotionEvent.ACTION_UP) {
-                if ((moveX > 0 && show == 0) || (moveX < 0 && show == pageSize - 1)) {
-                    //如果手指滑动了 并且是第一页向右滑  或者是 最后一页向左滑
-                    attemptClaimDrag(false);
-                } else {
-                    final float moveTime = ((float) (System.currentTimeMillis() - downTime)) / 100;
-                    s = moveX / moveTime / 2 * moveX / 30;
-                    if (moveX == 0) {
-                        s = viewWidth / 4 + 1;
-                        if (ev.getX() > viewWidth / 2) {
-                            if (show != pageSize - 1) {
-                                isNextPage = true;
-                            } else {
-                                ViewParent viewParent = getParent();
-                                ViewParent parent = viewParent.getParent();
-                                if (parent instanceof MiClickViewPage) {
-                                    ((MiClickViewPage) parent).nextPage();
-                                }
-                                return false;
-                            }
-                        } else if ((ev.getX() < viewWidth / 2)) {
-                            if (show != 0) {
-                                isNextPage = false;
-                            } else {
-                                if (getParent() instanceof MiClickViewPage) {
-                                    ((MiClickViewPage) getParent()).beforePage();
-                                }
-                                return false;
-                            }
-                        }
-                    } else {
-                        if (moveX < 0) {
+                final float moveTime = ((float) (System.currentTimeMillis() - downTime)) / 100;
+                s = moveX / moveTime / 2 * moveX / 30;
+                if (moveX == 0) {
+                    s = viewWidth / 4 + 1;
+                    if (ev.getX() > viewWidth / 2) {
+                        if (show != pageSize - 1) {
                             isNextPage = true;
                         } else {
+                            ViewParent viewParent = getParent();
+                            ViewParent parent = viewParent.getParent();
+                            if (parent instanceof MiClickViewPage) {
+                                ((MiClickViewPage) parent).nextPage();
+                            }
+                            if (scorllTextChangeListener != null) {
+                                scorllTextChangeListener.textEnd();
+                            }
+                        }
+                    } else if ((ev.getX() < viewWidth / 2)) {
+                        if (show != 0) {
                             isNextPage = false;
+                        } else {
+                            if (getParent() instanceof MiClickViewPage) {
+                                ((MiClickViewPage) getParent()).beforePage();
+                            }
+                            if (scorllTextChangeListener != null) {
+                                scorllTextChangeListener.textStart();
+                            }
                         }
                     }
+                } else {
+                    if (moveX < 0) {
+                        isNextPage = true;
+                    } else {
+                        isNextPage = false;
+                    }
+                }
+
+                if ((moveX > 0 && show == 0) || (moveX < 0 && show == pageSize - 1)) {
+                    //如果手指滑动了 并且是第一页向右滑  或者是 最后一页向左滑
+                    if (isNextPage && (moveX < 0 && show == pageSize - 1)) {
+                        if (scorllTextChangeListener != null) {
+                            scorllTextChangeListener.textEnd();
+                        }
+                        attemptClaimDrag(false);
+                        return false;
+                    } else if (!isNextPage && (moveX > 0 && show == 0)) {
+                        if (scorllTextChangeListener != null) {
+                            scorllTextChangeListener.textStart();
+                        }
+                        attemptClaimDrag(false);
+                        return false;
+                    }
+                } else {
                     if (show >= 0 && show < pageSize) {
                         setValueAnimal(new BackCall() {
                             @Override
@@ -301,6 +319,7 @@ public class ScorllTextView extends View {
                         moveX = 0;
                         moveY = 0;
                         attemptClaimDrag(false);
+                        return false;
                     }
                 }
             }
@@ -339,5 +358,14 @@ public class ScorllTextView extends View {
 
     public interface ScorllTextChangeListener {
         void pageChange(int page);
+
+        void textEnd();
+
+        void textStart();
+    }
+
+
+    public void addPageText() {
+
     }
 }

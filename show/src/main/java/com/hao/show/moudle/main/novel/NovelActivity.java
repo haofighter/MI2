@@ -166,7 +166,7 @@ public class NovelActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        getUrlDate();
     }
 
     @Override
@@ -183,7 +183,6 @@ public class NovelActivity extends BaseActivity {
             }
         }));
         imageView.setImageResource(R.mipmap.logo);
-        getUrlDate();
     }
 
     /**

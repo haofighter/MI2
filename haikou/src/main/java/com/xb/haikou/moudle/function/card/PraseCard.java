@@ -2,12 +2,15 @@ package com.xb.haikou.moudle.function.card;
 
 import android.util.Log;
 import com.hao.lib.Util.FileUtils;
+import com.hao.lib.Util.ToastUtils;
 import com.hao.lib.Util.Type;
 import com.hao.lib.base.Rx.Rx;
 import com.xb.haikou.BuildConfig;
 import com.xb.haikou.base.AppRunParam;
 import com.xb.haikou.cmd.devCmd;
+import com.xb.haikou.config.BlackList;
 import com.xb.haikou.config.line.PayRuleInfo;
+import com.xb.haikou.config.line.SingleTicktInfo;
 import com.xb.haikou.db.manage.DBManager;
 import com.xb.haikou.record.CardRecordEntity;
 import com.xb.haikou.record.RecordUpload;
@@ -26,6 +29,11 @@ public class PraseCard {
             //卡解析
             CardInfoEntity cardInfoEntity = new CardInfoEntity();
             cardInfoEntity.putDate(bytes);
+
+            if (cardInfoEntity.selete_aid.equals("01") && (cardInfoEntity.fileLocal17InfoEntity.card_type.toUpperCase().equals("F1") || cardInfoEntity.fileLocal17InfoEntity.card_type.toUpperCase().equals("FF"))) {
+                //如果是老宝岛卡的管理卡 不需要进行后续操作
+                return;
+            }
 
             if (cardInfoEntity.status.equals("00") && !cardInfoEntity.selete_aid.equals("00")) {
                 CardRecordEntity cardRecordEntity = DBManager.checkPayErrHistory(cardInfoEntity.card_id);
@@ -51,6 +59,19 @@ public class PraseCard {
 
     //组装消费命令
     private void packagePayCmd(CardInfoEntity cardInfoEntity) throws Exception {
+        SingleTicktInfo singleTicktInfo = DBManager.checkSinglePrice();
+        if (singleTicktInfo.getContinuousSwipFlag().equals("01")) {//支持连刷
+
+        } else {//半小时之内刷卡为连刷 连刷限制为30秒
+            CardRecordEntity cardRecordEntity = DBManager.checkCardRecord(cardInfoEntity.uid);
+            if (cardRecordEntity != null && Math.abs(cardRecordEntity.getTime() - System.currentTimeMillis()) < 30 * 1000) {//30S脸熟限制
+                BusToast.showToast("此线路不允许连刷", false);
+                SoundPoolUtil.play(VoiceConfig.IC_REPEAT);
+                return;
+            }
+        }
+
+
         int i = 0;
         byte[] pay = new byte[122];
 
@@ -62,11 +83,41 @@ public class PraseCard {
         arraycopy(uid, 0, pay, i, uid.length);
         i += uid.length;
 
-        if (cardInfoEntity.selete_aid.equals("02")) {
-            package1EFile(cardInfoEntity).getHexString();
-            //19文件中 刷卡优惠次数对扣费有影响
-            package19File(cardInfoEntity).getHexString();
 
+        if (cardInfoEntity.selete_aid.equals("02")) {
+
+            //卡面有卡面有效期，本地卡超过有效期按照卡类型“畅通卡”（卡类型代码12）折扣扣费，异地卡超过有效期不允许刷卡
+            if (DateUtil.ymdToLong(cardInfoEntity.file15InfoEntity.enabling_time) > System.currentTimeMillis()) {//卡片未启用
+                BusToast.showToast("卡片未启用", false);
+                SoundPoolUtil.play(VoiceConfig.IC_NO_ENABLE_TIME);
+                return;
+            }
+
+
+            if (DateUtil.ymdToLong(cardInfoEntity.file15InfoEntity.valid_time) < System.currentTimeMillis()) {//卡片已过期
+                BusToast.showToast("卡片过期", false);
+                SoundPoolUtil.play(VoiceConfig.IC_OVER_TIME);
+                return;
+            }
+
+            //互联互通卡 白名单校验
+            if (DBManager.seachWhite(cardInfoEntity.file15InfoEntity.pan.substring(1, 9)) == null) {
+                BusToast.showToast("非白名单卡", false);
+                SoundPoolUtil.play(VoiceConfig.IC_LLLEGAL);
+                return;
+            }
+
+            //本地卡号黑名单校验
+            if (DBManager.seachBlack(FileUtils.deleteCover(cardInfoEntity.file15InfoEntity.pan)) != null) {
+                BusToast.showToast("挂失卡", false);
+                SoundPoolUtil.play(VoiceConfig.IC_GUASHI);
+                return;
+            }
+
+
+            package1EFile(cardInfoEntity);
+            //19文件中 刷卡优惠次数对扣费有影响
+            package19File(cardInfoEntity);
 
             byte[] file1E = FileUtils.hex2byte(cardInfoEntity.file1EInfoEntity.getHexString());
             arraycopy(file1E, 0, pay, i, file1E.length);
@@ -84,11 +135,31 @@ public class PraseCard {
             if (cardInfoEntity.fileLocal17InfoEntity.card_type.toUpperCase().equals("F1") || cardInfoEntity.fileLocal17InfoEntity.card_type.toUpperCase().equals("FF")) {
                 return;
             }
+
+            //本地卡号黑名单校验
+            BlackList blackList = DBManager.seachBlack(FileUtils.deleteCover(cardInfoEntity.fileLocal17InfoEntity.pan));
+            if (blackList != null) {
+                BusToast.showToast("挂失卡", false);
+                SoundPoolUtil.play(VoiceConfig.IC_GUASHI);
+                return;
+            }
+
+            //卡面有卡面有效期，本地卡超过有效期按照卡类型“畅通卡”（卡类型代码12）折扣扣费，异地卡超过有效期不允许刷卡
+            if (DateUtil.ymdToLong(cardInfoEntity.fileLocal17InfoEntity.enabling_time) > System.currentTimeMillis()) {//卡片未启用
+                BusToast.showToast("卡片未启用", false);
+                SoundPoolUtil.play(VoiceConfig.IC_NO_ENABLE_TIME);
+                return;
+            }
+
+            //卡面有卡面有效期，本地卡超过有效期按照卡类型“畅通卡”（卡类型代码12）折扣扣费，异地卡超过有效期不允许刷卡
+            if (DateUtil.ymdToLong(cardInfoEntity.fileLocal17InfoEntity.valid_time) < System.currentTimeMillis()) {//卡片已过期
+                BusToast.showToast("卡片过期", false);
+                cardInfoEntity.file17InfoEntity.card_type = "12";
+            }
             //管理卡 不走消费流程
             File1EInfoEntity file1EInfoEntity = new File1EInfoEntity();
             cardInfoEntity.file1EInfoEntity = file1EInfoEntity;
             cardInfoEntity.file1EInfoEntity = package1EFile(cardInfoEntity);
-
 
             //组件宝岛卡 19文件包
             cardInfoEntity.fileLocal19InfoEntity = packageold19File(cardInfoEntity);
@@ -245,7 +316,12 @@ public class PraseCard {
                     BusToast.showToast("本次扣款：" + FileUtils.fen2Yuan(FileUtils.hexStringToInt(cardInfoEntity.file1EInfoEntity.transaction_amount_1e)) + "元\n余额：" +
                             FileUtils.fen2Yuan(balance) + "元", true);
                 }
-                SoundPoolUtil.play(VoiceConfig.IC_BASE);
+
+                if (cardRecordEntity.getKeyindex().equals("01")) {//一卡通
+                    showVoice(cardRecordEntity.getCardType());
+                } else {
+                    showLocalVoice(cardRecordEntity.getCardType());
+                }
             } else {
                 BusToast.showToast("刷卡失败【" + status + "】", false);
                 SoundPoolUtil.play(VoiceConfig.IC_ERROR);
@@ -256,7 +332,75 @@ public class PraseCard {
         }
     }
 
-    private static void saveRecord(CardInfoEntity cardInfoEntity, CardRecordEntity cardRecordEntity) throws Exception {
+    //互联互通
+    private static void showVoice(String cardType) {
+        switch (cardType) {
+            case "01"://普通卡
+                SoundPoolUtil.play(VoiceConfig.IC_BASE);
+                break;
+            case "02"://学生卡
+                SoundPoolUtil.play(VoiceConfig.IC_STUDENT);
+                break;
+            case "03"://老人卡
+                SoundPoolUtil.play(VoiceConfig.IC_OLD);
+                break;
+            case "04"://测试卡
+                SoundPoolUtil.play(VoiceConfig.IC_BASE);
+                break;
+            case "05"://军人卡
+                SoundPoolUtil.play(VoiceConfig.IC_JUNREN);
+                break;
+            default:
+                SoundPoolUtil.play(VoiceConfig.IC_BASE);
+                break;
+        }
+
+    }
+
+    //宝岛卡
+    private static void showLocalVoice(String cardType) {
+        switch (cardType) {
+            case "03"://测试卡
+            case "0C"://畅通卡
+            case "10"://普通卡销售版
+            case "11"://普通卡租用版
+            case "25"://银行联名卡
+            case "26"://市政押金卡
+            case "27"://车主卡
+            case "28"://景区卡
+            case "29"://电信卡
+            case "17"://异形卡
+            case "21"://思服乘车卡
+            case "23"://员工-警察版
+                SoundPoolUtil.play(VoiceConfig.IC_BASE);
+                break;
+            case "12"://学生卡
+            case "13"://中学生卡 -未用
+                SoundPoolUtil.play(VoiceConfig.IC_STUDENT);
+                break;
+            case "14"://半价老人卡
+            case "15"://半价老人卡租用版 -未用
+            case "18"://全免老年卡
+                SoundPoolUtil.play(VoiceConfig.IC_OLD);
+                break;
+            case "16"://纪念卡
+                SoundPoolUtil.play(VoiceConfig.IC_SOUVENIR);
+                break;
+            case "19"://关爱卡
+                SoundPoolUtil.play(VoiceConfig.IC_CARE);
+                break;
+            case "20"://宝岛老测试卡
+                SoundPoolUtil.play(VoiceConfig.IC_BASE);
+                break;
+            default:
+                SoundPoolUtil.play(VoiceConfig.IC_BASE);
+                break;
+        }
+
+    }
+
+    private static void saveRecord(CardInfoEntity cardInfoEntity, CardRecordEntity cardRecordEntity) throws
+            Exception {
         cardRecordEntity.setUid(cardInfoEntity.uid);
         cardRecordEntity.setBizType("10");//10 一卡通默认
         if (cardInfoEntity.selete_aid.equals("02")) {//互联互通
@@ -353,6 +497,7 @@ public class PraseCard {
         cardInfoEntity.file19InfoEntity.boarding_max_amount = FileUtils.formatStringToByteString(4, FileUtils.int2ByteStr(AppRunParam.getInstance().getCardPayFee(cardInfoEntity.file17InfoEntity.card_type), 4));        //标注金额 4
         cardInfoEntity.file19InfoEntity.reserved3 = FileUtils.bytesToHexString(new byte[4]);//预留空间 4
 
+
         int count = getPriceCount(cardInfoEntity.file19InfoEntity.last_trading_time, cardInfoEntity.file19InfoEntity.trading_number, cardInfoEntity.file17InfoEntity.card_type);
         if (count != -1) {
             int price = AppRunParam.getInstance().getCardPayFee(cardInfoEntity.file17InfoEntity.card_type);
@@ -409,8 +554,6 @@ public class PraseCard {
 
     //mac2 错误 进行记录校准
     public static void checkMac(@Nullable devCmd checkMac) {
-
-
         int i = 0;
         byte[] result = new byte[checkMac.getnRecvLen()];
         arraycopy(checkMac.getDataBuf(), 0, result, 0, result.length);

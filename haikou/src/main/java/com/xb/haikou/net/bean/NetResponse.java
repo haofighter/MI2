@@ -43,6 +43,15 @@ public class NetResponse {
 
         private List<KeysInfo> keys;
         private int curVersion;
+        private String key;
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
 
         public List<KeysInfo> getKeys() {
             return keys;

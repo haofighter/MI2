@@ -21,6 +21,7 @@ public class FileLocal17InfoEntity {
     String reserve2;
 
 
+
     public int praseLocalFile17(int i, byte[] date) {
         //发卡方唯一标识，作为部级密钥一级分散因子,发卡时填写:BAA3C4CFBAA3C4CF
         byte[] Card_issuer = new byte[8];

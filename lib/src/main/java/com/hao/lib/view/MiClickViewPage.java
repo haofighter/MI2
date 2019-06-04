@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 
 public class MiClickViewPage extends ViewPager {
@@ -28,34 +30,34 @@ public class MiClickViewPage extends ViewPager {
         screenWidth = metrics.widthPixels;
     }
 
-//    float downX = 0;
-//
-//    @Override
-//    public boolean onTouchEvent(MotionEvent ev) {
-//        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-//            downX = ev.getX();
-//        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
-//            float moveX = ev.getX() - downX;
-//            if (downX > screenWidth - 100 && moveX < 10) {
-//                if (getCurrentItem() + 1 < getAdapter().getCount()) {
-//                    setCurrentItem(getCurrentItem() + 1);
-//                    downX = 0;
-//                    Log.i("viewPage", "边缘事件点击  右");
-//                    return true;
-//                }
-//            } else if (downX < 100 && moveX < 10) {
-//                if (getCurrentItem() > 0) {
-//                    setCurrentItem(getCurrentItem() - 1);
-//                    downX = 0;
-//                    Log.i("viewPage", "边缘事件点击  左");
-//                    return true;
-//                } else {
-//
-//                }
-//            }
-//        }
-//        return super.onTouchEvent(ev);
-//    }
+    float downX = 0;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            downX = ev.getX();
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            float moveX = ev.getX() - downX;
+            if (downX > screenWidth - 100 && moveX < 10) {
+                if (getCurrentItem() + 1 < getAdapter().getCount()) {
+                    setCurrentItem(getCurrentItem() + 1);
+                    downX = 0;
+                    Log.i("viewPage", "边缘事件点击  右");
+                    return true;
+                }
+            } else if (downX < 100 && moveX < 10) {
+                if (getCurrentItem() > 0) {
+                    setCurrentItem(getCurrentItem() - 1);
+                    downX = 0;
+                    Log.i("viewPage", "边缘事件点击  左");
+                    return true;
+                } else {
+
+                }
+            }
+        }
+        return super.onTouchEvent(ev);
+    }
 
     @Override
     public void setCurrentItem(int item) {
@@ -76,6 +78,6 @@ public class MiClickViewPage extends ViewPager {
     }
 
 
-    public void getNowHolder(){
+    public void getNowHolder() {
     }
 }

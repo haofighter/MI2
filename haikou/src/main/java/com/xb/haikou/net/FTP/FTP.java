@@ -294,7 +294,6 @@ public class FTP {
             ftp.login(username, password);// 登录
             //连接的状态码
             reply = ftp.getReplyCode();
-            Log.d("FTP", reply + "11111");
             ftp.setDataTimeout(10000);
             //判断是否连接上ftp
             if (!FTPReply.isPositiveCompletion(reply)) {
@@ -316,6 +315,7 @@ public class FTP {
                     success = 1;
                     buffOut.flush();
                     buffOut.close();
+                    break;
                 } else {
                     success = 2;
                 }

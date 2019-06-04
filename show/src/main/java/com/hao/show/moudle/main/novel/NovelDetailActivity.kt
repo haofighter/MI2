@@ -31,7 +31,7 @@ class NovelDetailActivity : BaseActivity() {
         getDetailHtml(nowUrl)
         novel_chaper_list.adapter = NovelChapterItemAdapter(this)
         novel_chaper_list.setOnItemClickListener { parent, view, position, id ->
-            val intent = Intent(this@NovelDetailActivity, NovelContentActivity::class.java)
+            val intent = Intent(this@NovelDetailActivity, NovelLooksActivity::class.java)
             intent.putExtra("chapter", novel_chaper_list.adapter.getItem(position) as NovelChapter)
             startActivity(intent)
         }

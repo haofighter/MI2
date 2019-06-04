@@ -50,7 +50,7 @@ class Main2Activity : BaseActivity() {
                 try {
                     operate++
                     refreshView()
-                    if (operate >= 6) {//6s钟未操作就重置界面
+                    if (operate >= 15) {//6s钟未操作就重置界面
                         refreshMoudle()
                     }
                 } catch (e: Exception) {
@@ -221,7 +221,9 @@ class Main2Activity : BaseActivity() {
         }
     }
 
-    private fun keyCancal() { refreshMoudle() }
+    private fun keyCancal() {
+        refreshMoudle()
+    }
 
     fun initParam() {
         driver_no.text = AppRunParam.getInstance().driverNo;

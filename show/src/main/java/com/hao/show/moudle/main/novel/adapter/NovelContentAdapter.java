@@ -100,6 +100,17 @@ public class NovelContentAdapter extends PagerAdapter {
                     histroryReadEntity.setNoverChapter(novelChapter.getChapterName());
                     DBManager.insertHistroy(histroryReadEntity);
                 }
+
+                @Override
+                public void textEnd() {
+
+                }
+
+                @Override
+                public void textStart() {
+
+                }
+
             });
         }
         container.addView(view);

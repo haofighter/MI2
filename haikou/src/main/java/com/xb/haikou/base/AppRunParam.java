@@ -218,12 +218,23 @@ public class AppRunParam {
             if (payRuleInfo.getSpecialDiscountRuleFlag().equals("00")) {//特殊规则周期 为00 即没有 使用基础规则
                 List<DiscountRule> discountRules = payRuleInfo.getDiscountRule();
                 for (int i = 0; i < discountRules.size(); i++) {
-                    //判断当前时间
-                    if (DateUtil.getNowHourMin() > DateUtil.hmStrToLong(discountRules.get(i).getStartTime()) && DateUtil.getNowHourMin() < DateUtil.hmStrToLong(discountRules.get(i).getEndTime())) {
-                        if (payRuleInfo.getSpecialDiscountRuleType().equals("00")) {//按折扣优惠
-                            price = discountRules.get(i).getDiscount() * AppRunParam.getInstance().basePrice / 100;
-                        } else if (payRuleInfo.getSpecialDiscountRuleType().equals("01")) {//固定票价优惠
-                            price = discountRules.get(i).getDiscount();
+                    if (DateUtil.hmStrToLong(discountRules.get(i).getStartTime()) > DateUtil.hmStrToLong(discountRules.get(i).getEndTime())) {//跨天的时间判断 23：00-05：00 优惠
+                        //判断当前时间
+                        if (DateUtil.getNowHourMin() > DateUtil.hmStrToLong(discountRules.get(i).getStartTime()) && DateUtil.getNowHourMin() < DateUtil.hmStrToLong(discountRules.get(i).getEndTime())) {
+                            if (payRuleInfo.getSpecialDiscountRuleType().equals("00")) {//按折扣优惠
+                                price = discountRules.get(i).getDiscount() * AppRunParam.getInstance().basePrice / 100;
+                            } else if (payRuleInfo.getSpecialDiscountRuleType().equals("01")) {//固定票价优惠
+                                price = discountRules.get(i).getDiscount();
+                            }
+                        }
+                    } else {
+                        //判断当前时间
+                        if (DateUtil.getNowHourMin() > DateUtil.hmStrToLong(discountRules.get(i).getStartTime()) || DateUtil.getNowHourMin() < DateUtil.hmStrToLong(discountRules.get(i).getEndTime())) {
+                            if (payRuleInfo.getSpecialDiscountRuleType().equals("00")) {//按折扣优惠
+                                price = discountRules.get(i).getDiscount() * AppRunParam.getInstance().basePrice / 100;
+                            } else if (payRuleInfo.getSpecialDiscountRuleType().equals("01")) {//固定票价优惠
+                                price = discountRules.get(i).getDiscount();
+                            }
                         }
                     }
                 }
@@ -231,14 +242,27 @@ public class AppRunParam {
                 if (payRuleInfo.getSpecialDiscountRuleAll().size() > 0) {
                     List<SpecialDiscountRule> specialDiscountRules = payRuleInfo.getSpecialDiscountRuleAll();
                     for (int i = 0; i < specialDiscountRules.size(); i++) {
-                        //判断当前时间
-                        if (DateUtil.getNowHourMin() > DateUtil.hmStrToLong(specialDiscountRules.get(i).getStartTime()) && DateUtil.getNowHourMin() < DateUtil.hmStrToLong(specialDiscountRules.get(i).getEndTime())) {
-                            if (payRuleInfo.getSpecialDiscountRuleType().equals("00")) {
-                                price = specialDiscountRules.get(i).getDiscount() * AppRunParam.getInstance().basePrice / 100;
-                            } else if (payRuleInfo.getSpecialDiscountRuleType().equals("01")) {
-                                price = 0;
-                            } else if (payRuleInfo.getSpecialDiscountRuleType().equals("02")) {
-                                price = specialDiscountRules.get(i).getDiscount();
+                        //跨天的时间判断 23：00-05：00 优惠
+                        if (DateUtil.hmStrToLong(specialDiscountRules.get(i).getStartTime()) > DateUtil.hmStrToLong(specialDiscountRules.get(i).getEndTime())) {
+                            //判断当前时间
+                            if (DateUtil.getNowHourMin() > DateUtil.hmStrToLong(specialDiscountRules.get(i).getStartTime()) && DateUtil.getNowHourMin() < DateUtil.hmStrToLong(specialDiscountRules.get(i).getEndTime())) {
+                                if (payRuleInfo.getSpecialDiscountRuleType().equals("00")) {
+                                    price = specialDiscountRules.get(i).getDiscount() * AppRunParam.getInstance().basePrice / 100;
+                                } else if (payRuleInfo.getSpecialDiscountRuleType().equals("01")) {
+                                    price = 0;
+                                } else if (payRuleInfo.getSpecialDiscountRuleType().equals("02")) {
+                                    price = specialDiscountRules.get(i).getDiscount();
+                                }
+                            }
+                        } else {
+                            if (DateUtil.getNowHourMin() > DateUtil.hmStrToLong(specialDiscountRules.get(i).getStartTime()) || DateUtil.getNowHourMin() < DateUtil.hmStrToLong(specialDiscountRules.get(i).getEndTime())) {
+                                if (payRuleInfo.getSpecialDiscountRuleType().equals("00")) {
+                                    price = specialDiscountRules.get(i).getDiscount() * AppRunParam.getInstance().basePrice / 100;
+                                } else if (payRuleInfo.getSpecialDiscountRuleType().equals("01")) {
+                                    price = 0;
+                                } else if (payRuleInfo.getSpecialDiscountRuleType().equals("02")) {
+                                    price = specialDiscountRules.get(i).getDiscount();
+                                }
                             }
                         }
                     }

@@ -12,6 +12,16 @@ public class VoiceConfig {
     public static final int IC_ERROR = 9;//二维码过期
     public static final int IC_INVALID = 10;//卡过期
     public static final int ZHIFU_SUC = 11;//支付成功
-    public static final int IC_PUSH_MONEY = 12;//卡过期（银联）
-    public static final int QR_ERROR = 13;//二维码错误
+    public static final int IC_PUSH_MONEY = 12;//无效卡
+    public static final int IC_OVER_TIME = 13;//卡过期
+    public static final int IC_NO_ENABLE_TIME = 14;//卡未启用
+    public static final int IC_CHECK_TIME = 15;//请年检
+    public static final int IC_STUDENT = 16;//学生卡
+    public static final int IC_OLD = 17;//老年卡
+    public static final int IC_SOUVENIR = 18;//纪念卡
+    public static final int IC_CARE = 19;//关爱卡
+    public static final int IC_JUNREN = 20;//关爱卡
+    public static final int IC_REPEAT = 21;//重复刷卡
+    public static final int IC_LLLEGAL = 22;//非法卡
+    public static final int IC_GUASHI = 23;//挂失卡
 }

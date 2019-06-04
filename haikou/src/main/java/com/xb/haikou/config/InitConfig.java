@@ -1,9 +1,11 @@
 package com.xb.haikou.config;
 
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import com.bluering.sdk.qrcode.jtb.JTBQRCodeSDK;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hao.lib.Util.FileUtils;
@@ -29,6 +31,9 @@ import okhttp3.Callback;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InitConfig {
@@ -66,7 +71,6 @@ public class InitConfig {
 
     //获取腾讯的密钥
     public InitConfig getWxMacKey() {
-        Rx.getInstance().sendMessage("微信秘钥正在下载", 2);
         new OkHttpManager().setNetType(OkHttpManager.NetType.Post)
                 .addFromParam(ParamsUtil.getkeyMap())
                 .setUrl(NetUrl.TENCENT_MAC_KEY)
@@ -103,7 +107,6 @@ public class InitConfig {
 
     //获取腾讯的密钥
     public InitConfig getWXPublicKey() {
-        Rx.getInstance().sendMessage("微信公钥正在下载", false);
         new OkHttpManager().setNetType(OkHttpManager.NetType.Post)
                 .addFromParam(ParamsUtil.getkeyMap())
                 .setUrl(NetUrl.TENCENT_PUBLIC_KEY)
@@ -117,7 +120,7 @@ public class InitConfig {
 
                     @Override
                     public void onResponse(Call call, okhttp3.Response response) throws IOException {
-                    try {
+                        try {
                             String result = response.body().string();
                             Log.e("请求 腾讯公钥返回", "成功       " + result);
                             NetResponse netResponse = new Gson().fromJson(result, NetResponse.class);
@@ -144,7 +147,6 @@ public class InitConfig {
 
     //获取支付宝的公钥
     public InitConfig getALPublicKey() {
-        Rx.getInstance().sendMessage("支付宝公钥正在下载", false);
         new OkHttpManager().setNetType(OkHttpManager.NetType.Post)
                 .addFromParam(ParamsUtil.getkeyMap())
                 .setUrl(NetUrl.ALI_PUBLIC_KEY)
@@ -204,17 +206,17 @@ public class InitConfig {
                             Log.e("请求 交通部证书返回", result);
                             NetResponse netResponse = new Gson().fromJson(result, NetResponse.class);
                             if (netResponse != null && !TextUtils.isEmpty(netResponse.getResult()) && TextUtils.equals(netResponse.getResult(), "success")) {
-//                                //将数据保存至运行所需的配置之中
-//                                DBManager.updateConfig(DBManager.checkRunConfig().setJTMAC(netResponse.getData().getKeys()));
-//                                int ret = JTBQRCodeSDK.updateCert(FileUtils.hex2byte(netResponse.getData().getKeys()));
-//                                if (ret == 0) {
-//                                    Rx.getInstance().sendMessage("交通部证书下载成功", 2);
-//                                } else {
-//                                    Rx.getInstance().sendMessage("交通部证书下载错误", 2);
-//                                    Log.e("请求 交通部证书返回", "设置错误=" + ret);
-//                                }
-//
-//                                App.appPreload.JTBParam = true;
+                                //将数据保存至运行所需的配置之中
+                                DBManager.updateConfig(DBManager.checkRunConfig().setJTMAC(netResponse.getData().getKey()));
+                                int ret = JTBQRCodeSDK.updateCert(FileUtils.hex2byte(netResponse.getData().getKey()));
+                                if (ret == 0) {
+                                    Rx.getInstance().sendMessage("交通部证书下载成功", 2);
+                                } else {
+                                    Rx.getInstance().sendMessage("交通部证书下载错误", 2);
+                                    Log.e("请求 交通部证书返回", "设置错误=" + ret);
+                                }
+
+                                App.appPreload.JTBParam = true;
                                 Rx.getInstance().sendMessage("交通部秘钥下载完成", 2);
                             } else {
                                 App.appPreload.JTBParam = false;
@@ -270,6 +272,114 @@ public class InitConfig {
             File lineFile = new File(Environment.getExternalStorageDirectory() + "/" + lineNo);
             PraseLine.praseLineFile(FileUtils.readFile(lineFile));
         }
+    }
+
+    //下载交通部白名单
+    public InitConfig getWhite() {
+        Rx.getInstance().sendMessage("下载交通部白名单", false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int ret = FTPUtils.downloadContentName("BN", "xzbus/line/", "线路下载");
+                if (ret == 1) {
+                    File lineFile = new File(Environment.getExternalStorageDirectory() + "/BN");
+                    initWhiteList(FileUtils.readFile(lineFile));
+                }
+            }
+        }).start();
+        return this;
+    }
+
+
+    private static void initWhiteList(final byte[] bytes) {
+        try {
+            String result = null;
+            try {
+                result = new String(bytes, "utf-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+            String[] sresult = result.split("\r\n");
+            List<Whitelist> whitelists = new ArrayList<>();
+            for (int i = 0; i < sresult.length; i++) {
+                if (i > 1) {
+                    String[] sitem = sresult[i].split("\\s+");
+
+                    if (sitem.length > 2) {
+                        System.out.println(sitem[0] + sitem[1] + sitem[2]);
+                        Whitelist addlist = new Whitelist(null, sitem[0], sitem[1], sitem[2]);
+                        whitelists.add(addlist);
+                    } else {
+                        System.out.println(sitem[0] + sitem[1]);
+                        Whitelist addlist = new Whitelist(null, sitem[0], sitem[1], "no word");
+                        whitelists.add(addlist);
+                    }
+                }
+            }
+            DBCore.getDaoSession().getWhitelistDao().insertOrReplaceInTx(whitelists);
+            App.appPreload.WHITE = true;
+            Rx.getInstance().sendMessage("白名单导入成功", 1);
+        } catch (Exception e) {
+            Rx.getInstance().sendMessage("白名单导入失败", 1);
+        }
+    }
+
+
+    //下载公交黑名单
+    public InitConfig getBlack() {
+        Rx.getInstance().sendMessage("下载黑名单", false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int ret = FTPUtils.downloadContentName("BLK_ALL", "xzbus/line/", "线路下载");
+                if (ret == 1) {
+                    File lineFile = new File(Environment.getExternalStorageDirectory() + "/BLK_ALL");
+                    initBlcakList(FileUtils.readFile(lineFile));
+                }
+            }
+        }).start();
+        return this;
+    }
+
+    private void initBlcakList(byte[] bytes) {
+        String result = null;
+        try {
+            result = new String(bytes, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String[] sresult = result.split("\r\n");
+        List<BlackList> list = new ArrayList<>();
+        for (int i = 0; i < sresult.length; i++) {
+            System.out.println(sresult[i]);
+            if (i > 1) {
+                String[] sitem = sresult[i].split(",");
+                if (sitem.length >= 2) {
+                    try {
+                        BlackList blackList = new BlackList();
+                        blackList.setCard(sitem[1]);
+                        blackList.setType(sitem[0]);
+                        list.add(blackList);
+                    } catch (Exception e) {
+                        Log.i("黑名单数据解析失败", sresult[0]);
+                    }
+                }
+            }
+        }
+
+        if (BuildConfig.isTest) {
+            BlackList blackList = new BlackList();
+            blackList.setCard("3105000001000565566");
+            blackList.setType("01");
+            list.add(blackList);
+        }
+
+        DBCore.getDaoSession().getBlackListDao().insertOrReplaceInTx(list);
+        Log.i("黑名单", "list.size()=" + list.size());
+        App.appPreload.BLACK = true;
+        Rx.getInstance().sendMessage("黑名单导入成功", 1);
     }
 
 }
