@@ -6,6 +6,9 @@ import android.os.Build;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
+/**
+ * 自定义的一个动画工具类
+ */
 public class AnimalUtils {
     Object[] date = new Object[]{};
 

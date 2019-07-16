@@ -4,6 +4,7 @@ import android.util.Log;
 import com.hao.lib.Util.ThreadUtils;
 import com.hao.show.db.manage.DBManager;
 import com.hao.show.moudle.main.novel.Entity.*;
+import com.hao.show.moudle.main.novel.adapter.NovelListAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -59,7 +60,7 @@ public class SpiderNovelFromBiQu {
      * @param Nid  小说本地存储的ID
      * @return 小说章节列表
      */
-    public static NovelDetail getNovelDetail(String html, Long Nid) {
+    public static NovelDetail getNovelDetail(String html, NovelListItemContent novelListItemContent) {
         NovelDetail novelDetail = new NovelDetail();
         Document doc = Jsoup.parse(html);
         Elements frist = doc.select("div[class=box_con]");
@@ -82,10 +83,12 @@ public class SpiderNovelFromBiQu {
         for (int i = 0; i < selectChapter.size(); i++) {
             String chapterUrl = selectChapter.get(i).select("a").attr("href");
             String chapterName = selectChapter.get(i).select("a").text();
-            chapters.add(new NovelChapter(Long.parseLong(i + ""), Nid, chapterName, CheckedUrl(chapterUrl), "", "", ""));
+            chapters.add(new NovelChapter(Long.parseLong(i + ""), novelListItemContent.getNID(), chapterName, CheckedUrl(chapterUrl), "", "", ""));
         }
         novelDetail.setNovelChapters(chapters);
         DBManager.addNovelChapter(novelDetail.getNovelChapters());
+
+        DBManager.addNovel(novelListItemContent.setNovelImage(CheckedUrl(url)));
         return novelDetail;
     }
 
@@ -115,26 +118,4 @@ public class SpiderNovelFromBiQu {
         return novelChapternew;
     }
 
-    /**
-     * 入库所有的小说
-     *
-     * @param html
-     */
-    @NotNull
-    public static void getAllNovel(final String html) {
-        ThreadUtils.getInstance().createSingle("allnovel").execute(new Runnable() {
-            @Override
-            public void run() {
-                Document doc = Jsoup.parse(html);
-                Elements novellist = doc.select("div[class=novellist]").select("li");
-                for (int i = 0; i < novellist.size(); i++) {
-                    NovelListItemContent novelListItemContent = new NovelListItemContent();
-                    Elements node = novellist.get(i).select("a");
-                    novelListItemContent.setTitle(node.text());
-                    novelListItemContent.setUrl(node.attr("href"));
-                    DBManager.addNovel(novelListItemContent);
-                }
-            }
-        });
-    }
 }

@@ -30,6 +30,8 @@ public class NovelListItemContentDao extends AbstractDao<NovelListItemContent, L
         public final static Property Auther = new Property(3, String.class, "auther", false, "AUTHER");
         public final static Property NewChapter = new Property(4, String.class, "newChapter", false, "NEW_CHAPTER");
         public final static Property NewChapter_utl = new Property(5, String.class, "newChapter_utl", false, "NEW_CHAPTER_UTL");
+        public final static Property NovelImage = new Property(6, String.class, "novelImage", false, "NOVEL_IMAGE");
+        public final static Property NovelType = new Property(7, String.class, "novelType", false, "NOVEL_TYPE");
     }
 
 
@@ -50,7 +52,9 @@ public class NovelListItemContentDao extends AbstractDao<NovelListItemContent, L
                 "\"URL\" TEXT," + // 2: url
                 "\"AUTHER\" TEXT," + // 3: auther
                 "\"NEW_CHAPTER\" TEXT," + // 4: newChapter
-                "\"NEW_CHAPTER_UTL\" TEXT);"); // 5: newChapter_utl
+                "\"NEW_CHAPTER_UTL\" TEXT," + // 5: newChapter_utl
+                "\"NOVEL_IMAGE\" TEXT," + // 6: novelImage
+                "\"NOVEL_TYPE\" TEXT);"); // 7: novelType
     }
 
     /** Drops the underlying database table. */
@@ -92,6 +96,16 @@ public class NovelListItemContentDao extends AbstractDao<NovelListItemContent, L
         if (newChapter_utl != null) {
             stmt.bindString(6, newChapter_utl);
         }
+ 
+        String novelImage = entity.getNovelImage();
+        if (novelImage != null) {
+            stmt.bindString(7, novelImage);
+        }
+ 
+        String novelType = entity.getNovelType();
+        if (novelType != null) {
+            stmt.bindString(8, novelType);
+        }
     }
 
     @Override
@@ -127,6 +141,16 @@ public class NovelListItemContentDao extends AbstractDao<NovelListItemContent, L
         if (newChapter_utl != null) {
             stmt.bindString(6, newChapter_utl);
         }
+ 
+        String novelImage = entity.getNovelImage();
+        if (novelImage != null) {
+            stmt.bindString(7, novelImage);
+        }
+ 
+        String novelType = entity.getNovelType();
+        if (novelType != null) {
+            stmt.bindString(8, novelType);
+        }
     }
 
     @Override
@@ -142,7 +166,9 @@ public class NovelListItemContentDao extends AbstractDao<NovelListItemContent, L
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // url
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // auther
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // newChapter
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // newChapter_utl
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // newChapter_utl
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // novelImage
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // novelType
         );
         return entity;
     }
@@ -155,6 +181,8 @@ public class NovelListItemContentDao extends AbstractDao<NovelListItemContent, L
         entity.setAuther(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setNewChapter(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setNewChapter_utl(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setNovelImage(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setNovelType(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
      }
     
     @Override

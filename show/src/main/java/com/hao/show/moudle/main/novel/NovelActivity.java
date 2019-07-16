@@ -8,15 +8,19 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import com.hao.lib.Util.PopUtils;
+import com.hao.lib.Util.SystemUtil;
+import com.hao.lib.Util.SystemUtils;
 import com.hao.lib.base.Rx.Rx;
 import com.hao.lib.base.Rx.RxMessage;
-import com.hao.lib.view.RecycleView;
+import com.hao.lib.view.RecycleViewHelp.RecycleView;
+import com.hao.lib.view.RecycleViewHelp.RecycleViewDivider;
 import com.hao.show.R;
 import com.hao.show.base.App;
 import com.hao.show.base.BaseActivity;
@@ -40,11 +44,13 @@ public class NovelActivity extends BaseActivity {
     EditText search_content;
     RecyclerView recyclerView;
     PopupWindow pop;
+    NovelListAdapter novelListAdapter;
 
     @Override
     protected void findView() {
         setDrawerContent(LayoutInflater.from(this).inflate(R.layout.menu_layout, null));
         setView();
+        initListener();
     }
 
     @Override
@@ -63,11 +69,28 @@ public class NovelActivity extends BaseActivity {
             }
         });
         novel_list = findViewById(R.id.novel_list);
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         novel_list.setLayoutManager(linearLayoutManager);
-        novel_list.setAdapter(new NovelListAdapter(this).setItemClickLisener(new NovelListAdapter.OnItemClickListener() {
+        novelListAdapter = new NovelListAdapter(this);
+        RecycleViewDivider recycleViewDivider = new RecycleViewDivider(this, LinearLayoutManager.VERTICAL, SystemUtils.INSTANCE.dip2px(this, 10), R.color.transparent);
+        novel_list.addItemDecoration(recycleViewDivider);
+        novel_list.setAdapter(novelListAdapter);
+        refresh = findViewById(R.id.refresh);
+        refresh.setEnableRefresh(true);
+        refresh.setEnableLoadmore(true);
+        search_content = findViewById(R.id.search_content);
+        addViewForNotHideSoftInput(search_content);
+    }
+
+    public void initListener() {
+        novel_list.setScrollListener(new RecycleView.RecycleScrollListener() {
+            @Override
+            public void onScroll(int start, int end) {
+                Log.i("滑动", "当前显示的第一项：" + start + "         当前显示的最后一项：" + end);
+            }
+        });
+        novelListAdapter.setItemClickLisener(new NovelListAdapter.OnItemClickListener() {
             @Override
             public void itemClick(int position, View view, Object o) {
                 //保存或者更新当前小说的信息
@@ -76,17 +99,8 @@ public class NovelActivity extends BaseActivity {
                 intent.putExtra("novel", DBManager.addNovel(novelListItemContent));
                 startActivity(intent);
             }
-        }));
-        novel_list.setScrollListener(new RecycleView.RecycleScrollListener() {
-            @Override
-            public void onScroll(int start, int end) {
-                Log.i("滑动", "当前显示的第一项：" + start + "         当前显示的最后一项：" + end);
-            }
         });
-
-        refresh = findViewById(R.id.refresh);
-        refresh.setEnableRefresh(true);
-        refresh.setEnableLoadmore(true);
+        refresh.setEnableRefresh(false);
         refresh.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {
@@ -104,6 +118,7 @@ public class NovelActivity extends BaseActivity {
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
+                refresh.setEnableRefresh(true);
                 String nextPage = ((NovelListAdapter) novel_list.getAdapter()).getNowDate().getNextPageUrl();
                 if (nextPage == null || nextPage.equals("")) {
                     Toast.makeText(NovelActivity.this, "没有更多内容了", Toast.LENGTH_LONG).show();
@@ -112,8 +127,6 @@ public class NovelActivity extends BaseActivity {
                 }
             }
         });
-
-        search_content = findViewById(R.id.search_content);
         search_content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -201,6 +214,7 @@ public class NovelActivity extends BaseActivity {
             SpiderUtils.getHtml(SpiderNovelFromBiQu.BiQuMainUrl, "html");
         }
     }
+
 
     /**
      * 抓取标题栏的数据

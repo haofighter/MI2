@@ -24,7 +24,6 @@ public class Rx {
     BlockingQueue<RxMessage> queue = new LinkedBlockingQueue<>(10000);
 
     public void sendMessage(final Object tag, final Object o) {
-        List<RxMessage> errorRx = new ArrayList<>();
         for (final RxMessage rx : queue) {
             try {
                 if (MI2App.getInstance().getNowActivitie() != null) {
@@ -38,10 +37,8 @@ public class Rx {
                     rx.rxDo(tag, o);
                 }
             } catch (Exception e) {
-                queue.remove(rx);
             }
         }
-
     }
 
 

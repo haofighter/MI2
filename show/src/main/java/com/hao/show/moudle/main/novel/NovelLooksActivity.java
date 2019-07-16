@@ -1,11 +1,8 @@
 package com.hao.show.moudle.main.novel;
 
-import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import com.hao.lib.base.Rx.Rx;
 import com.hao.lib.base.Rx.RxMessage;
-import com.hao.lib.view.ScorllTextView;
+import com.hao.lib.view.scorlltextview.ScorllTextView;
 import com.hao.show.R;
 import com.hao.show.base.BaseActivity;
 import com.hao.show.db.manage.DBManager;

@@ -26,7 +26,6 @@ public class NovelClassify {
         return title;
     }
 
-
     public Long getNcId() {
         return this.ncId;
     }

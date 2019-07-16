@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.hao.lib.Util.TypeFaceUtils;
 import com.hao.lib.base.Rx.Rx;
-import com.hao.lib.view.ScorllTextView;
+import com.hao.lib.view.scorlltextview.ScorllTextView;
 import com.hao.show.R;
 import com.hao.show.base.App;
 import com.hao.show.db.manage.DBManager;

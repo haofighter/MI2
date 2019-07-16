@@ -19,6 +19,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.gson.Gson;
+import com.hao.lib.Util.MiLog;
 import com.hao.lib.base.BackCall;
 import com.squareup.picasso.Picasso;
 import com.xb.visitor.FaceUtil.FaceUtils;
@@ -153,7 +154,7 @@ public class GetPushService extends Service {
                         Log.i("过程 接收数据", "" + new String(message.getPayload()));
                         updateFace();
                     } catch (Exception e) {
-                        Log.i("过程 错误", "解析错误" + e.getMessage() + "     " + new String(message.getPayload()));
+                        MiLog.i("过程 错误", "解析错误" + e.getMessage() + "     " + new String(message.getPayload()));
                     }
                 }
             });

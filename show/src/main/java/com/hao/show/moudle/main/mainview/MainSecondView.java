@@ -8,7 +8,7 @@ import com.hao.show.R;
 
 import java.util.List;
 
-public class MainSecondView {
+public class MainSecondView implements MainView{
     private View mainsecondView;
     TextView textView;
     Context context;
@@ -26,7 +26,13 @@ public class MainSecondView {
     }
 
 
-    public View getMainsecondView() {
+    @Override
+    public void refresh() {
+
+    }
+
+    @Override
+    public View getMainView() {
         return mainsecondView;
     }
 }

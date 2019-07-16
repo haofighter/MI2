@@ -17,5 +17,22 @@
         <attr name="paddingTop" format="dimension"/>
         <attr name="paddingBottom" format="dimension"/>
         <attr name="padding" format="dimension"/>
+        <attr name="orientation_ver" format="boolean"/>
+        <attr name="needselftouch" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="NiceImageView">
+        <attr name="iscircle" format="boolean" />
+        <attr name="iscoversrc" format="boolean" />
+        <attr name="cornerradius" format="dimension" />
+        <attr name="cornertopleftradius" format="dimension" />
+        <attr name="cornertoprightradius" format="dimension" />
+        <attr name="cornerbottomleftradius" format="dimension" />
+        <attr name="cornerbottomrightradius" format="dimension" />
+        <attr name="borderwidth" format="dimension" />
+        <attr name="bordercolor" format="color" />
+        <attr name="innerborderwidth" format="dimension" />
+        <attr name="innerbordercolor" format="color" />
+        <attr name="maskcolor" format="color" />
     </declare-styleable>
 </resources>

@@ -2,7 +2,6 @@ package com.xb.visitor.moudle;
 
 import android.hardware.Camera;
 import android.media.FaceRecognizer;
-import android.util.Log;
 
 import java.lang.reflect.Method;
 import java.util.List;

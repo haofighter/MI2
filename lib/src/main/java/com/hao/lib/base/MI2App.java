@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import com.hao.lib.base.theme.AppThemeSetting;
-import com.hao.lib.base.theme.ThemeFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +84,7 @@ public class MI2App extends Application {
 
 
     public AppThemeSetting getMi2Theme() {
-        return ThemeFactory.getInstance().getTheme();
+        return AppThemeSetting.getInstance();
     }
 
     public void gotoSetting() {

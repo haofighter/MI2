@@ -15,8 +15,8 @@
             android:gravity="center">
         <ImageView
                 android:id="@+id/menu"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@mipmap/menu"
                 android:layout_marginRight="5dp"/>
         <EditText
@@ -38,10 +38,10 @@
             android:id="@+id/refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <com.hao.lib.view.RecycleView
+        <com.hao.lib.view.RecycleViewHelp.RecycleView
                 android:id="@+id/novel_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-        </com.hao.lib.view.RecycleView>
+        </com.hao.lib.view.RecycleViewHelp.RecycleView>
     </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 </LinearLayout>

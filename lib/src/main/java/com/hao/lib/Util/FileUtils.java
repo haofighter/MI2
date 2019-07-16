@@ -507,19 +507,6 @@ public class FileUtils {
 
 
     /**
-     * 双段计算票价
-     *
-     * @param startStation 上车站点号
-     * @param endStation   下车站点号
-     * @param countStation 总站数
-     * @return 总票价id
-     */
-    public static int fetchPrices(int startStation, int endStation, int countStation) {
-        return (startStation - 1) * countStation + (endStation - 1);
-    }
-
-
-    /**
      * @param posi 下标
      * @param list 源
      * @return 黑名单 位置(0)、项数8:全量，4：增量
@@ -1136,6 +1123,61 @@ public class FileUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * 遍历文件夹查询 包含第一个str的文件
+     *
+     * @param rootDirectory
+     * @param str
+     * @param path
+     * @return
+     */
+    public static String searchFile(String rootDirectory, String str, String path) {
+        File file = new File(rootDirectory);
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    if (files[i].isDirectory()) {
+                        String searchPath = searchFile(files[i].getPath(), str, path);
+                        if (!searchPath.equals("")) {
+                            path = searchPath;
+                        }
+                    } else if (files[i].getName().contains(str)) {
+                        path = files[i].getPath();
+                    }
+                }
+            }
+        }
+        return path;
+    }
+
+
+    /**
+     * 遍历文件夹查询 包含str的所有文件
+     *
+     * @param rootDirectory 根目录  用于查询文件的主目录
+     * @param str           需要查询的文件的标识
+     * @return
+     */
+    public static List<String> searchFiles(String rootDirectory, String str) {
+        List<String> strings = new ArrayList<>();
+        File file = new File(rootDirectory);
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    if (files[i].isDirectory()) {
+                        strings.addAll(searchFiles(files[i].getPath(), str));
+                    } else if (files[i].getName().contains(str)) {
+                        strings.add(files[i].getPath());
+                    }
+                }
+            }
+        }
+        return strings;
     }
 
 

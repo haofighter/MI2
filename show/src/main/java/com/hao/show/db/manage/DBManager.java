@@ -103,4 +103,13 @@ public class DBManager {
         HistroryReadEntityDao histroryReadEntityDao = DBCore.getDaoSession().getHistroryReadEntityDao();
         histroryReadEntityDao.insertOrReplace(histroryReadEntity);
     }
+
+    /**
+     * 查询所有带有封面图片的小说
+     *
+     * @return
+     */
+    public static List<NovelListItemContent> checkNovelList() {
+        return DBCore.getDaoSession().getNovelListItemContentDao().queryBuilder().where(NovelListItemContentDao.Properties.NovelImage.notEq("")).list();
+    }
 }

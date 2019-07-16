@@ -12,10 +12,10 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_margin="20dp"/>
-    <com.hao.lib.view.RecycleView
+    <com.hao.lib.view.RecycleViewHelp.RecycleView
             android:layout_margin="10dp"
             android:id="@+id/novel_classify_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-    </com.hao.lib.view.RecycleView>
+    </com.hao.lib.view.RecycleViewHelp.RecycleView>
 </LinearLayout>

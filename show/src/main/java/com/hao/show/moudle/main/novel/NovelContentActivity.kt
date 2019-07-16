@@ -24,37 +24,12 @@ class NovelContentActivity : BaseActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         var novelChapter = intent.getSerializableExtra("chapter") as NovelChapter;
-        novel_content.setOffscreenPageLimit(1);
+        novel_content.setOffscreenPageLimit(1)
         novel_content.adapter = NovelContentAdapter(this, DBManager.selectNovelChapter(novelChapter.nid));
         novel_content.currentItem = novelChapter.cid.toInt()
 
         showLoading()
         getDetailHtml(novelChapter)
-        novel_content.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(p0: Int) {
-            }
-
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
-            }
-
-            override fun onPageSelected(position: Int) {
-                var chapterList = (novel_content.adapter as NovelContentAdapter).date
-                if (position < chapterList.size - 1 && position > 0) {
-                    //加载后一章
-                    var content = chapterList.get(position + 1).chapterContent
-                    if (content == null || content.equals("")) {
-                        getDetailHtml(chapterList.get(position + 1))
-                    }
-
-                    //加载前一章
-                    var beforContent = chapterList.get(position - 1).chapterContent
-                    if (beforContent == null || beforContent.equals("")) {
-                        getDetailHtml(chapterList.get(position - 1))
-                    }
-                }
-            }
-        })
-
     }
 
     override fun initViewID(): Int {

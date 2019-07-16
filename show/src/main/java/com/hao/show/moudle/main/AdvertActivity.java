@@ -26,7 +26,6 @@ public class AdvertActivity extends MI2Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advert);
-
         initVidio();
     }
 

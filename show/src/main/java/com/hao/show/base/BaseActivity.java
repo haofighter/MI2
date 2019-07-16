@@ -54,7 +54,6 @@ public abstract class BaseActivity extends MI2Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        Rx.getInstance().removeAll();
     }
 
     public void checkPromission() {
@@ -64,6 +63,7 @@ public abstract class BaseActivity extends MI2Activity {
         };
         initPromission(promissions);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -80,6 +80,13 @@ public abstract class BaseActivity extends MI2Activity {
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Rx.getInstance().removeAll();
+    }
+
+
 }

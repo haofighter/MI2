@@ -7,6 +7,9 @@ import org.greenrobot.greendao.annotation.Id;
 
 import java.io.Serializable;
 
+/**
+ * 小说列表Item信息
+ */
 @Entity
 public class NovelListItemContent implements Serializable {
     private static final long serialVersionUID = App.serialVersionUID;
@@ -17,6 +20,26 @@ public class NovelListItemContent implements Serializable {
     private String auther;
     private String newChapter;
     private String newChapter_utl;
+    private String novelImage = "";
+    private String novelType = "";
+
+
+    public String getNovelType() {
+        return novelType;
+    }
+
+    public void setNovelType(String novelType) {
+        this.novelType = novelType;
+    }
+
+    public String getNovelImage() {
+        return novelImage;
+    }
+
+    public NovelListItemContent setNovelImage(String novelImage) {
+        this.novelImage = novelImage;
+        return this;
+    }
 
     public String getNewChapter_utl() {
         return newChapter_utl;
@@ -86,17 +109,18 @@ public class NovelListItemContent implements Serializable {
     }
 
 
-    @Generated(hash = 1911203596)
-    public NovelListItemContent(Long nID, String title, String url, String auther, String newChapter,
-                                String newChapter_utl) {
+    @Generated(hash = 900250585)
+    public NovelListItemContent(Long nID, String title, String url, String auther, String newChapter, String newChapter_utl,
+            String novelImage, String novelType) {
         this.nID = nID;
         this.title = title;
         this.url = url;
         this.auther = auther;
         this.newChapter = newChapter;
         this.newChapter_utl = newChapter_utl;
+        this.novelImage = novelImage;
+        this.novelType = novelType;
     }
-
 
     @Generated(hash = 56679149)
     public NovelListItemContent() {

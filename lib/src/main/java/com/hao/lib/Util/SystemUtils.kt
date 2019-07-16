@@ -213,7 +213,7 @@ object SystemUtils {
 
     /**
      * path 搜索文件的最初目录
-     * filestag 搜索的文件的表示 可以是特定的表示  也可以是后缀
+     * filestag 搜索的文件的表示 可以是特定的标示  也可以是后缀
      */
     fun traverseFile(
         path: String,
@@ -345,25 +345,5 @@ object SystemUtils {
     }
 
 
-    /**
-     * @param context 。
-     * @return 是否有网络
-     */
-    fun getNetWorkState(context: Context): Boolean {
-        val connectivityManager = context
-            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetworkInfo = connectivityManager
-            .activeNetworkInfo
-        if (activeNetworkInfo != null && activeNetworkInfo.isConnected) {
-            if (activeNetworkInfo.type == ConnectivityManager.TYPE_WIFI) {
-                return true
-            } else if (activeNetworkInfo.type == ConnectivityManager.TYPE_MOBILE) {
-                return true
-            }
-        } else {
-            return false
-        }
-        return false
-    }
 }
 

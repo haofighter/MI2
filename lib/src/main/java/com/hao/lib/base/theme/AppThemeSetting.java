@@ -13,6 +13,15 @@ public class AppThemeSetting {
     Drawable background;
     Typeface typeface;
 
+    private AppThemeSetting() {
+    }
+
+    private static AppThemeSetting appThemeSetting = new AppThemeSetting();
+
+    public static AppThemeSetting getInstance() {
+        return appThemeSetting;
+    }
+
 
     public int getTextColorResuoce() {
         if (textColorResuoce == 0) {
@@ -32,8 +41,9 @@ public class AppThemeSetting {
         return background;
     }
 
-    public void setBackground(Drawable background) {
+    public AppThemeSetting setBackground(Drawable background) {
         this.background = background;
+        return this;
     }
 
     public Typeface getTypeface() {

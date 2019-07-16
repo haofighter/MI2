@@ -6,9 +6,10 @@ import com.hao.lib.Util.SPUtils;
 import com.hao.lib.base.MI2App;
 import com.hao.lib.base.Rx.Rx;
 import com.hao.lib.base.Rx.RxMessage;
-import com.hao.lib.base.theme.ThemeFactory;
+import com.hao.lib.base.theme.AppThemeSetting;
 import com.hao.show.R;
 import com.hao.show.db.manage.DBCore;
+import com.hao.show.moudle.main.novel.NovelTask;
 import com.hao.show.spider.SpiderNovelFromBiQu;
 import com.hao.show.spider.SpiderUtils;
 
@@ -28,29 +29,12 @@ public class App extends MI2App {
         super.onCreate();
         app = this;
         SPUtils.init(this);
-        getAllNovel();
         initTheme();
         DBCore.init(this);
+        NovelTask.getInstance().start();
     }
-
-
-    public void getAllNovel() {
-        if (System.currentTimeMillis() - updateTime > 24 * 60 * 60 * 1000) {
-            Rx.getInstance().addRxMessage(new RxMessage() {
-                @Override
-                public void rxDo(Object tag, Object o) {
-                    if (tag.equals("all")) {
-                        SpiderNovelFromBiQu.getAllNovel((String) o);
-                        updateTime = System.currentTimeMillis();
-                    }
-                }
-            });
-            SpiderUtils.getHtml("http://www.xbiquge.la/xiaoshuodaquan/", "all");
-        }
-    }
-
 
     public void initTheme() {
-        ThemeFactory.getInstance().createTheme().setBackBitmap(R.mipmap.background).setTextColorResource(this, R.color.white).load();
+        AppThemeSetting.getInstance().setBackground(getResources().getDrawable(R.color.app)).setTextColorResuoce(R.color.white);
     }
 }

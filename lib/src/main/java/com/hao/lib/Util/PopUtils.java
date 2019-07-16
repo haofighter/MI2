@@ -1,5 +1,6 @@
 package com.hao.lib.Util;
 
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,10 +43,12 @@ public class PopUtils {
             }
         });
 
+        //是否响应外部事件
+        popupWindow.setOutsideTouchable(true);
         // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
         // 我觉得这里是API的一个bug
         popupWindow.setBackgroundDrawable(MI2App.getInstance().getResources().getDrawable(
-                R.color.red));
+                R.color.white));
 //        // 设置好参数之后再show
 
         return this;
@@ -55,6 +58,10 @@ public class PopUtils {
         popupWindow.showAsDropDown(v);
     }
 
+
+    public void setBackGroundDrawable(Drawable drawable) {
+        popupWindow.setBackgroundDrawable(drawable);
+    }
 
     public void showDown(View v) {
         popupWindow.showAtLocation(v, Gravity.BOTTOM, 0, 0);

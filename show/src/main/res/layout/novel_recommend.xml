@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center">
+
+    <androidx.cardview.widget.CardView
+            android:id="@+id/stack_layout"
+            android:layout_margin="20dp"
+            app:cardCornerRadius="10dp"
+            android:layout_width="match_parent"
+            app:cardElevation="5dp"
+            android:layout_height="wrap_content">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+            <com.hao.lib.view.NiceImageView
+                    android:id="@+id/novel_recommend_image"
+                    android:layout_width="match_parent"
+                    app:cornerradius="10dp"
+                    app:iscircle="false"
+                    android:layout_height="500dp"/>
+            <TextView
+                    android:id="@+id/novel_recommend_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+            <TextView
+                    android:id="@+id/novel_recommend_auther"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/gray_dd"
+                    android:gravity="center"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

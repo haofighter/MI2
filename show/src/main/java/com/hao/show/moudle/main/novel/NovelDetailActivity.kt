@@ -83,7 +83,7 @@ class NovelDetailActivity : BaseActivity() {
      */
     fun setViewDate(tag: String, o: Any) {
         if (tag == "detail") {
-            val classifies = SpiderNovelFromBiQu.getNovelDetail(o as String, nowShowNocel!!.nid)
+            val classifies = SpiderNovelFromBiQu.getNovelDetail(o as String, nowShowNocel)
             mainContentView.visibility = View.VISIBLE
             (novel_chaper_list.adapter as NovelChapterItemAdapter).setNovelChapterList(classifies.novelChapters)
             Glide.with(App.getInstance()).load(classifies.imageUrl).into(novel_image)
