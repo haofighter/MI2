@@ -11,6 +11,9 @@ import android.util.AttributeSet;
 import com.hao.lib.R;
 import com.hao.lib.Util.SystemUtil;
 
+/**
+ * 圆角图片
+ */
 public class NiceImageView extends AppCompatImageView {
     private Context context;
 

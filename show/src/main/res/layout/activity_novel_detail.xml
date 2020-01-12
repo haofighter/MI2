@@ -29,6 +29,7 @@
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_title"
                             android:text="小说标题"
+                            android:transitionName="novel_title"
                             android:id="@+id/novel_title" android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>
                     <TextView

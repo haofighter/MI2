@@ -1,5 +1,6 @@
 package com.hao.show.moudle.main.novel;
 
+import android.os.AsyncTask;
 import android.util.Log;
 import com.hao.lib.Util.CommonSharedPreferences;
 import com.hao.lib.Util.MiLog;
@@ -24,7 +25,6 @@ public class NovelTask extends Thread {
     private int loadIndex = 0;
 
     private static class NovelTaskHelp {
-
         final static NovelTask no = new NovelTask();
     }
 
@@ -75,13 +75,15 @@ public class NovelTask extends Thread {
         Document doc = Jsoup.parse(html);
         Elements novelTypeList = doc.select("div[class=novellist]");
 
+        int nowLoadIndex = 0;
         for (int i = 0; i < novelTypeList.size(); i++) {
             Elements novellist = novelTypeList.get(i).select("li");
             Elements noveltype = novelTypeList.get(i).select("h2");
             for (int j = 0; j < novellist.size(); j++) {
                 try {
+                    nowLoadIndex++;
                     loadIndex = (int) CommonSharedPreferences.get("loadIndex", 0);
-                    if (j >= loadIndex) {
+                    if (nowLoadIndex >= loadIndex) {
                         NovelListItemContent novelListItemContent = new NovelListItemContent();
                         novelListItemContent.setNovelType(noveltype.text());
                         Elements node = novellist.get(j).select("a");
@@ -90,9 +92,10 @@ public class NovelTask extends Thread {
                         String novelDetailHtml = startErgodic(novelListItemContent.getUrl());
                         NovelDetail novelDetail = SpiderNovelFromBiQu.getNovelDetail(novelDetailHtml, novelListItemContent);
                         novelListItemContent.setNovelImage(novelDetail.getImageUrl());
-                        Log.i("遍历网站", noveltype.text() + "    小说名：" + novelListItemContent.getTitle() + "    图片地址：" + novelListItemContent.getNovelImage());
+                        novelListItemContent.setAuther(novelDetail.getNovel_auther());
+                        Log.i("遍历网站", noveltype.text() + "    小说名：" + novelListItemContent.getTitle() + "    作者：" + novelListItemContent.getAuther() + "    图片地址：" + novelListItemContent.getNovelImage());
                         DBManager.addNovel(novelListItemContent);
-                        CommonSharedPreferences.get("loadIndex", j);
+                        CommonSharedPreferences.put("loadIndex", ++loadIndex);
                     }
                 } catch (Exception e) {
                     CommonSharedPreferences.put("loadIndex", ++loadIndex);
@@ -101,6 +104,5 @@ public class NovelTask extends Thread {
         }
         CommonSharedPreferences.put("loadAll", true);
     }
-
 
 }

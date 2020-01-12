@@ -2,9 +2,10 @@ package com.hao.show.moudle.main;
 
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import com.hao.lib.Util.ToastUtils;
 import com.hao.lib.view.NavigationBar;
 import com.hao.show.R;
@@ -21,7 +22,7 @@ import com.hao.show.moudle.view.adapter.BottomDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private LinearLayout main;
     private ViewPager vp_main;
@@ -29,6 +30,9 @@ public class MainActivity extends BaseActivity {
     private NavigationBar navigationBar;
     long beforBackTime;
     MainVPAdapter adapter;
+    RadioButton mi_collect;
+    RadioButton mi_history;
+    RadioButton mi_recommend;
 
     @Override
     public int initViewID() {
@@ -37,10 +41,30 @@ public class MainActivity extends BaseActivity {
 
     protected void findView() {
         main = findViewById(R.id.main);
+        mi_collect = findViewById(R.id.mi_collect);
+        mi_history = findViewById(R.id.mi_history);
+        mi_recommend = findViewById(R.id.mi_recommend);
         navigationBar = findViewById(R.id.navigationBar);
         navigationBar.setVisibility(View.GONE);
         vp_main = findViewById(R.id.vp_main);
-        bottomView = ((BottomView) findViewById(R.id.bottom_view)).setBottomClickListener(new BottomView.BottomViewClickListener() {
+        bottomView = ((BottomView) findViewById(R.id.bottom_view));
+        initContent();
+        initListener();
+    }
+
+    private void initContent() {
+        adapter = new MainVPAdapter();
+        List<MainView> views = new ArrayList<>();
+        views.add(new MainFristView(this));
+        views.add(new MainSecondView(this));
+        views.add(new MainThreeView(this));
+        adapter.setViews(views);
+        vp_main.setAdapter(adapter);
+    }
+
+
+    public void initListener() {
+        bottomView.setBottomClickListener(new BottomView.BottomViewClickListener() {
             @Override
             public void click(int item, View v) {
                 Intent intent = new Intent();
@@ -60,18 +84,42 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }).setDate(initBottomViewDate()).setViewBackground(R.color.white);
-        initContent();
+
+        vp_main.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+                Log.i("scorllview", "滑动：" + v + "   i=" + i + "       i1=" + i1);
+                if (v <= 1) {
+                }
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                switch (i) {
+                    case 0:
+                        mi_collect.setChecked(true);
+                        break;
+                    case 1:
+                        mi_recommend.setChecked(true);
+                        break;
+                    case 2:
+                        mi_history.setChecked(true);
+                        break;
+                }
+                adapter.getView(i).refresh();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+
+        mi_collect.setOnClickListener(this);
+        mi_recommend.setOnClickListener(this);
+        mi_history.setOnClickListener(this);
     }
 
-    private void initContent() {
-        adapter = new MainVPAdapter();
-        List<MainView> views = new ArrayList<>();
-        views.add(new MainFristView(this));
-        views.add(new MainSecondView(this));
-        views.add(new MainThreeView(this));
-        adapter.setViews(views);
-        vp_main.setAdapter(adapter);
-    }
 
     @Override
     protected void onResume() {
@@ -81,7 +129,7 @@ public class MainActivity extends BaseActivity {
 
     private List<BottomDate> initBottomViewDate() {
         List<BottomDate> bottomDateList = new ArrayList<>();
-        bottomDateList.add(new BottomDate().setTitle("首页").setDefIcon(R.mipmap.home).setCheckIcon(R.mipmap.home_check).setUncheckColor(R.color.colorPrimary));
+//        bottomDateList.add(new BottomDate().setTitle("首页").setDefIcon(R.mipmap.home).setCheckIcon(R.mipmap.home_check).setUncheckColor(R.color.colorPrimary));
         bottomDateList.add(new BottomDate().setTitle("搜索").setDefIcon(R.mipmap.search).setCheckIcon(R.mipmap.search).setUncheckColor(R.color.colorPrimary));
         bottomDateList.add(new BottomDate().setTitle("设置").setDefIcon(R.mipmap.setting).setCheckIcon(R.mipmap.setting).setUncheckColor(R.color.colorPrimary));
         return bottomDateList;
@@ -95,5 +143,20 @@ public class MainActivity extends BaseActivity {
             return;
         }
         super.onBackPressed();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.mi_collect:
+                vp_main.setCurrentItem(0);
+                break;
+            case R.id.mi_recommend:
+                vp_main.setCurrentItem(1);
+                break;
+            case R.id.mi_history:
+                vp_main.setCurrentItem(2);
+                break;
+        }
     }
 }

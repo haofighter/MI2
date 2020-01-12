@@ -1,19 +1,26 @@
 package com.hao.show.moudle.main.novel;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Toast;
+import androidx.annotation.RequiresApi;
 import com.hao.lib.Util.PopUtils;
 import com.hao.lib.Util.SystemUtil;
 import com.hao.lib.Util.SystemUtils;
@@ -35,6 +42,7 @@ import com.hao.show.spider.SpiderUtils;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NovelActivity extends BaseActivity {
@@ -158,16 +166,24 @@ public class NovelActivity extends BaseActivity {
                     recyclerView.addItemDecoration(new DividerItemDecoration(App.getInstance(), DividerItemDecoration.VERTICAL));
                     recyclerView.setAdapter(new TextNovelAdapter(App.getInstance(), DBManager.selectNovelbyStr(s.toString()))
                             .setItemClickLisener(new TextNovelAdapter.OnItemClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
                                 @Override
                                 public void itemClick(int position, View view, Object object) {
                                     if (pop != null) {
                                         pop.dismiss();
                                     }
+
+                                    View novel_name = view.findViewById(R.id.novel_name);
+                                    View novel_author = view.findViewById(R.id.novel_author);
+
+                                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(NovelActivity.this,
+                                            Pair.create(novel_name, "agreedName1"),
+                                            Pair.create(novel_author, "novel_author"));
                                     //保存或者更新当前小说的信息
                                     NovelListItemContent novelListItemContent = ((TextNovelAdapter) recyclerView.getAdapter()).getDate().get(position);
                                     Intent intent = new Intent(NovelActivity.this, NovelDetailActivity.class);
                                     intent.putExtra("novel", DBManager.addNovel(novelListItemContent));
-                                    startActivity(intent);
+                                    startActivity(intent, options.toBundle());
                                 }
                             }));
                     PopUtils.getInstance().createPop(search_content, recyclerView).showAsViewDown(search_content);

@@ -2,6 +2,9 @@ package com.hao.lib.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.TextView;
 import com.hao.lib.base.MI2App;
@@ -21,7 +24,15 @@ public class ThemeTextView extends TextView {
     public ThemeTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setTextColor(MI2App.getInstance().getMi2Theme().getTextColorResuoce());
+        init();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public ThemeTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
 
+    private void init() {
+    }
 }

@@ -142,6 +142,7 @@ public abstract class MI2Activity extends AppCompatActivity implements DrawerHel
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         if (checkCallingOrSelfPermission(PERMISSION_MI) != PackageManager.PERMISSION_GRANTED) {
             throw new SecurityException("继承此activity需要权限");
         }

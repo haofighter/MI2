@@ -22,17 +22,32 @@
     </declare-styleable>
 
     <declare-styleable name="NiceImageView">
-        <attr name="iscircle" format="boolean" />
-        <attr name="iscoversrc" format="boolean" />
-        <attr name="cornerradius" format="dimension" />
-        <attr name="cornertopleftradius" format="dimension" />
-        <attr name="cornertoprightradius" format="dimension" />
-        <attr name="cornerbottomleftradius" format="dimension" />
-        <attr name="cornerbottomrightradius" format="dimension" />
-        <attr name="borderwidth" format="dimension" />
-        <attr name="bordercolor" format="color" />
-        <attr name="innerborderwidth" format="dimension" />
-        <attr name="innerbordercolor" format="color" />
-        <attr name="maskcolor" format="color" />
+        <attr name="iscircle" format="boolean"/>
+        <attr name="iscoversrc" format="boolean"/>
+        <attr name="cornerradius" format="dimension"/>
+        <attr name="cornertopleftradius" format="dimension"/>
+        <attr name="cornertoprightradius" format="dimension"/>
+        <attr name="cornerbottomleftradius" format="dimension"/>
+        <attr name="cornerbottomrightradius" format="dimension"/>
+        <attr name="borderwidth" format="dimension"/>
+        <attr name="bordercolor" format="color"/>
+        <attr name="innerborderwidth" format="dimension"/>
+        <attr name="innerbordercolor" format="color"/>
+        <attr name="maskcolor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="CheekChangeButton">
+        <attr name="cheekcornerradius" format="dimension"/>
+        <attr name="cheekcornertopleftradius" format="dimension"/>
+        <attr name="cheekcornertoprightradius" format="dimension"/>
+        <attr name="cheekcornerbottomleftradius" format="dimension"/>
+        <attr name="cheekcornerbottomrightradius" format="dimension"/>
+        <attr name="cheekborderwidth" format="dimension"/>
+        <attr name="cheekbordercolor" format="color"/>
+        <attr name="cheekinnerborderwidth" format="dimension"/>
+        <attr name="cheekinnerbordercolor" format="color"/>
+        <attr name="cheekbackground" format="reference"/>
+        <attr name="cheekischeck" format="boolean"/>
+        <attr name="cheekinitbordercolor" format="color"/>
     </declare-styleable>
 </resources>

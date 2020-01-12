@@ -40,6 +40,7 @@ public class MainVPAdapter extends PagerAdapter {
     }
 
     public MainView getView(int position) {
+        views.get(position).refresh();
         return views.get(position);
     }
 

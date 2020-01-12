@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,11 +66,35 @@ public class StackLayout extends FrameLayout {
      *
      * @param <VH> {@link ViewHolder}
      */
-    public static abstract class Adapter<VH extends ViewHolder> {
-        public static Adapter<?> EMPTY = new Adapter<ViewHolder>() {
+    public static abstract class Adapter<VH extends ViewHolder, T extends List> {
+        T t;
+
+        public Adapter(T t) {
+            this.t = t;
+        }
+
+
+        public Adapter(Context context, T t) {
+            this.t = t;
+        }
+
+        public void setDate(T t) {
+            this.t = t;
+        }
+
+        public T getDate() {
+            return t;
+        }
+
+        public static Adapter<?, ?> EMPTY = new Adapter<ViewHolder, List>(new ArrayList()) {
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent, int position) {
                 return null;
+            }
+
+            @Override
+            public void remove(int position) {
+
             }
 
             @Override
@@ -85,9 +110,18 @@ public class StackLayout extends FrameLayout {
         // ------------ ViewHolder -------------
         public abstract VH onCreateViewHolder(ViewGroup parent, int position);
 
-        public abstract void onBindViewHolder(VH holder, int position);
+        public void remove(int position) {
+            t.remove(position);
+            notifyDataSetChanged();
+        }
 
-        public abstract int getItemCount();
+        public void onBindViewHolder(VH holder, int position) {
+            holder.itemView.setTag(Integer.MAX_VALUE, position);
+        }
+
+        public int getItemCount() {
+            return t == null ? 0 : t.size();
+        }
 
         private VH getViewHolder(ViewGroup parent, int position) {
             VH viewHolder = onCreateViewHolder(parent, position);
@@ -163,6 +197,7 @@ public class StackLayout extends FrameLayout {
             }
 
             transformPage(0, true);
+            return;
         }
     }
 
@@ -218,7 +253,7 @@ public class StackLayout extends FrameLayout {
 
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-//            Log.d(TAG, "onViewPositionChanged: " + ViewHolder.getPosition(changedView));
+            Log.d(TAG, "onViewPositionChanged: " + ViewHolder.getPosition(changedView) + "     dx=" + dx + "    dy=" + dy);
             int totalRange = mParent.getWidth();
             float position = (1.0f * (left - 0)) / totalRange;
             transformPage(position, left < 0);
@@ -245,10 +280,10 @@ public class StackLayout extends FrameLayout {
                     @Override
                     public void onComplete(View view) {
 //                        Log.d(TAG, "onViewReleased: remove" + ViewHolder.getPosition(releasedChild));
-                        removeView(view);
-                        setCurrentItem(getCurrentItem() + 1);
-                        mOnSwipeListener.onSwiped(view, ViewHolder.getPosition(view), left < 0, mAdapter.getItemCount() - getCurrentItem());
 
+                        removeView(view);
+                        mAdapter.remove((Integer) view.getTag(Integer.MAX_VALUE));
+                        mOnSwipeListener.onSwiped(view, ViewHolder.getPosition(view), left < 0, mAdapter.getItemCount() - getCurrentItem());
                         if (mItemObserver.isDataChangedWhileScrolling)
                             mItemObserver.dataChanged(mAdapter);
                     }

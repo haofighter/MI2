@@ -23,11 +23,13 @@
             <com.hao.lib.view.ThemeTextView
                     android:id="@+id/novel_name"
                     android:text="小说1"
+                    android:transitionName="novel_title"
                     android:textSize="@dimen/text_title"
                     android:layout_width="match_parent" android:layout_height="wrap_content"/>
             <com.hao.lib.view.ThemeTextView
                     android:id="@+id/novel_author"
                     android:text="小说1"
+                    android:transitionName="novel_author"
                     android:layout_marginTop="5dp"
                     android:textSize="@dimen/text_second"
                     android:layout_width="match_parent" android:layout_height="wrap_content"/>

@@ -11,6 +11,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/navigationBar"/>
 
+
+    <RadioGroup
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+        <RadioButton
+                android:id="@+id/mi_collect"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Blue"
+                android:text="我的收藏"
+                android:padding="10dp"
+                android:button="@null"
+                android:checked="true"
+                android:background="@drawable/select_cheek_white_blue_5dp_left"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"/>
+
+        <RadioButton
+                android:id="@+id/mi_recommend"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Blue"
+                android:text="小说推荐"
+                android:padding="10dp"
+                android:button="@null"
+                android:background="@drawable/select_cheek_white_blue"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"/>
+        <RadioButton
+                android:id="@+id/mi_history"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/Blue"
+                android:text="我的历史"
+                android:padding="10dp"
+                android:button="@null"
+                android:background="@drawable/select_cheek_white_blue_5dp_right"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"/>
+    </RadioGroup>
+
     <android.support.v4.view.ViewPager
             android:id="@+id/vp_main"
             android:layout_width="match_parent"

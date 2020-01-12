@@ -112,4 +112,9 @@ public class DBManager {
     public static List<NovelListItemContent> checkNovelList() {
         return DBCore.getDaoSession().getNovelListItemContentDao().queryBuilder().where(NovelListItemContentDao.Properties.NovelImage.notEq("")).list();
     }
+
+    public static List<NovelListItemContent> getNovelCount() {
+        NovelListItemContentDao novelListItemContentDao=DBCore.getDaoSession().getNovelListItemContentDao();
+       return novelListItemContentDao.queryBuilder().list();
+    }
 }
